@@ -27,4 +27,12 @@ void main() {
     expect(find.text('0'), findsNothing);
     expect(find.text('1'), findsOneWidget);
   });
+  // add a new test: verify has list of items
+  testWidgets('Verify has list of items', (WidgetTester tester) async {
+    // Build our app and trigger a frame.
+    await tester.pumpWidget(const MyApp());
+
+    // Verify that our list has items.
+    expect(find.byType(ListView), findsOneWidget);
+  });
 }

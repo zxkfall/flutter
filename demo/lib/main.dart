@@ -54,8 +54,104 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+//define a billing object, field contains type(income or expense), amount, date, description and kind of payment
+// type use enum, enum give number to each type, income is 0, expense is 1
+enum BillingType {
+  income,
+  expense,
+}
+
+class Billing {
+  Billing(
+      {required this.type,
+      required this.amount,
+      required this.date,
+      required this.description,
+      required this.payment});
+
+  final BillingType type;
+  final int amount;
+  final DateTime date;
+  final String description;
+  final String payment;
+}
+
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+
+  //define a list of billing objects
+  final List<Billing> _billings = <Billing>[];
+
+  //define some fake billing data add to the list
+  void _addFakeBillings() {
+    _billings.add(Billing(
+        type: BillingType.income,
+        amount: 100,
+        date: DateTime.now(),
+        description: 'fake income',
+        payment: 'cash'));
+    _billings.add(Billing(
+        type: BillingType.expense,
+        amount: 200,
+        date: DateTime.now(),
+        description: 'fake expense',
+        payment: 'credit card'));
+    _billings.add(Billing(
+        type: BillingType.income,
+        amount: 300,
+        date: DateTime.now(),
+        description: 'fake income',
+        payment: 'cash'));
+    _billings.add(Billing(
+        type: BillingType.expense,
+        amount: 400,
+        date: DateTime.now(),
+        description: 'fake expense',
+        payment: 'credit card'));
+    _billings.add(Billing(
+        type: BillingType.income,
+        amount: 500,
+        date: DateTime.now(),
+        description: 'fake income',
+        payment: 'cash'));
+    _billings.add(Billing(
+        type: BillingType.expense,
+        amount: 600,
+        date: DateTime.now(),
+        description: 'fake expense',
+        payment: 'credit card'));
+    _billings.add(Billing(
+        type: BillingType.income,
+        amount: 700,
+        date: DateTime.now(),
+        description: 'fake income',
+        payment: 'cash'));
+    _billings.add(Billing(
+        type: BillingType.expense,
+        amount: 800,
+        date: DateTime.now(),
+        description: 'fake expense',
+        payment: 'credit card'));
+    _billings.add(Billing(
+        type: BillingType.income,
+        amount: 900,
+        date: DateTime.now(),
+        description: 'fake income',
+        payment: 'cash'));
+    _billings.add(Billing(
+        type: BillingType.expense,
+        amount: 1000,
+        date: DateTime.now(),
+        description: 'fake expense',
+        payment: 'credit card'));
+  }
+
+  // add fake data when the app start
+  @override
+  void initState() {
+    super.initState();
+    _addFakeBillings();
+  }
 
   void _incrementCounter() {
     setState(() {
@@ -111,6 +207,22 @@ class _MyHomePageState extends State<MyHomePage> {
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            // add a list view, source is _billings
+            Expanded(
+              child: ListView.builder(
+                itemCount: _billings.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return ListTile(
+                    title: Text(_billings[index].description),
+                    subtitle: Text(_billings[index].amount.toString()),
+                    leading: Icon(_billings[index].type == BillingType.income
+                        ? Icons.add
+                        : Icons.remove),
+                    trailing: Text(_billings[index].payment),
+                  );
+                },
+              ),
             ),
           ],
         ),
