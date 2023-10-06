@@ -39,10 +39,19 @@ dependencies:
   path: ^1.8.3
   sqflite_common_ffi: ^2.3.0+2
   sqlite3_flutter_libs: ^0.5.17
+  # add injectable to your dependencies
+  injectable: ^2.3.1
+  # add get_it
+  get_it: ^7.6.4
+  http: ^1.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  # add the generator to your dev_dependencies
+  injectable_generator: ^2.4.0
+  # add build runner if not already added
+  build_runner: ^2.4.6
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -50,6 +59,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  mockito: ^5.4.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
