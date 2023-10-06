@@ -13,7 +13,7 @@ class BillingRepository {
     WidgetsFlutterBinding.ensureInitialized();
   }
 
-  Future<Database?> initDatabase() async {
+  Future<Database?> _initDatabase() async {
     if (_db == null) {
       await _lock.synchronized(() async {
         _db ??= await openDatabase(
@@ -31,7 +31,7 @@ class BillingRepository {
   }
 
   Future<Database> get db async {
-    final database = await initDatabase();
+    final database = await _initDatabase();
     if (database != null) {
       return database;
     } else {
