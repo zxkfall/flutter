@@ -1,8 +1,6 @@
 import 'package:demo/billing_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
 
 import 'billing.dart';
 
