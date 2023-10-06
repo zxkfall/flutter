@@ -1,6 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 
 void main() {
+  // init sqflite
+  WidgetsFlutterBinding.ensureInitialized();
+  // databaseFactory = databaseFactoryFfi;
   runApp(const MyApp());
 }
 
@@ -77,90 +84,98 @@ class Billing {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
 
   //define a list of billing objects
   final List<Billing> _billings = <Billing>[];
 
-  //define some fake billing data add to the list
-  void _addFakeBillings() {
-    _billings.add(Billing(
-        type: BillingType.income,
-        amount: 100,
-        date: DateTime.now(),
-        description: 'fake income',
-        payment: 'cash'));
-    _billings.add(Billing(
-        type: BillingType.expense,
-        amount: 200,
-        date: DateTime.now(),
-        description: 'fake expense',
-        payment: 'credit card'));
-    _billings.add(Billing(
-        type: BillingType.income,
-        amount: 300,
-        date: DateTime.now(),
-        description: 'fake income',
-        payment: 'cash'));
-    _billings.add(Billing(
-        type: BillingType.expense,
-        amount: 400,
-        date: DateTime.now(),
-        description: 'fake expense',
-        payment: 'credit card'));
-    _billings.add(Billing(
-        type: BillingType.income,
-        amount: 500,
-        date: DateTime.now(),
-        description: 'fake income',
-        payment: 'cash'));
-    _billings.add(Billing(
-        type: BillingType.expense,
-        amount: 600,
-        date: DateTime.now(),
-        description: 'fake expense',
-        payment: 'credit card'));
-    _billings.add(Billing(
-        type: BillingType.income,
-        amount: 700,
-        date: DateTime.now(),
-        description: 'fake income',
-        payment: 'cash'));
-    _billings.add(Billing(
-        type: BillingType.expense,
-        amount: 800,
-        date: DateTime.now(),
-        description: 'fake expense',
-        payment: 'credit card'));
-    _billings.add(Billing(
-        type: BillingType.income,
-        amount: 900,
-        date: DateTime.now(),
-        description: 'fake income',
-        payment: 'cash'));
-    _billings.add(Billing(
-        type: BillingType.expense,
-        amount: 1000,
-        date: DateTime.now(),
-        description: 'fake expense',
-        payment: 'credit card'));
+  //define database
+  late final Future<Database> database;
+
+  //define add function to get data from sqllite and add to the list
+  Future<void> _loadBillings() async {
+    // Open the database and store the reference.
+    database = openDatabase(
+      // Set the path to the database. Note: Using the `join` function from the
+      // `path` package is best practice to ensure the path is correctly
+      // constructed for each platform.
+      join(await getDatabasesPath(), 'billing_database.db'),
+      // When the database is first created, create a table to store dogs.
+      onCreate: (db, version) {
+        // Run the CREATE TABLE statement on the database.
+        return db.execute(
+            'CREATE TABLE Billing (id INTEGER PRIMARY KEY, type INTEGER, amount INTEGER, date TEXT, description TEXT, payment TEXT)');
+      },
+      // Set the version. This executes the onCreate function and provides a
+      // path to perform database upgrades and downgrades.
+      version: 1,
+    );
+    final db = await database;
+    db.insert(
+        'Billing',
+        {
+          'type': 0,
+          'amount': 100,
+          'date': DateTime.now().toString(),
+          'description': 'fake income',
+          'payment': 'cash'
+        },
+        conflictAlgorithm: ConflictAlgorithm.replace);
+    db.insert(
+        'Billing',
+        {
+          'type': 1,
+          'amount': 200,
+          'date': DateTime.now().toString(),
+          'description': 'fake expense',
+          'payment': 'credit card'
+        },
+        conflictAlgorithm: ConflictAlgorithm.replace);
+    db.query('Billing').then((value) {
+      for (var item in value) {
+        _billings.add(Billing(
+            type: item['type'] == 0 ? BillingType.income : BillingType.expense,
+            amount: item['amount'] as int,
+            date: DateTime.parse(item['date'] as String),
+            description: item['description'] as String,
+            payment: item['payment'] as String));
+      }
+    });
   }
 
-  // add fake data when the app start
   @override
   void initState() {
     super.initState();
-    _addFakeBillings();
+    _loadBillings();
   }
 
-  void _incrementCounter() {
+  Future<void> _incrementCounter() async {
+    final db = await database;
+    db.insert(
+        'Billing',
+        {
+          'type': 1,
+          'amount': 200,
+          'date': DateTime.now().toString(),
+          'description': 'fake expense',
+          'payment': 'credit card'
+        },
+        conflictAlgorithm: ConflictAlgorithm.replace);
+    // reload the list
+    _billings.clear();
+    await db.query('Billing').then((value) {
+      for (var item in value) {
+        _billings.add(Billing(
+            type: item['type'] == 0 ? BillingType.income : BillingType.expense,
+            amount: item['amount'] as int,
+            date: DateTime.parse(item['date'] as String),
+            description: item['description'] as String,
+            payment: item['payment'] as String));
+      }
+    });
+    // var res = await db.delete('Billing', where: 'id != 0');
+    // log('delete $res');
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+
     });
   }
 
@@ -201,13 +216,6 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
             // add a list view, source is _billings
             Expanded(
               child: ListView.builder(
