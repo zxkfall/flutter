@@ -6,37 +6,38 @@ import 'package:synchronized/synchronized.dart'; // 导入 synchronized 包
 import 'billing.dart';
 
 class BillingRepository {
-  late final Database _db;
-  bool _isDbInitialized = false;
+  Database? _db;
   final _lock = Lock(); // 创建一个锁
 
   BillingRepository() {
     WidgetsFlutterBinding.ensureInitialized();
   }
 
-  Future<void> initDatabase() async {
-    if (!_isDbInitialized) {
-      // 使用锁来确保只有一个线程可以执行以下代码块
+  Future<Database?> initDatabase() async {
+    if (_db == null) {
       await _lock.synchronized(() async {
-        if (!_isDbInitialized) {
-          _db = await openDatabase(
-            join(await getDatabasesPath(), 'billing_database.db'),
-            onCreate: (db, version) {
-              return db.execute(
-                'CREATE TABLE Billing (id INTEGER PRIMARY KEY, type INTEGER, amount INTEGER, date TEXT, description TEXT, payment TEXT)',
-              );
-            },
-            version: 1,
-          );
-          _isDbInitialized = true;
-        }
+        _db ??= await openDatabase(
+          join(await getDatabasesPath(), 'billing_database.db'),
+          onCreate: (db, version) {
+            return db.execute(
+              'CREATE TABLE Billing (id INTEGER PRIMARY KEY, type INTEGER, amount INTEGER, date TEXT, description TEXT, payment TEXT)',
+            );
+          },
+          version: 1,
+        );
       });
     }
+    return _db;
   }
 
   Future<Database> get db async {
-    await initDatabase(); // 在调用 get db 时初始化
-    return _db;
+    final database = await initDatabase();
+    if (database != null) {
+      return database;
+    } else {
+      // 返回一个默认的 Database 对象，或者抛出异常
+      throw Exception('Database initialization failed');
+    }
   }
 
   Future<void> insertBilling(Billing billing) async {

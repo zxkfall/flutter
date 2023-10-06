@@ -44,6 +44,7 @@ dependencies:
   # add get_it
   get_it: ^7.6.4
   http: ^1.1.0
+  synchronized: ^3.1.0
 
 dev_dependencies:
   flutter_test:
