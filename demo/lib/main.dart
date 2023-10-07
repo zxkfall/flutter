@@ -56,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
   Future<void> _insertBilling() async {
-    await GetIt.I<SqlBillingRepository>().insertBilling(Billing(
+    await GetIt.I<BillingRepository>().insertBilling(Billing(
         id: 1,
         type: BillingType.income,
         amount: 100,
@@ -64,14 +64,14 @@ class _MyHomePageState extends State<MyHomePage> {
         description: 'fake income',
         payment: 'cash'));
     _billings.clear();
-    await GetIt.I<SqlBillingRepository>()
+    await GetIt.I<BillingRepository>()
         .billings()
         .then((value) => _billings.addAll(value));
     setState(() {});
   }
 
   Future<void> removeBilling(int index) async {
-    await GetIt.I<SqlBillingRepository>().deleteBilling(_billings[index].id);
+    await GetIt.I<BillingRepository>().deleteBilling(_billings[index].id);
     setState(() {
       _billings.removeAt(index);
     });

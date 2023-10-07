@@ -7,6 +7,7 @@
 
 import 'package:demo/billing.dart';
 import 'package:demo/billing_repository.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:demo/main.dart';
@@ -62,5 +63,19 @@ void main() {
     expect(find.text('100'), findsNWidgets(2));
     expect(find.text('cash'), findsNWidgets(1));
     expect(find.text('credit card'), findsNWidgets(1));
+  });
+
+  testWidgets('Should navigate to add billing page when click add button',
+      (WidgetTester tester) async {
+    when(mockRepository.billings()).thenAnswer((_) async {
+      return [];
+    });
+
+    await tester.pumpWidget(const MyApp());
+    await tester.pump();
+
+    await tester.tap(find.byIcon(Icons.add));
+    await tester.pumpAndSettle();
+    expect(find.text('Add Billing'), findsOneWidget);
   });
 }
