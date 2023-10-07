@@ -5,7 +5,7 @@ import 'package:get_it/get_it.dart';
 
 import 'billing.dart';
 import 'billing_repository.dart';
-import 'main.dart';
+import 'home_page.dart';
 
 class BillingDetailPage extends StatefulWidget {
   const BillingDetailPage({Key? key, this.billing}) : super(key: key);
@@ -99,7 +99,7 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
       // 使用当前页面的Navigator来进行导航
       currentNavigator.pop();
       currentNavigator.pushReplacement(
-          MaterialPageRoute(builder: (_) => const MyHomePage()));
+          MaterialPageRoute(builder: (_) => const HomePage()));
 
       setState(() {});
     }
