@@ -51,7 +51,7 @@ void main() {
           id: 2,
           type: BillingType.expense,
           amount: Decimal.parse('100.00'),
-          date: DateTime(2021, 1, 1),
+          date: DateTime(2021, 1, 2),
           description: 'fake expense',
           kind: BillingKind.fruit,
         ),
@@ -60,12 +60,17 @@ void main() {
 
     await tester.pumpWidget(const MyApp());
     await tester.pump();
+    expect(find.text('Jan 1, 2021'), findsOneWidget);
     expect(find.text('fake income'), findsOneWidget);
-    expect(find.text('fake expense'), findsOneWidget);
-    expect(find.text('-100'), findsNWidgets(1));
-    expect(find.text('100'), findsNWidgets(1));
+    expect(find.text('+\$100.00'), findsNWidgets(1));
     expect(find.text('food'), findsNWidgets(1));
+    expect(find.text('Total: +\$100'), findsOneWidget);
+    expect(find.text('Jan 2, 2021'), findsOneWidget);
+    expect(find.text('fake expense'), findsOneWidget);
+    expect(find.text('-\$100.00'), findsNWidgets(1));
     expect(find.text('fruit'), findsNWidgets(1));
+    expect(find.text('Total: -\$100'), findsOneWidget);
+
   });
 
   testWidgets('Should navigate to add billing page when click add button',
