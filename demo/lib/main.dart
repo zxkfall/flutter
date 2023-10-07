@@ -94,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       leading: Icon(_billings[index].type == BillingType.income
                           ? Icons.add
                           : Icons.remove),
-                      trailing: Text(_billings[index].payment),
+                      trailing: Text(_billings[index].kind.name),
                     ),
                   );
                 },
@@ -127,7 +127,7 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
   final _formKey = GlobalKey<FormState>();
   final _descriptionController = TextEditingController();
   final _amountController = TextEditingController();
-  final _paymentController = TextEditingController();
+  BillingKind _selectedKind = BillingKind.cash;
   BillingType _type = BillingType.income;
   DateTime _date = DateTime.now();
   FToast fToast = FToast();
@@ -138,7 +138,7 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
     if (widget.billing != null) {
       _descriptionController.text = widget.billing!.description;
       _amountController.text = widget.billing!.amount.toString();
-      _paymentController.text = widget.billing!.payment;
+      _selectedKind = widget.billing!.kind;
       _type = widget.billing!.type;
       _date = widget.billing!.date;
     }
@@ -149,7 +149,6 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
   void dispose() {
     _descriptionController.dispose();
     _amountController.dispose();
-    _paymentController.dispose();
     super.dispose();
   }
 
@@ -187,7 +186,7 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
         amount: Decimal.parse(_amountController.text),
         date: _date,
         description: _descriptionController.text,
-        payment: _paymentController.text,
+        kind: _selectedKind,
       );
 
       if (int.parse(_amountController.text) == 0) {
@@ -264,14 +263,26 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
                 return null;
               },
             ),
-            TextFormField(
-              controller: _paymentController,
+            DropdownButtonFormField<BillingKind>(
+              value: _selectedKind,
+              onChanged: (BillingKind? newValue) {
+                setState(() {
+                  _selectedKind = newValue!;
+                });
+              },
+              items: BillingKind.values
+                  .map<DropdownMenuItem<BillingKind>>((BillingKind value) {
+                return DropdownMenuItem<BillingKind>(
+                  value: value,
+                  child: Text(value.name), // 可以自定义显示文本
+                );
+              }).toList(),
               decoration: const InputDecoration(
-                labelText: 'Payment',
+                labelText: 'Kind',
               ),
               validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter payment';
+                if (value == null) {
+                  return 'Please select a kind';
                 }
                 return null;
               },

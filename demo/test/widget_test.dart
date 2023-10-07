@@ -45,7 +45,7 @@ void main() {
           amount: Decimal.parse('100.00'),
           date: DateTime(2021, 1, 1),
           description: 'fake income',
-          payment: "cash",
+          kind: BillingKind.cash,
         ),
         Billing(
           id: 2,
@@ -53,7 +53,7 @@ void main() {
           amount: Decimal.parse('100.00'),
           date: DateTime(2021, 1, 1),
           description: 'fake expense',
-          payment: "credit card",
+          kind: BillingKind.creditCard,
         ),
       ];
     });
@@ -64,7 +64,7 @@ void main() {
     expect(find.text('fake expense'), findsOneWidget);
     expect(find.text('100'), findsNWidgets(2));
     expect(find.text('cash'), findsNWidgets(1));
-    expect(find.text('credit card'), findsNWidgets(1));
+    expect(find.text('creditCard'), findsNWidgets(1));
   });
 
   testWidgets('Should navigate to add billing page when click add button',

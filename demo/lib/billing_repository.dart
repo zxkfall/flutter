@@ -1,3 +1,4 @@
+import 'package:decimal/decimal.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
@@ -33,13 +34,33 @@ class SqlBillingRepository implements BillingRepository {
           join(await getDatabasesPath(), 'billing_database.db'),
           onCreate: (db, version) {
             return db.execute(
-              'CREATE TABLE Billing (id INTEGER PRIMARY KEY, type INTEGER, amount INTEGER, date TEXT, description TEXT, payment TEXT)',
+              'CREATE TABLE Billing (id INTEGER PRIMARY KEY, type INTEGER, amount INTEGER, date TEXT, description TEXT, kind TEXT)',
             );
           },
-          version: 1,
+          onUpgrade: (db, oldVersion, newVersion) async {
+            if (oldVersion < 2) {
+              // 1. 重命名现有的表
+              await db.execute('ALTER TABLE Billing RENAME TO BillingTemp');
+
+              // 2. 创建新的表，包含 kind 列
+              await db.execute(
+                'CREATE TABLE Billing (id INTEGER PRIMARY KEY, type INTEGER, amount TEXT, date TEXT, description TEXT, kind INTEGER)',
+              );
+
+              // 3. 将数据从临时表复制到新表
+              await db.execute(
+                'INSERT INTO Billing (id, type, amount, date, description, kind) SELECT id, type, amount, date, description, CAST(kind AS INTEGER) FROM BillingTemp',
+              );
+
+              // 4. 删除临时表
+              await db.execute('DROP TABLE BillingTemp');
+            }
+          },
+          version: 2, // 增加数据库版本号
         );
       });
     }
+
     return _db;
   }
 
@@ -88,10 +109,12 @@ class SqlBillingRepository implements BillingRepository {
     return Billing(
       id: maps[0]['id'],
       type: maps[0]['type'] == 0 ? BillingType.income : BillingType.expense,
-      amount: maps[0]['amount'],
+      amount: Decimal.parse(maps[0]['amount']),
       date: DateTime.parse(maps[0]['date']),
       description: maps[0]['description'],
-      payment: maps[0]['payment'],
+      kind:  maps[0]['kind'] >= 0 && maps[0]['kind'] < BillingKind.values.length
+          ? BillingKind.values[maps[0]['kind']]
+          : BillingKind.creditCard,
     );
   }
 
@@ -101,10 +124,12 @@ class SqlBillingRepository implements BillingRepository {
       return Billing(
         id: maps[i]['id'],
         type: maps[i]['type'] == 0 ? BillingType.income : BillingType.expense,
-        amount: maps[i]['amount'],
+        amount: Decimal.parse(maps[i]['amount']),
         date: DateTime.parse(maps[i]['date']),
         description: maps[i]['description'],
-        payment: maps[i]['payment'],
+        kind: maps[i]['kind'] >= 0 && maps[i]['kind'] < BillingKind.values.length
+            ? BillingKind.values[maps[i]['kind']]
+            : BillingKind.creditCard,
       );
     });
   }
