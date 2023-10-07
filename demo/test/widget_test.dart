@@ -5,60 +5,62 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:flutter/material.dart';
+import 'package:demo/billing.dart';
+import 'package:demo/billing_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:path/path.dart';
+import 'package:get_it/get_it.dart';
 import 'package:demo/main.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-@GenerateMocks([Database, DatabaseFactory, DatabaseExecutor, DatabaseException])
+import 'widget_test.mocks.dart';
+// before run test, run this command: flutter pub run build_runner build --delete-conflicting-outputs
+// steps:
+// 1. add @GenerateMocks
+// 2. run command: flutter pub run build_runner build --delete-conflicting-outputs
+// 3. import 'widget_test.mocks.dart';
+// 4. add mockRepository
+// 5. add when(mockRepository.billings()).thenAnswer((_) async {
+// 6. add await tester.pumpWidget(const MyApp());
+// 7. add await tester.pump();
+// 8. add expect(find.text('fake income'), findsOneWidget);
+@GenerateNiceMocks([MockSpec<BillingRepository>()])
 void main() {
+  final mockRepository = MockBillingRepository();
+
+  setUpAll(() async {
+    GetIt.I.registerSingleton<BillingRepository>(mockRepository);
+  });
+
   testWidgets('Test that all the billing data in the sqllite',
       (WidgetTester tester) async {
-    WidgetsFlutterBinding.ensureInitialized();
-    // 设置 databaseFactory 为 databaseFactoryFfi
-    databaseFactory = databaseFactoryFfi;
-
-    await tester.runAsync(() async {
-      final database = openDatabase(
-        join(await getDatabasesPath(), 'billing_database.db'),
-        onCreate: (db, version) {
-          return db.execute(
-            'CREATE TABLE Billing (id INTEGER PRIMARY KEY, type INTEGER, amount INTEGER, date TEXT, description TEXT, payment TEXT)',
-          );
-        },
-        version: 1,
-      );
-
-      final db = await database;
-      db.insert(
-          'Billing',
-          {
-            'type': 0,
-            'amount': 100,
-            'date': DateTime.now().toString(),
-            'description': 'fake income',
-            'payment': 'cash'
-          },
-          conflictAlgorithm: ConflictAlgorithm.replace);
-      db.insert(
-          'Billing',
-          {
-            'type': 1,
-            'amount': 200,
-            'date': DateTime.now().toString(),
-            'description': 'fake expense',
-            'payment': 'credit card'
-          },
-          conflictAlgorithm: ConflictAlgorithm.replace);
-      await tester.pumpWidget(MyApp(database: db));
-      expect(find.text('fake income'), findsOneWidget);
-      expect(find.text('fake expense'), findsOneWidget);
-      expect(find.text('100'), findsNWidgets(2));
-      expect(find.text('cash'), findsNWidgets(2));
-      expect(find.text('credit card'), findsNWidgets(2));
+    when(mockRepository.billings()).thenAnswer((_) async {
+      return [
+        Billing(
+          id: 1,
+          type: BillingType.income,
+          amount: 100,
+          date: DateTime(2021, 1, 1),
+          description: 'fake income',
+          payment: "cash",
+        ),
+        Billing(
+          id: 2,
+          type: BillingType.expense,
+          amount: 100,
+          date: DateTime(2021, 1, 1),
+          description: 'fake expense',
+          payment: "credit card",
+        ),
+      ];
     });
+
+    await tester.pumpWidget(const MyApp());
+    await tester.pump();
+    expect(find.text('fake income'), findsOneWidget);
+    expect(find.text('fake expense'), findsOneWidget);
+    expect(find.text('100'), findsNWidgets(2));
+    expect(find.text('cash'), findsNWidgets(1));
+    expect(find.text('credit card'), findsNWidgets(1));
   });
 }

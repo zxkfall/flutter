@@ -1,11 +1,10 @@
 import 'package:demo/billing_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-
 import 'billing.dart';
 
 Future<void> main() async {
-  GetIt.I.registerSingleton<BillingRepository>(BillingRepository());
+  GetIt.I.registerSingleton<BillingRepository>(SqlBillingRepository());
   runApp(const MyApp());
 }
 
@@ -52,14 +51,12 @@ class _MyHomePageState extends State<MyHomePage> {
     var list = await GetIt.I<BillingRepository>().billings();
     _billings.addAll(list);
 
-    setState(() {
-      // 更新 UI 或执行其他操作
-    });
+    setState(() {});
   }
 
 
   Future<void> _insertBilling() async {
-    await GetIt.I<BillingRepository>().insertBilling(Billing(
+    await GetIt.I<SqlBillingRepository>().insertBilling(Billing(
         id: 1,
         type: BillingType.income,
         amount: 100,
@@ -67,14 +64,14 @@ class _MyHomePageState extends State<MyHomePage> {
         description: 'fake income',
         payment: 'cash'));
     _billings.clear();
-    await GetIt.I<BillingRepository>()
+    await GetIt.I<SqlBillingRepository>()
         .billings()
         .then((value) => _billings.addAll(value));
     setState(() {});
   }
 
   Future<void> removeBilling(int index) async {
-    await GetIt.I<BillingRepository>().deleteBilling(_billings[index].id);
+    await GetIt.I<SqlBillingRepository>().deleteBilling(_billings[index].id);
     setState(() {
       _billings.removeAt(index);
     });

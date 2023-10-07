@@ -5,11 +5,24 @@ import 'package:synchronized/synchronized.dart'; // 导入 synchronized 包
 
 import 'billing.dart';
 
-class BillingRepository {
+abstract class BillingRepository {
+
+  Future<void> insertBilling(Billing billing);
+
+  Future<void> deleteBilling(int id);
+
+  Future<Billing> updateBilling(Billing billing);
+
+  Future<Billing> billing(int id);
+
+  Future<List<Billing>> billings();
+}
+
+class SqlBillingRepository implements BillingRepository {
   Database? _db;
   final _lock = Lock(); // 创建一个锁
 
-  BillingRepository() {
+  SqlBillingRepository() {
     WidgetsFlutterBinding.ensureInitialized();
   }
 
@@ -30,7 +43,7 @@ class BillingRepository {
     return _db;
   }
 
-  Future<Database> get db async {
+  Future<Database> get _session async {
     final database = await _initDatabase();
     if (database != null) {
       return database;
@@ -41,7 +54,7 @@ class BillingRepository {
   }
 
   Future<void> insertBilling(Billing billing) async {
-    (await db).insert(
+    (await _session).insert(
       'Billing',
       billing.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
@@ -49,7 +62,7 @@ class BillingRepository {
   }
 
   Future<Billing> updateBilling(Billing billing) async {
-    (await db).update(
+    (await _session).update(
       'Billing',
       billing.toMap(),
       where: 'id = ?',
@@ -59,7 +72,7 @@ class BillingRepository {
   }
 
   Future<void> deleteBilling(int id) async {
-    (await db).delete(
+    (await _session).delete(
       'Billing',
       where: 'id = ?',
       whereArgs: [id],
@@ -67,7 +80,7 @@ class BillingRepository {
   }
 
   Future<Billing> billing(int id) async {
-    final List<Map<String, dynamic>> maps = await (await db).query(
+    final List<Map<String, dynamic>> maps = await (await _session).query(
       'Billing',
       where: 'id = ?',
       whereArgs: [id],
@@ -83,7 +96,7 @@ class BillingRepository {
   }
 
   Future<List<Billing>> billings() async {
-    final List<Map<String, dynamic>> maps = await (await db).query('Billing');
+    final List<Map<String, dynamic>> maps = await (await _session).query('Billing');
     return List.generate(maps.length, (i) {
       return Billing(
         id: maps[i]['id'],
