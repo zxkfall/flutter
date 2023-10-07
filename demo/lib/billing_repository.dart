@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:decimal/decimal.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter/material.dart';
@@ -74,6 +76,7 @@ class SqlBillingRepository implements BillingRepository {
     }
   }
 
+  @override
   Future<void> insertBilling(Billing billing) async {
     (await _session).insert(
       'Billing',
@@ -82,6 +85,7 @@ class SqlBillingRepository implements BillingRepository {
     );
   }
 
+  @override
   Future<Billing> updateBilling(Billing billing) async {
     (await _session).update(
       'Billing',
@@ -92,6 +96,7 @@ class SqlBillingRepository implements BillingRepository {
     return billing;
   }
 
+  @override
   Future<void> deleteBilling(int id) async {
     (await _session).delete(
       'Billing',
@@ -100,6 +105,7 @@ class SqlBillingRepository implements BillingRepository {
     );
   }
 
+  @override
   Future<Billing> billing(int id) async {
     final List<Map<String, dynamic>> maps = await (await _session).query(
       'Billing',
@@ -118,9 +124,11 @@ class SqlBillingRepository implements BillingRepository {
     );
   }
 
+  @override
   Future<List<Billing>> billings() async {
     final List<Map<String, dynamic>> maps = await (await _session).query('Billing');
     return List.generate(maps.length, (i) {
+      log('${maps[i]['kind']} ${BillingKind.values[maps[i]['kind']]}');
       return Billing(
         id: maps[i]['id'],
         type: maps[i]['type'] == 0 ? BillingType.income : BillingType.expense,
