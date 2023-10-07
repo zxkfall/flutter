@@ -55,6 +55,22 @@ void main() {
           description: 'fake expense',
           kind: BillingKind.fruit,
         ),
+        Billing(
+          id: 3,
+          type: BillingType.income,
+          amount: Decimal.parse('50.00'),
+          date: DateTime(2021, 1, 3),
+          description: 'fake income for apparel',
+          kind: BillingKind.apparel,
+        ),
+        Billing(
+          id: 4,
+          type: BillingType.expense,
+          amount: Decimal.parse('200.00'),
+          date: DateTime(2021, 1, 3),
+          description: 'fake expense for digital',
+          kind: BillingKind.digital,
+        ),
       ];
     });
 
@@ -70,7 +86,14 @@ void main() {
     expect(find.text('-\$100.00'), findsNWidgets(1));
     expect(find.text('fruit'), findsNWidgets(1));
     expect(find.text('Total: -\$100'), findsOneWidget);
-
+    expect(find.text('Jan 3, 2021'), findsOneWidget);
+    expect(find.text('Total: +\$50, -\$200'), findsOneWidget);
+    expect(find.text('fake income for apparel'), findsOneWidget);
+    expect(find.text('+\$50.00'), findsNWidgets(1));
+    expect(find.text('apparel'), findsNWidgets(1));
+    expect(find.text('fake expense for digital'), findsOneWidget);
+    expect(find.text('-\$200.00'), findsNWidgets(1));
+    expect(find.text('digital'), findsNWidgets(1));
   });
 
   testWidgets('Should navigate to add billing page when click add button',
