@@ -29,8 +29,8 @@ class Billing {
 }
 
 enum BillingType {
-  income,
   expense,
+  income,
 }
 
 enum BillingKind {

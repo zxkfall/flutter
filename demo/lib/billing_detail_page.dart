@@ -21,7 +21,7 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
   final _descriptionController = TextEditingController();
   final _amountController = TextEditingController();
   BillingKind _selectedKind = BillingKind.other;
-  BillingType _type = BillingType.income;
+  BillingType _type = BillingType.expense;
   DateTime _date = DateTime.now();
   FToast fToast = FToast();
 
@@ -211,7 +211,7 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
                     return DropdownMenuItem<BillingType>(
                       value: value,
                       child: Text(
-                          value == BillingType.income ? 'Income' : 'Expense'),
+                          value == BillingType.expense ? 'Expense': 'Income'),
                     );
                   }).toList(),
                 ),
