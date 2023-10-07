@@ -1,3 +1,5 @@
+import 'package:decimal/decimal.dart';
+
 class Billing {
   Billing(
       {required this.id,
@@ -9,7 +11,7 @@ class Billing {
 
   final int id;
   final BillingType type;
-  final int amount;
+  final Decimal amount;
   final DateTime date;
   final String description;
   final String payment;

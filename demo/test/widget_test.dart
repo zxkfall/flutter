@@ -5,6 +5,7 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'package:decimal/decimal.dart';
 import 'package:demo/billing.dart';
 import 'package:demo/billing_repository.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
 import 'widget_test.mocks.dart';
+
 // before run test, run this command: flutter pub run build_runner build --delete-conflicting-outputs
 // steps:
 // 1. add @GenerateMocks
@@ -40,7 +42,7 @@ void main() {
         Billing(
           id: 1,
           type: BillingType.income,
-          amount: 100,
+          amount: Decimal.parse('100.00'),
           date: DateTime(2021, 1, 1),
           description: 'fake income',
           payment: "cash",
@@ -48,7 +50,7 @@ void main() {
         Billing(
           id: 2,
           type: BillingType.expense,
-          amount: 100,
+          amount: Decimal.parse('100.00'),
           date: DateTime(2021, 1, 1),
           description: 'fake expense',
           payment: "credit card",

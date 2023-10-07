@@ -1,3 +1,4 @@
+import 'package:decimal/decimal.dart';
 import 'package:demo/billing_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -183,7 +184,7 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
       var billing = Billing(
         id: widget.billing?.id ?? 0,
         type: _type,
-        amount: int.parse(_amountController.text),
+        amount: Decimal.parse(_amountController.text),
         date: _date,
         description: _descriptionController.text,
         payment: _paymentController.text,
