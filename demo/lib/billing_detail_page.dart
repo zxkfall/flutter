@@ -98,8 +98,8 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
 
       // 使用当前页面的Navigator来进行导航
       currentNavigator.pop();
-      currentNavigator.pushReplacement(
-          MaterialPageRoute(builder: (_) => const HomePage()));
+      currentNavigator
+          .pushReplacement(MaterialPageRoute(builder: (_) => const HomePage()));
 
       setState(() {});
     }
@@ -157,13 +157,15 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
               },
             ),
             DropdownButtonFormField<BillingKind>(
-              value: _selectedKind,
+              value: getDefaultKindForType(_selectedKind, _type),
               onChanged: (BillingKind? newValue) {
                 setState(() {
                   _selectedKind = newValue!;
                 });
               },
-              items: BillingKind.values
+              items: (_type == BillingType.expense
+                      ? getExpenseValues()
+                      : getIncomeValues())
                   .map<DropdownMenuItem<BillingKind>>((BillingKind value) {
                 return DropdownMenuItem<BillingKind>(
                   value: value,
@@ -211,7 +213,7 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
                     return DropdownMenuItem<BillingType>(
                       value: value,
                       child: Text(
-                          value == BillingType.expense ? 'Expense': 'Income'),
+                          value == BillingType.expense ? 'Expense' : 'Income'),
                     );
                   }).toList(),
                 ),
@@ -225,5 +227,13 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
         ),
       ),
     );
+  }
+
+  BillingKind getDefaultKindForType(BillingKind kind, BillingType type) {
+    if (type == BillingType.expense) {
+      return getExpenseValues().contains(kind) ? kind : BillingKind.food;
+    } else {
+      return getIncomeValues().contains(kind) ? kind : BillingKind.salary;
+    }
   }
 }

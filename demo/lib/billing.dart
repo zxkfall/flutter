@@ -33,6 +33,13 @@ enum BillingType {
   income,
 }
 
+extension BillingTypeExtension on BillingType {
+  String get name {
+    // 使用 substring 方法去掉前缀
+    return toString().split('.').last;
+  }
+}
+
 enum BillingKind {
   food,
   snack,
@@ -106,9 +113,37 @@ class BillingIconMapper {
   }
 }
 
-extension BillingTypeExtension on BillingType {
-  String get name {
-    // 使用 substring 方法去掉前缀
-    return toString().split('.').last;
-  }
+List<BillingKind> getExpenseValues() {
+  return [
+    BillingKind.food,
+    BillingKind.snack,
+    BillingKind.fruit,
+    BillingKind.traffic,
+    BillingKind.shopping,
+    BillingKind.entertainment,
+    BillingKind.education,
+    BillingKind.medical,
+    BillingKind.digital,
+    BillingKind.apparel,
+    BillingKind.sport,
+    BillingKind.travel,
+    BillingKind.gift,
+    BillingKind.pet,
+    BillingKind.housing,
+    BillingKind.communication,
+    BillingKind.waterAndElectricity,
+    BillingKind.redEnvelope,
+    BillingKind.other,
+  ];
+}
+
+List<BillingKind> getIncomeValues() {
+  return [
+    BillingKind.salary,
+    BillingKind.bonus,
+    BillingKind.manageFinances,
+    BillingKind.lottery,
+    BillingKind.redEnvelope,
+    BillingKind.other,
+  ];
 }
