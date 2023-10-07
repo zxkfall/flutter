@@ -47,21 +47,6 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  Future<void> loadBillingData() async {
-    _billings.clear();
-    var list = await GetIt.I<BillingRepository>().billings();
-    _billings.addAll(list);
-
-    setState(() {});
-  }
-
-  Future<void> removeBilling(int index) async {
-    await GetIt.I<BillingRepository>().deleteBilling(_billings[index].id);
-    setState(() {
-      _billings.removeAt(index);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,9 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 itemBuilder: (BuildContext context, int index) {
                   return Dismissible(
                     key: Key(_billings[index].id.toString()),
-                    // 使用每个项目的唯一标识符作为 key
                     onDismissed: (direction) {
-                      // 在项目被滑动删除时执行的操作
                       removeBilling(index);
                     },
                     background: Container(
@@ -88,12 +71,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: const Icon(Icons.delete, color: Colors.white),
                     ),
                     child: ListTile(
-                      title: Text(_billings[index].description),
-                      subtitle: Text(_billings[index].amount.toString()),
-                      leading: Icon(_billings[index].type == BillingType.income
-                          ? Icons.add
-                          : Icons.remove),
-                      trailing: Text(_billings[index].kind.name),
+                      title: Text(_billings[index].kind.name),
+                      subtitle: Text(_billings[index].description),
+                      leading: Icon(BillingIconMapper.getIcon(_billings[index].kind)),
+                      trailing: Text(_billings[index].type == BillingType.income
+                          ? '${_billings[index].amount}'
+                          : '-${_billings[index].amount}'),
                     ),
                   );
                 },
@@ -110,5 +93,20 @@ class _MyHomePageState extends State<MyHomePage> {
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  Future<void> loadBillingData() async {
+    _billings.clear();
+    var list = await GetIt.I<BillingRepository>().billings();
+    _billings.addAll(list);
+
+    setState(() {});
+  }
+
+  Future<void> removeBilling(int index) async {
+    await GetIt.I<BillingRepository>().deleteBilling(_billings[index].id);
+    setState(() {
+      _billings.removeAt(index);
+    });
   }
 }

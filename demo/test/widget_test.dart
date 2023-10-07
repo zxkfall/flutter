@@ -62,7 +62,8 @@ void main() {
     await tester.pump();
     expect(find.text('fake income'), findsOneWidget);
     expect(find.text('fake expense'), findsOneWidget);
-    expect(find.text('100'), findsNWidgets(2));
+    expect(find.text('-100'), findsNWidgets(1));
+    expect(find.text('100'), findsNWidgets(1));
     expect(find.text('food'), findsNWidgets(1));
     expect(find.text('fruit'), findsNWidgets(1));
   });
