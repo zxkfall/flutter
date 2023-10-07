@@ -33,11 +33,24 @@ enum BillingType {
 }
 
 enum BillingKind {
-  cash,
-  creditCard,
-  debitCard,
-  check,
-  bankTransfer,
+  food,
+  snack,
+  fruit,
+  traffic,
+  shopping,
+  entertainment,
+  education,
+  medical,
+  digital,
+  apparel,
+  sport,
+  travel,
+  gift,
+  pet,
+  housing,
+  communication,
+  waterAndElectricity,
+  redEnvelope,
   other,
 }
 

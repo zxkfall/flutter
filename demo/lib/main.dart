@@ -127,7 +127,7 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
   final _formKey = GlobalKey<FormState>();
   final _descriptionController = TextEditingController();
   final _amountController = TextEditingController();
-  BillingKind _selectedKind = BillingKind.cash;
+  BillingKind _selectedKind = BillingKind.other;
   BillingType _type = BillingType.income;
   DateTime _date = DateTime.now();
   FToast fToast = FToast();

@@ -120,7 +120,7 @@ class SqlBillingRepository implements BillingRepository {
       description: maps[0]['description'],
       kind:  maps[0]['kind'] >= 0 && maps[0]['kind'] < BillingKind.values.length
           ? BillingKind.values[maps[0]['kind']]
-          : BillingKind.creditCard,
+          : BillingKind.other,
     );
   }
 
@@ -137,7 +137,7 @@ class SqlBillingRepository implements BillingRepository {
         description: maps[i]['description'],
         kind: maps[i]['kind'] >= 0 && maps[i]['kind'] < BillingKind.values.length
             ? BillingKind.values[maps[i]['kind']]
-            : BillingKind.creditCard,
+            : BillingKind.other,
       );
     });
   }
