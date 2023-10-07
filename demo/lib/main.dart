@@ -1,5 +1,6 @@
 import 'package:decimal/decimal.dart';
 import 'package:demo/billing_repository.dart';
+import 'package:demo/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'billing.dart';
@@ -68,11 +69,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       index > 0 ? _billings[index - 1] : null;
                   // 判断是否需要显示日期表头
                   final showDateHeader = previousBilling == null ||
-                      !isSameDay(currentBilling.date, previousBilling.date);
+                      !Utils.isSameDay(currentBilling.date, previousBilling.date);
 
                   // 计算当前日期的总支出或总收入
                   final dailyTotalMap =
-                      _calculateDailyTotal(currentBilling.date);
+                      Utils.calculateDailyTotal(currentBilling.date, _billings);
 
                   return Column(
                     children: <Widget>[
@@ -148,30 +149,5 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _billings.removeAt(index);
     });
-  }
-
-  bool isSameDay(DateTime date1, DateTime date2) {
-    return date1.year == date2.year &&
-        date1.month == date2.month &&
-        date1.day == date2.day;
-  }
-
-  Map<String, Decimal> _calculateDailyTotal(DateTime targetDate) {
-    Decimal dailyTotalIncome = Decimal.zero;
-    Decimal dailyTotalExpense = Decimal.zero;
-
-    for (final billing in _billings) {
-      if (isSameDay(billing.date, targetDate)) {
-        if (billing.type == BillingType.income) {
-          dailyTotalIncome += billing.amount;
-        } else {
-          dailyTotalExpense += billing.amount;
-        }
-      }
-    }
-    return {
-      'income': dailyTotalIncome,
-      'expense': dailyTotalExpense,
-    };
   }
 }
