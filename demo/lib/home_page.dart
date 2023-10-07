@@ -41,14 +41,15 @@ class _HomePageState extends State<HomePage> {
                 itemBuilder: (BuildContext context, int index) {
                   final currentBilling = _billings[index];
                   final previousBilling =
-                  index > 0 ? _billings[index - 1] : null;
+                      index > 0 ? _billings[index - 1] : null;
                   // 判断是否需要显示日期表头
                   final showDateHeader = previousBilling == null ||
-                      !Utils.isSameDay(currentBilling.date, previousBilling.date);
+                      !Utils.isSameDay(
+                          currentBilling.date, previousBilling.date);
 
                   // 计算当前日期的总支出或总收入
                   final dailyTotalMap =
-                  Utils.calculateDailyTotal(currentBilling.date, _billings);
+                      Utils.calculateDailyTotal(currentBilling.date, _billings);
 
                   return Column(
                     children: <Widget>[
@@ -64,8 +65,8 @@ class _HomePageState extends State<HomePage> {
                               ),
                               trailing: Text(
                                 'Total: ${dailyTotalMap['income'] == Decimal.zero ? '' : '+\$${dailyTotalMap['income']}'}'
-                                    '${dailyTotalMap['income'] != Decimal.zero && dailyTotalMap['expense'] != Decimal.zero ? ', ' : ''}'
-                                    '${dailyTotalMap['expense'] == Decimal.zero ? '' : '-\$${dailyTotalMap['expense']}'}',
+                                '${dailyTotalMap['income'] != Decimal.zero && dailyTotalMap['expense'] != Decimal.zero ? ', ' : ''}'
+                                '${dailyTotalMap['expense'] == Decimal.zero ? '' : '-\$${dailyTotalMap['expense']}'}',
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -85,10 +86,10 @@ class _HomePageState extends State<HomePage> {
                         child: ListTile(
                           title: Text(currentBilling.kind.name),
                           subtitle: Text(currentBilling.description),
-                          leading: Icon(
-                              BillingIconMapper.getIcon(currentBilling.kind)),
+                          leading: Icon(BillingIconMapper.getIcon(
+                              currentBilling.type, currentBilling.kind)),
                           trailing: Text(currentBilling.type ==
-                              BillingType.income
+                                  BillingType.income
                               ? '+\$${currentBilling.amount.toStringAsFixed(2)}'
                               : '-\$${currentBilling.amount.toStringAsFixed(2)}'),
                         ),
