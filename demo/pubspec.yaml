@@ -45,6 +45,7 @@ dependencies:
   get_it: ^7.6.4
   http: ^1.1.0
   synchronized: ^3.1.0
+  fluttertoast: ^8.2.2
 
 dev_dependencies:
   flutter_test:
