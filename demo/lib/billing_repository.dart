@@ -36,7 +36,7 @@ class SqlBillingRepository implements BillingRepository {
           join(await getDatabasesPath(), 'billing_database.db'),
           onCreate: (db, version) {
             return db.execute(
-              'CREATE TABLE Billing (id INTEGER PRIMARY KEY, type INTEGER, amount INTEGER, date TEXT, description TEXT, kind TEXT)',
+              'CREATE TABLE Billing (id INTEGER PRIMARY KEY, type INTEGER, amount INTEGER, date TEXT, description TEXT, kind INTEGER)',
             );
           },
           onUpgrade: (db, oldVersion, newVersion) async {
@@ -115,7 +115,7 @@ class SqlBillingRepository implements BillingRepository {
     return Billing(
       id: maps[0]['id'],
       type: maps[0]['type'] == 0 ? BillingType.income : BillingType.expense,
-      amount: Decimal.parse(maps[0]['amount']),
+      amount: Decimal.parse(maps[0]['amount'].toString()),
       date: DateTime.parse(maps[0]['date']),
       description: maps[0]['description'],
       kind:  maps[0]['kind'] >= 0 && maps[0]['kind'] < BillingKind.values.length
@@ -132,7 +132,7 @@ class SqlBillingRepository implements BillingRepository {
       return Billing(
         id: maps[i]['id'],
         type: maps[i]['type'] == 0 ? BillingType.income : BillingType.expense,
-        amount: Decimal.parse(maps[i]['amount']),
+        amount: Decimal.parse(maps[i]['amount'].toString()),
         date: DateTime.parse(maps[i]['date']),
         description: maps[i]['description'],
         kind: maps[i]['kind'] >= 0 && maps[i]['kind'] < BillingKind.values.length

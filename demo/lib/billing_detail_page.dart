@@ -84,7 +84,7 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
         kind: _selectedKind,
       );
 
-      if (int.parse(_amountController.text) == 0) {
+      if (Decimal.parse(_amountController.text) == Decimal.zero) {
         _showToast('Amount can not be 0');
         return;
       }
