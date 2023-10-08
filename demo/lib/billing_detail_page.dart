@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'billing.dart';
 import 'billing_repository.dart';
 import 'home_page.dart';
+import 'kind_selection_wrap_widget.dart';
 
 class BillingDetailPage extends StatefulWidget {
   const BillingDetailPage({Key? key, this.billing}) : super(key: key);
@@ -22,7 +23,7 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
   final _formKey = GlobalKey<FormState>();
   final _descriptionController = TextEditingController();
   final _amountController = TextEditingController();
-  BillingKind _selectedKind = BillingKind.other;
+  BillingKind _selectedKind = BillingKind.food;
   BillingType _type = BillingType.expense;
   DateTime _date = DateTime.now();
   FToast fToast = FToast();
@@ -137,17 +138,17 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            TextFormField(
-              controller: _descriptionController,
-              decoration: const InputDecoration(
-                labelText: 'Description',
-              ),
-              validator: (value) {
-                // if (value == null || value.isEmpty) {
-                //   return 'Please enter description';
-                // }
-                return null;
+            KindSelectionWrapWidget(
+              allKinds: _type == BillingType.expense
+                  ? getExpenseValues()
+                  : getIncomeValues(), // 所有可选的kind
+              selectedKind: _selectedKind, // 当前选择的kind
+              onKindSelected: (selectedKind) {
+                setState(() {
+                  _selectedKind = selectedKind; // 更新选择的kind
+                });
               },
+              type: _type, // 收入或支出
             ),
             TextFormField(
               controller: _amountController,
@@ -157,7 +158,8 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
               inputFormatters: [
                 FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}$')),
               ],
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter amount';
@@ -165,29 +167,15 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
                 return null;
               },
             ),
-            DropdownButtonFormField<BillingKind>(
-              value: getDefaultKindForType(_selectedKind, _type),
-              onChanged: (BillingKind? newValue) {
-                setState(() {
-                  _selectedKind = newValue!;
-                });
-              },
-              items: (_type == BillingType.expense
-                      ? getExpenseValues()
-                      : getIncomeValues())
-                  .map<DropdownMenuItem<BillingKind>>((BillingKind value) {
-                return DropdownMenuItem<BillingKind>(
-                  value: value,
-                  child: Text(value.name), // 可以自定义显示文本
-                );
-              }).toList(),
+            TextFormField(
+              controller: _descriptionController,
               decoration: const InputDecoration(
-                labelText: 'Kind',
+                labelText: 'Description',
               ),
               validator: (value) {
-                if (value == null) {
-                  return 'Please select a kind';
-                }
+                // if (value == null || value.isEmpty) {
+                //   return 'Please enter description';
+                // }
                 return null;
               },
             ),
