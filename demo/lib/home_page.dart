@@ -1,4 +1,5 @@
 import 'package:decimal/decimal.dart';
+import 'package:demo/billing_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
@@ -83,15 +84,29 @@ class _HomePageState extends State<HomePage> {
                           color: Colors.red, // 定义滑动时显示的背景颜色
                           child: const Icon(Icons.delete, color: Colors.white),
                         ),
-                        child: ListTile(
-                          title: Text(currentBilling.kind.name),
-                          subtitle: Text(currentBilling.description),
-                          leading: Icon(BillingIconMapper.getIcon(
-                              currentBilling.type, currentBilling.kind)),
-                          trailing: Text(currentBilling.type ==
-                                  BillingType.income
-                              ? '+\$${currentBilling.amount.toStringAsFixed(2)}'
-                              : '-\$${currentBilling.amount.toStringAsFixed(2)}'),
+                        child: InkWell(
+                          onTap: () {
+                            Future.delayed(const Duration(milliseconds: 200), () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => BillingDetailPage(billing: currentBilling), // 传递当前账单给详细信息页面
+                                ),
+                              );
+                            });
+                          },
+                          highlightColor: Colors.transparent,
+                          child: ListTile(
+                            title: Text(currentBilling.kind.name),
+                            subtitle: Text(currentBilling.description),
+                            leading: Icon(
+                              BillingIconMapper.getIcon(currentBilling.type, currentBilling.kind),
+                            ),
+                            trailing: Text(
+                              currentBilling.type == BillingType.income
+                                  ? '+\$${currentBilling.amount.toStringAsFixed(2)}'
+                                  : '-\$${currentBilling.amount.toStringAsFixed(2)}',
+                            ),
+                          ),
                         ),
                       ),
                     ],

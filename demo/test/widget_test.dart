@@ -109,4 +109,32 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Add Billing'), findsOneWidget);
   });
+
+  testWidgets('Should navigate to edit billing page when click billing item',
+      (WidgetTester tester) async {
+    when(mockRepository.billings()).thenAnswer((_) async {
+      return [Billing(
+        id: 1,
+        type: BillingType.income,
+        amount: Decimal.parse('100.00'),
+        date: DateTime(2021, 1, 1),
+        description: 'fake income',
+        kind: BillingKind.salary,
+      )];
+    });
+
+    await tester.pumpWidget(const MyApp());
+    await tester.pump();
+
+    await tester.tap(find.text('fake income'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Edit Billing'), findsOneWidget);
+    expect(find.byIcon(Icons.delete), findsOneWidget);
+    expect(find.text('salary'), findsOneWidget);
+    expect(find.text('fake income'), findsOneWidget);
+    expect(find.text('Jan 1, 2021'), findsOneWidget);
+    expect(find.text('100'), findsOneWidget);
+    expect(find.text('Income'), findsOneWidget);
+  });
 }

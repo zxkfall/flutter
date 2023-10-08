@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
 
 import 'billing.dart';
 import 'billing_repository.dart';
@@ -111,6 +112,9 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
       final currentNavigator = Navigator.of(context);
       await GetIt.I<BillingRepository>().deleteBilling(widget.billing!.id);
       currentNavigator.pop();
+      currentNavigator
+          .pushReplacement(MaterialPageRoute(builder: (_) => const HomePage()));
+      setState(() {});
     }
   }
 
@@ -203,7 +207,10 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
                       });
                     }
                   },
-                  child: Text(_date.toString()),
+                  child: Text(
+                    DateFormat.yMMMd().format(_date), // 使用DateFormat格式化日期
+                    style: const TextStyle(fontSize: 16.0), // 可以自定义文本样式
+                  ),
                 ),
                 const Spacer(),
                 DropdownButton<BillingType>(
