@@ -21,7 +21,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      loadBillingData();
+      _loadBillingData();
     });
   }
 
@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
           controller: _pageController,
           children: <Widget>[
             // 展示页面
-            BillingListView(billings: _billings, removeBilling: removeBilling),
+            BillingListView(billings: _billings, removeBilling: _removeBilling),
             // 设置页面
             const Center(
               child: Text('Settings Page'),
@@ -45,26 +45,7 @@ class _HomePageState extends State<HomePage> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    const BillingDetailPage(),
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
-                  const begin = Offset(1.0, 0.0);
-                  const end = Offset.zero;
-                  const curve = Curves.easeInOut;
-                  var tween = Tween(begin: begin, end: end)
-                      .chain(CurveTween(curve: curve));
-                  var offsetAnimation = animation.drive(tween);
-                  return SlideTransition(
-                    position: offsetAnimation,
-                    child: child,
-                  );
-                },
-              ),
-            );
+            _goToBillingDetailPage(context);
           },
           tooltip: 'Add Billing',
           shape: const CircleBorder(),
@@ -103,7 +84,30 @@ class _HomePageState extends State<HomePage> {
         ));
   }
 
-  Future<void> loadBillingData() async {
+  void _goToBillingDetailPage(BuildContext context) {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            const BillingDetailPage(),
+        transitionsBuilder:
+            (context, animation, secondaryAnimation, child) {
+          const begin = Offset(1.0, 0.0);
+          const end = Offset.zero;
+          const curve = Curves.easeInOut;
+          var tween = Tween(begin: begin, end: end)
+              .chain(CurveTween(curve: curve));
+          var offsetAnimation = animation.drive(tween);
+          return SlideTransition(
+            position: offsetAnimation,
+            child: child,
+          );
+        },
+      ),
+    );
+  }
+
+  Future<void> _loadBillingData() async {
     _billings.clear();
     var list = await GetIt.I<BillingRepository>().billings();
     list.sort((a, b) => b.date.compareTo(a.date));
@@ -111,7 +115,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {});
   }
 
-  Future<void> removeBilling(int index) async {
+  Future<void> _removeBilling(int index) async {
     await GetIt.I<BillingRepository>().deleteBilling(_billings[index].id);
     setState(() {
       _billings.removeAt(index);

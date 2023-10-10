@@ -23,12 +23,17 @@ class BillingListView extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         final currentBilling = billings[index];
         final previousBilling = index > 0 ? billings[index - 1] : null;
-        final showDateHeader = previousBilling == null ||
-            !Utils.isSameDay(currentBilling.date, previousBilling.date);
+        final showDateHeader = previousBilling == null || !Utils.isSameDay(currentBilling.date, previousBilling.date);
 
-        final dailyTotalMap =
-            Utils.calculateDailyTotal(currentBilling.date, billings);
+        final dailyTotalMap = Utils.calculateDailyTotal(currentBilling.date, billings);
 
+        var hasIncome = dailyTotalMap['income'] != Decimal.zero;
+        var hasExpense = dailyTotalMap['expense'] != Decimal.zero;
+
+        var incomeAmount = !hasIncome ? '' : '+\$${dailyTotalMap['income']}';
+        var spaceAndComma = hasIncome && hasExpense ? ', ' : '';
+        var expenseAmount = !hasExpense ? '' : '-\$${dailyTotalMap['expense']}';
+        var formattedAmount = currentBilling.amount.toStringAsFixed(2);
         return Column(
           children: <Widget>[
             if (showDateHeader)
@@ -42,9 +47,7 @@ class BillingListView extends StatelessWidget {
                       ),
                     ),
                     trailing: Text(
-                      'Total: ${dailyTotalMap['income'] == Decimal.zero ? '' : '+\$${dailyTotalMap['income']}'}'
-                      '${dailyTotalMap['income'] != Decimal.zero && dailyTotalMap['expense'] != Decimal.zero ? ', ' : ''}'
-                      '${dailyTotalMap['expense'] == Decimal.zero ? '' : '-\$${dailyTotalMap['expense']}'}',
+                      'Total: $incomeAmount$spaceAndComma$expenseAmount',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
@@ -63,11 +66,11 @@ class BillingListView extends StatelessWidget {
               ),
               child: InkWell(
                 onTap: () {
-                  Future.delayed(const Duration(milliseconds: 200), () {
+                  Future.delayed(const Duration(milliseconds: 150), () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (_) => BillingDetailPage(
-                            billing: currentBilling),
+                        builder: (_) =>
+                            BillingDetailPage(billing: currentBilling),
                       ),
                     );
                   });
@@ -82,8 +85,8 @@ class BillingListView extends StatelessWidget {
                   ),
                   trailing: Text(
                     currentBilling.type == BillingType.income
-                        ? '+\$${currentBilling.amount.toStringAsFixed(2)}'
-                        : '-\$${currentBilling.amount.toStringAsFixed(2)}',
+                        ? '+'
+                        : '-' '\$$formattedAmount',
                   ),
                 ),
               ),
