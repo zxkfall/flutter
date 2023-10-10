@@ -34,6 +34,7 @@ class BillingListView extends StatelessWidget {
         var spaceAndComma = hasIncome && hasExpense ? ', ' : '';
         var expenseAmount = !hasExpense ? '' : '-\$${dailyTotalMap['expense']}';
         var formattedAmount = currentBilling.amount.toStringAsFixed(2);
+        var amountPrefix = currentBilling.type == BillingType.income ? '+' : '-';
         return Column(
           children: <Widget>[
             if (showDateHeader)
@@ -83,10 +84,7 @@ class BillingListView extends StatelessWidget {
                     BillingIconMapper.getIcon(
                         currentBilling.type, currentBilling.kind),
                   ),
-                  trailing: Text(
-                    currentBilling.type == BillingType.income
-                        ? '+'
-                        : '-' '\$$formattedAmount',
+                  trailing: Text('$amountPrefix\$$formattedAmount',
                   ),
                 ),
               ),
