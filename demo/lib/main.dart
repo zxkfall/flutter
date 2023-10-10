@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
         ),
         home: const HomePage(),
         routes: <String, WidgetBuilder>{
+          '/home': (BuildContext context) => const HomePage(),
           '/billing-detail': (BuildContext context) => const BillingDetailPage(
                 billing: null,
               ),

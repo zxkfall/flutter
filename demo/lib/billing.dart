@@ -35,7 +35,6 @@ enum BillingType {
 
 extension BillingTypeExtension on BillingType {
   String get name {
-    // 使用 substring 方法去掉前缀
     return toString().split('.').last;
   }
 }
