@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:decimal/decimal.dart';
 import 'package:demo/billing_detail_page.dart';
@@ -9,7 +7,6 @@ import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
 
 import 'package:get_it/get_it.dart';
 import 'billing.dart';
@@ -50,7 +47,7 @@ class _HomePageState extends State<HomePage> {
             Center(
               child: Row(
                   children: <Widget>[
-                  Text('Settings Page'),
+                  const Text('Settings Page'),
                     TextButton(onPressed: ()=>{
                       openFilePickerAndRead()
                     }, child: const Text('选择文件')),
