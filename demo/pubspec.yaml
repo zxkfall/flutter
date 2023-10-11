@@ -48,6 +48,10 @@ dependencies:
   fluttertoast: ^8.2.2
   decimal: ^2.3.3
   intl: ^0.18.1
+  excel: ^2.1.0
+  file_picker: ^5.5.0
+  path_provider: ^2.0.2
+  dartx: ^1.2.0
 
 dev_dependencies:
   flutter_test:

@@ -1,7 +1,16 @@
-import 'package:demo/billing_detail_page.dart';
-import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'dart:async';
+import 'dart:developer';
+import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:demo/billing_detail_page.dart';
+import 'package:excel/excel.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
+
+import 'package:get_it/get_it.dart';
 import 'billing.dart';
 import 'billing_list_view.dart';
 import 'billing_repository.dart';
@@ -37,8 +46,14 @@ class _HomePageState extends State<HomePage> {
             // 展示页面
             BillingListView(billings: _billings, removeBilling: _removeBilling),
             // 设置页面
-            const Center(
-              child: Text('Settings Page'),
+            Center(
+              child: Row(
+                  children: <Widget>[
+                  Text('Settings Page'),
+                    TextButton(onPressed: ()=>{
+                      openFilePickerAndRead()
+                    }, child: const Text('选择文件')),
+                  ]),
             ),
           ],
         ),
@@ -83,6 +98,35 @@ class _HomePageState extends State<HomePage> {
           ),
         ));
   }
+
+  Future<void> openFilePickerAndRead() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom, // 文件类型
+      allowedExtensions: ['xlsx'],
+      withData: true,
+      withReadStream: true// 允许的文件扩展名
+    );
+
+    if (result != null) {
+      Uint8List bytes = result.files.single.bytes!;
+
+      final excel = Excel.decodeBytes(bytes);
+
+      excel.tables.keys.forEach((element) {
+        log(element); //sheet Name
+        log(excel.tables[element]!.maxCols.toString()); //max col
+        log(excel.tables[element]!.maxRows.toString()); //max row
+        for (var table in excel.tables.keys) {
+          excel.tables[table]!.rows.forEach((element) {
+            log(element.map((e) => e!.value.toString()).join(' '));
+          });
+        }
+      });
+    } else {
+      // 用户取消了文件选择
+    }
+  }
+
 
   void _goToBillingDetailPage(BuildContext context) {
     Navigator.push(
