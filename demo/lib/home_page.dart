@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:decimal/decimal.dart';
 import 'package:demo/billing_detail_page.dart';
 import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
@@ -112,16 +113,34 @@ class _HomePageState extends State<HomePage> {
 
       final excel = Excel.decodeBytes(bytes);
 
-      excel.tables.keys.forEach((element) {
+      List<Billing> billings = [];
+      for (var table in excel.tables.keys) {
+        for (var element in excel.tables[table]!.rows) {
+          if (element[0]!.value.toString() == 'Date') {
+            continue;
+          }
+          var billing = Billing(
+              id: 0,
+              date: DateTime.parse(element[0]!.value.toString()),
+              amount: Decimal.parse(element[1]!.value.toString()),
+              type: element[2]!.value.toString() == 'COST'
+                  ? BillingType.expense
+                  : BillingType.income,
+              kind: BillingKind.food,
+              description: '${element[3]!.value} ${element[4]!.value}');
+          billings.add(billing);
+        }
+      }
+      for (var element in excel.tables.keys) {
         log(element); //sheet Name
         log(excel.tables[element]!.maxCols.toString()); //max col
         log(excel.tables[element]!.maxRows.toString()); //max row
         for (var table in excel.tables.keys) {
-          excel.tables[table]!.rows.forEach((element) {
+          for (var element in excel.tables[table]!.rows) {
             log(element.map((e) => e!.value.toString()).join(' '));
-          });
+          }
         }
-      });
+      }
     } else {
       // 用户取消了文件选择
     }
