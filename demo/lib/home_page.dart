@@ -116,18 +116,21 @@ class _HomePageState extends State<HomePage> {
           if (element[0]!.value.toString() == 'Date') {
             continue;
           }
+          var billingType = element[2]!.value.toString() == 'COST'
+                  ? BillingType.expense
+                  : BillingType.income;
           var billing = Billing(
               id: 0,
               date: DateTime.parse(element[0]!.value.toString()),
               amount: Decimal.parse(element[1]!.value.toString()),
-              type: element[2]!.value.toString() == 'COST'
-                  ? BillingType.expense
-                  : BillingType.income,
-              kind: BillingKind.food,
+              type: billingType,
+              kind: stringToBillingKind(billingType, element[3]!.value.toString()),
               description: '${element[3]!.value} ${element[4]!.value}');
           billings.add(billing);
         }
       }
+
+      await GetIt.I<BillingRepository>().batchInsertBilling(billings);
       for (var element in excel.tables.keys) {
         log(element); //sheet Name
         log(excel.tables[element]!.maxCols.toString()); //max col

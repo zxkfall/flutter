@@ -146,3 +146,9 @@ List<BillingKind> getIncomeValues() {
     BillingKind.other,
   ];
 }
+
+BillingKind stringToBillingKind(BillingType type, String value) {
+  return type == BillingType.expense
+      ? getExpenseValues().firstWhere((element) => element.name == value, orElse: () => BillingKind.other)
+      : getIncomeValues().firstWhere((element) => element.name == value, orElse: () => BillingKind.other);
+}

@@ -12,6 +12,8 @@ abstract class BillingRepository {
 
   Future<void> insertBilling(Billing billing);
 
+  Future<void> batchInsertBilling(List<Billing> billings);
+
   Future<void> deleteBilling(int id);
 
   Future<Billing> updateBilling(Billing billing);
@@ -84,6 +86,22 @@ class SqlBillingRepository implements BillingRepository {
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
+
+  @override
+  Future<void> batchInsertBilling(List<Billing> billings) async {
+    final batch = (await _session).batch();
+
+    for (final billing in billings) {
+      batch.insert(
+        'Billing',
+        billing.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+
+    await batch.commit();
+  }
+
 
   @override
   Future<Billing> updateBilling(Billing billing) async {
