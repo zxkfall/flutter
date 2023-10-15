@@ -3,29 +3,47 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:excel/excel.dart';
 import 'package:decimal/decimal.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 
 import 'billing.dart';
 import 'billing_repository.dart';
+import 'utils.dart';
 
 class SettingPage extends StatelessWidget {
   const SettingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    FToast fToast = FToast();
+    fToast.init(context);
     return Center(
-      child: Row(children: <Widget>[
+      child: Column(children: <Widget>[
         const Text('Settings Page'),
-        TextButton(
-            onPressed: () => {
-                  openFilePickerAndRead().then((value) => {
-                        // _showToast('导入成功，共导入$value条数据')
-                      })
-                },
-            child: const Text('选择文件')),
-        TextButton(
-            onPressed: () => {GetIt.I<BillingRepository>().clearBilling()},
-            child: const Text('清除数据'))
+        Align(
+          alignment: Alignment.center,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              TextButton(
+                  onPressed: () => {
+                        openFilePickerAndRead().then((value) {
+                          Utils.showToast('导入成功，共导入$value条数据', fToast);
+                        })
+                      },
+                  child: const Text('选择文件')),
+              TextButton(
+                  onPressed: () => {
+                        GetIt.I<BillingRepository>()
+                            .clearBilling()
+                            .then((value) {
+                          Utils.showToast('清除成功，共清除$value条数据', fToast);
+                        })
+                      },
+                  child: const Text('清除数据'))
+            ],
+          ),
+        )
       ]),
     );
   }
@@ -42,9 +60,12 @@ class SettingPage extends StatelessWidget {
 
       final excel = Excel.decodeBytes(bytes);
 
+      var totalRows = 0;
       List<Billing> billings = [];
-      for (var table in excel.tables.keys) {
-        for (var element in excel.tables[table]!.rows) {
+      var tables = excel.tables;
+      for (var table in tables.keys) {
+        totalRows += tables[table]!.maxRows;
+        for (var element in tables[table]!.rows) {
           if (element[0]!.value.toString() == 'Date') {
             continue;
           }
@@ -64,7 +85,7 @@ class SettingPage extends StatelessWidget {
       }
 
       await GetIt.I<BillingRepository>().batchInsertBilling(billings);
-      return excel.tables[0]!.maxRows;
+      return totalRows;
     }
     // 用户取消了文件选择
     return 0;
