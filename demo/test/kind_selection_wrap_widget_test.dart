@@ -1,7 +1,9 @@
 import 'package:demo/billing.dart';
 import 'package:demo/kind_selection_wrap_widget.dart';
+import 'package:demo/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   testWidgets('Should change style when kind is chose', (widgetTester) async {
@@ -10,15 +12,24 @@ void main() {
     const type = BillingType.expense;
     onKindSelected(BillingKind kind) {}
 
-    await widgetTester.pumpWidget(Material(
-        child: Directionality(
-            textDirection: TextDirection.ltr,
-            child: KindSelectionWrapWidget(
-              allKinds: allKinds,
-              selectedKind: selectedKind,
-              onKindSelected: onKindSelected,
-              type: type,
-            ))));
+    await widgetTester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider<BillingProvider>(
+            create: (_) => BillingProvider(), // 这里你需要提供BillingProvider的实例
+          ),
+        ],
+        child: Material(
+            child: Directionality(
+                textDirection: TextDirection.ltr,
+                child: KindSelectionWrapWidget(
+                  allKinds: allKinds,
+                  selectedKind: selectedKind,
+                  onKindSelected: onKindSelected,
+                  type: type,
+                ))),
+      ),
+    );
     await widgetTester.pump();
 
     final foodFinder = find.text('food');

@@ -1,10 +1,3 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:decimal/decimal.dart';
 import 'package:demo/billing.dart';
 import 'package:demo/billing_repository.dart';
@@ -14,6 +7,7 @@ import 'package:get_it/get_it.dart';
 import 'package:demo/main.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:provider/provider.dart';
 
 import 'widget_test.mocks.dart';
 
@@ -74,7 +68,16 @@ void main() {
       ];
     });
 
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider<BillingProvider>(
+            create: (_) => BillingProvider(), // 这里你需要提供BillingProvider的实例
+          ),
+        ],
+        child: const MyApp(),
+      ),
+    );
     await tester.pump();
     expect(find.text('Jan 1, 2021'), findsOneWidget);
     expect(find.text('fake income'), findsOneWidget);
@@ -102,7 +105,16 @@ void main() {
       return [];
     });
 
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider<BillingProvider>(
+            create: (_) => BillingProvider(), // 这里你需要提供BillingProvider的实例
+          ),
+        ],
+        child: const MyApp(),
+      ),
+    );
     await tester.pump();
 
     await tester.tap(find.byIcon(Icons.add));
@@ -113,17 +125,28 @@ void main() {
   testWidgets('Should navigate to edit billing page when click billing item',
       (WidgetTester tester) async {
     when(mockRepository.billings()).thenAnswer((_) async {
-      return [Billing(
-        id: 1,
-        type: BillingType.income,
-        amount: Decimal.parse('100.00'),
-        date: DateTime(2021, 1, 1),
-        description: 'fake income',
-        kind: BillingKind.salary,
-      )];
+      return [
+        Billing(
+          id: 1,
+          type: BillingType.income,
+          amount: Decimal.parse('100.00'),
+          date: DateTime(2021, 1, 1),
+          description: 'fake income',
+          kind: BillingKind.salary,
+        )
+      ];
     });
 
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider<BillingProvider>(
+            create: (_) => BillingProvider(), // 这里你需要提供BillingProvider的实例
+          ),
+        ],
+        child: const MyApp(),
+      ),
+    );
     await tester.pump();
 
     await tester.tap(find.text('fake income'));

@@ -5,6 +5,7 @@ import 'package:demo/main.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   setUpAll(() async {
@@ -12,7 +13,16 @@ void main() {
   });
   testWidgets('Should delete billing when swipe billing item',
       (widgetTester) async {
-    await widgetTester.pumpWidget(const MyApp());
+    await widgetTester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider<BillingProvider>(
+            create: (_) => BillingProvider(), // 这里你需要提供BillingProvider的实例
+          ),
+        ],
+        child: const MyApp(),
+      ),
+    );
     await widgetTester.pump();
     // swipe to delete
     expect(find.text('fake income'), findsOneWidget);

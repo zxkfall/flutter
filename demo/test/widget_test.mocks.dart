@@ -45,6 +45,17 @@ class MockBillingRepository extends _i1.Mock implements _i3.BillingRepository {
       ) as _i4.Future<void>);
 
   @override
+  _i4.Future<void> batchInsertBilling(List<_i2.Billing>? billings) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #batchInsertBilling,
+          [billings],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
   _i4.Future<void> deleteBilling(int? id) => (super.noSuchMethod(
         Invocation.method(
           #deleteBilling,
@@ -53,6 +64,16 @@ class MockBillingRepository extends _i1.Mock implements _i3.BillingRepository {
         returnValue: _i4.Future<void>.value(),
         returnValueForMissingStub: _i4.Future<void>.value(),
       ) as _i4.Future<void>);
+
+  @override
+  _i4.Future<int> clearBilling() => (super.noSuchMethod(
+        Invocation.method(
+          #clearBilling,
+          [],
+        ),
+        returnValue: _i4.Future<int>.value(0),
+        returnValueForMissingStub: _i4.Future<int>.value(0),
+      ) as _i4.Future<int>);
 
   @override
   _i4.Future<_i2.Billing> updateBilling(_i2.Billing? billing) =>
