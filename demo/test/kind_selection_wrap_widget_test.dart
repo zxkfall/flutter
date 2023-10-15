@@ -1,6 +1,6 @@
-import 'package:demo/billing.dart';
-import 'package:demo/kind_selection_wrap_widget.dart';
-import 'package:demo/billing_provider.dart';
+import 'package:demo/model/billing.dart';
+import 'package:demo/view/kind_selection_wrap_view.dart';
+import 'package:demo/provider/billing_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +22,7 @@ void main() {
         child: Material(
             child: Directionality(
                 textDirection: TextDirection.ltr,
-                child: KindSelectionWrapWidget(
+                child: KindSelectionWrapView(
                   allKinds: allKinds,
                   selectedKind: selectedKind,
                   onKindSelected: onKindSelected,

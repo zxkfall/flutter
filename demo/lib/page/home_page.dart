@@ -1,13 +1,13 @@
 import 'dart:async';
-import 'package:demo/billing_detail_page.dart';
-import 'package:demo/setting_page.dart';
+import 'package:demo/page/billing_detail_page.dart';
+import 'package:demo/page/setting_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
-import 'billing.dart';
-import 'billing_list_view.dart';
-import 'billing_repository.dart';
-import 'billing_provider.dart';
+import '../model/billing.dart';
+import '../view/billing_list_view.dart';
+import '../repository/billing_repository.dart';
+import '../provider/billing_provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);

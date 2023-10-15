@@ -1,7 +1,7 @@
 import 'package:decimal/decimal.dart';
-import 'package:demo/billing.dart';
-import 'package:demo/billing_provider.dart';
-import 'package:demo/billing_repository.dart';
+import 'package:demo/model/billing.dart';
+import 'package:demo/provider/billing_provider.dart';
+import 'package:demo/repository/billing_repository.dart';
 import 'package:demo/main.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';

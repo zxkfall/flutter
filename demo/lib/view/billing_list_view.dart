@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import 'billing.dart';
-import 'billing_detail_page.dart';
-import 'billing_provider.dart';
-import 'utils.dart';
+import '../model/billing.dart';
+import '../page/billing_detail_page.dart';
+import '../provider/billing_provider.dart';
+import '../utils/utils.dart';
 
 class BillingListView extends StatelessWidget {
   final Function(int) removeBilling;

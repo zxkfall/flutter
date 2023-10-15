@@ -1,7 +1,7 @@
 import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'billing.dart';
+import '../model/billing.dart';
 
 class Utils {
   static bool isSameDay(DateTime date1, DateTime date2) {

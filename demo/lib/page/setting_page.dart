@@ -7,10 +7,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
-import 'billing.dart';
-import 'billing_repository.dart';
-import 'billing_provider.dart';
-import 'utils.dart';
+import '../model/billing.dart';
+import '../repository/billing_repository.dart';
+import '../provider/billing_provider.dart';
+import '../utils/utils.dart';
 
 class SettingPage extends StatelessWidget {
   const SettingPage({super.key});

@@ -1,6 +1,6 @@
 import 'package:decimal/decimal.dart';
-import 'package:demo/billing.dart';
-import 'package:demo/billing_repository.dart';
+import 'package:demo/model/billing.dart';
+import 'package:demo/repository/billing_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -8,7 +8,7 @@ import 'package:demo/main.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
-import 'package:demo/billing_provider.dart';
+import 'package:demo/provider/billing_provider.dart';
 
 import 'widget_test.mocks.dart';
 

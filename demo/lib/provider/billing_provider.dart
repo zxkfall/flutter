@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'billing.dart';
+import '../model/billing.dart';
 
 class BillingProvider with ChangeNotifier {
   List<Billing> _billings = <Billing>[];

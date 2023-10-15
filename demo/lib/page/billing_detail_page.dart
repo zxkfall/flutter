@@ -6,12 +6,12 @@ import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import 'billing.dart';
-import 'billing_provider.dart';
-import 'billing_repository.dart';
+import '../model/billing.dart';
+import '../provider/billing_provider.dart';
+import '../repository/billing_repository.dart';
 import 'home_page.dart';
-import 'kind_selection_wrap_widget.dart';
-import 'utils.dart';
+import '../view/kind_selection_wrap_view.dart';
+import '../utils/utils.dart';
 
 class BillingDetailPage extends StatefulWidget {
   const BillingDetailPage({Key? key, this.billing}) : super(key: key);
@@ -121,7 +121,7 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            KindSelectionWrapWidget(
+            KindSelectionWrapView(
               allKinds: _type == BillingType.expense
                   ? getExpenseValues()
                   : getIncomeValues(), // 所有可选的kind

@@ -1,11 +1,11 @@
-import 'billing_provider.dart';
-import 'package:demo/billing_repository.dart';
+import 'provider/billing_provider.dart';
+import 'package:demo/repository/billing_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'billing_detail_page.dart';
+import 'page/billing_detail_page.dart';
 import 'package:provider/provider.dart';
 
-import 'home_page.dart';
+import 'page/home_page.dart';
 
 Future<void> main() async {
   GetIt.I.registerSingleton<BillingRepository>(SqlBillingRepository());

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:synchronized/synchronized.dart'; // 导入 synchronized 包
 
-import 'billing.dart';
+import '../model/billing.dart';
 
 abstract class BillingRepository {
 

@@ -5,8 +5,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i4;
 
-import 'package:demo/billing.dart' as _i2;
-import 'package:demo/billing_repository.dart' as _i3;
+import 'package:demo/model/billing.dart' as _i2;
+import 'package:demo/repository/billing_repository.dart' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
