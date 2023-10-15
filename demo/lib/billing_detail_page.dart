@@ -7,10 +7,10 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import 'billing.dart';
+import 'billing_provider.dart';
 import 'billing_repository.dart';
 import 'home_page.dart';
 import 'kind_selection_wrap_widget.dart';
-import 'main.dart';
 import 'utils.dart';
 
 class BillingDetailPage extends StatefulWidget {

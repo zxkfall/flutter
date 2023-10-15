@@ -1,6 +1,6 @@
 import 'package:demo/billing.dart';
 import 'package:demo/kind_selection_wrap_widget.dart';
-import 'package:demo/main.dart';
+import 'package:demo/billing_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';

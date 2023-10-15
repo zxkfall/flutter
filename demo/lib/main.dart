@@ -1,4 +1,4 @@
-import 'package:demo/billing.dart';
+import 'billing_provider.dart';
 import 'package:demo/billing_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -35,16 +35,5 @@ class MyApp extends StatelessWidget {
                 billing: null,
               ),
         });
-  }
-}
-
-class BillingProvider with ChangeNotifier {
-  List<Billing> _billings = <Billing>[];
-
-  List<Billing> get billings => _billings;
-
-  void setBillings(List<Billing> newBillings) {
-    _billings = newBillings;
-    notifyListeners(); // 通知监听器数据已更新
   }
 }

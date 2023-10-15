@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'billing.dart';
 import 'billing_list_view.dart';
 import 'billing_repository.dart';
-import 'main.dart';
+import 'billing_provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);

@@ -8,6 +8,7 @@ import 'package:demo/main.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
+import 'package:demo/billing_provider.dart';
 
 import 'widget_test.mocks.dart';
 

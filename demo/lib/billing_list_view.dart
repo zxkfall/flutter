@@ -1,11 +1,11 @@
 import 'package:decimal/decimal.dart';
-import 'package:demo/main.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import 'billing.dart';
 import 'billing_detail_page.dart';
+import 'billing_provider.dart';
 import 'utils.dart';
 
 class BillingListView extends StatelessWidget {
