@@ -9,6 +9,7 @@ import 'billing.dart';
 import 'billing_repository.dart';
 import 'home_page.dart';
 import 'kind_selection_wrap_widget.dart';
+import 'utils.dart';
 
 class BillingDetailPage extends StatefulWidget {
   const BillingDetailPage({Key? key, this.billing}) : super(key: key);
@@ -48,32 +49,6 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
     super.dispose();
   }
 
-  _showToast(String msg) {
-    Widget toast = Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25.0),
-        color: Colors.greenAccent,
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.check),
-          const SizedBox(
-            width: 12.0,
-          ),
-          Text(msg),
-        ],
-      ),
-    );
-
-    fToast.showToast(
-      child: toast,
-      gravity: ToastGravity.BOTTOM,
-      toastDuration: const Duration(seconds: 2),
-    );
-  }
-
   Future<void> _save() async {
     if (_formKey.currentState!.validate()) {
       var billing = Billing(
@@ -86,7 +61,7 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
       );
 
       if (Decimal.parse(_amountController.text) == Decimal.zero) {
-        _showToast('Amount can not be 0');
+        Utils.showToast('Amount can not be 0', fToast);
         return;
       }
 
