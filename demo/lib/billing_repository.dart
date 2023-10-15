@@ -16,6 +16,8 @@ abstract class BillingRepository {
 
   Future<void> deleteBilling(int id);
 
+  Future<int> clearBilling();
+
   Future<Billing> updateBilling(Billing billing);
 
   Future<Billing> billing(int id);
@@ -158,5 +160,13 @@ class SqlBillingRepository implements BillingRepository {
             : BillingKind.other,
       );
     });
+  }
+
+  @override
+  Future<int> clearBilling() async{
+    final rows = (await _session).delete(
+      'Billing'
+    );
+    return rows;
   }
 }

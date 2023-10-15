@@ -89,4 +89,10 @@ class HMockBillingRepository implements BillingRepository {
     // TODO: implement batchInsertBilling
     throw UnimplementedError();
   }
+
+  @override
+  Future<int> clearBilling() {
+    // TODO: implement clearBilling
+    throw UnimplementedError();
+  }
 }

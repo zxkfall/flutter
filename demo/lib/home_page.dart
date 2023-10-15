@@ -1,13 +1,7 @@
 import 'dart:async';
-import 'dart:developer';
-
-import 'package:decimal/decimal.dart';
 import 'package:demo/billing_detail_page.dart';
-import 'package:excel/excel.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:demo/setting_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
 import 'package:get_it/get_it.dart';
 import 'billing.dart';
 import 'billing_list_view.dart';
@@ -44,15 +38,7 @@ class _HomePageState extends State<HomePage> {
             // 展示页面
             BillingListView(billings: _billings, removeBilling: _removeBilling),
             // 设置页面
-            Center(
-              child: Row(
-                  children: <Widget>[
-                  const Text('Settings Page'),
-                    TextButton(onPressed: ()=>{
-                      openFilePickerAndRead()
-                    }, child: const Text('选择文件')),
-                  ]),
-            ),
+            const SettingPage(),
           ],
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -96,56 +82,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ));
   }
-
-  Future<void> openFilePickerAndRead() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom, // 文件类型
-      allowedExtensions: ['xlsx'],
-      withData: true,
-      withReadStream: true// 允许的文件扩展名
-    );
-
-    if (result != null) {
-      Uint8List bytes = result.files.single.bytes!;
-
-      final excel = Excel.decodeBytes(bytes);
-
-      List<Billing> billings = [];
-      for (var table in excel.tables.keys) {
-        for (var element in excel.tables[table]!.rows) {
-          if (element[0]!.value.toString() == 'Date') {
-            continue;
-          }
-          var billingType = element[2]!.value.toString() == 'COST'
-                  ? BillingType.expense
-                  : BillingType.income;
-          var billing = Billing(
-              id: 0,
-              date: DateTime.parse(element[0]!.value.toString()),
-              amount: Decimal.parse(element[1]!.value.toString()),
-              type: billingType,
-              kind: stringToBillingKind(billingType, element[3]!.value.toString()),
-              description: '${element[3]!.value} ${element[4]!.value}');
-          billings.add(billing);
-        }
-      }
-
-      await GetIt.I<BillingRepository>().batchInsertBilling(billings);
-      for (var element in excel.tables.keys) {
-        log(element); //sheet Name
-        log(excel.tables[element]!.maxCols.toString()); //max col
-        log(excel.tables[element]!.maxRows.toString()); //max row
-        for (var table in excel.tables.keys) {
-          for (var element in excel.tables[table]!.rows) {
-            log(element.map((e) => e!.value.toString()).join(' '));
-          }
-        }
-      }
-    } else {
-      // 用户取消了文件选择
-    }
-  }
-
 
   void _goToBillingDetailPage(BuildContext context) {
     Navigator.push(
