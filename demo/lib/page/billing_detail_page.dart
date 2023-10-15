@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -72,14 +74,14 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
       final currentNavigator = Navigator.of(context);
 
       if (widget.billing == null) {
-        await GetIt.I<BillingRepository>().insertBilling(billing);
+        GetIt.I<BillingRepository>().insertBilling(billing).then((value) {
+          billing.id = value;
+          billingProvider.addBilling(billing);
+        });
       } else {
         await GetIt.I<BillingRepository>().updateBilling(billing);
+        billingProvider.updateBilling(billing);
       }
-
-      // 更新 BillingProvider 中的数据
-      final updatedBillings = await GetIt.I<BillingRepository>().billings();
-      billingProvider.setBillings(updatedBillings);
 
       // 使用当前页面的Navigator来进行导航
       currentNavigator.pop();
@@ -93,12 +95,10 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
       final billingProvider = Provider.of<BillingProvider>(context, listen: false);
       final currentNavigator = Navigator.of(context);
       await GetIt.I<BillingRepository>().deleteBilling(widget.billing!.id);
-      final updatedBillings = await GetIt.I<BillingRepository>().billings();
-      billingProvider.setBillings(updatedBillings);
+      billingProvider.removeBilling(widget.billing!.id);
       currentNavigator.pop();
       currentNavigator
           .pushReplacement(MaterialPageRoute(builder: (_) => const HomePage()));
-      setState(() {});
     }
   }
 

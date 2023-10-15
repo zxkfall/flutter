@@ -10,7 +10,7 @@ import '../model/billing.dart';
 
 abstract class BillingRepository {
 
-  Future<void> insertBilling(Billing billing);
+  Future<int> insertBilling(Billing billing);
 
   Future<void> batchInsertBilling(List<Billing> billings);
 
@@ -81,8 +81,8 @@ class SqlBillingRepository implements BillingRepository {
   }
 
   @override
-  Future<void> insertBilling(Billing billing) async {
-    (await _session).insert(
+  Future<int> insertBilling(Billing billing) async {
+    return (await _session).insert(
       'Billing',
       billing.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,

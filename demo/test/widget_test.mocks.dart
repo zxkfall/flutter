@@ -35,14 +35,14 @@ class _FakeBilling_0 extends _i1.SmartFake implements _i2.Billing {
 /// See the documentation for Mockito's code generation for more information.
 class MockBillingRepository extends _i1.Mock implements _i3.BillingRepository {
   @override
-  _i4.Future<void> insertBilling(_i2.Billing? billing) => (super.noSuchMethod(
+  _i4.Future<int> insertBilling(_i2.Billing? billing) => (super.noSuchMethod(
         Invocation.method(
           #insertBilling,
           [billing],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i4.Future<int>.value(0),
+        returnValueForMissingStub: _i4.Future<int>.value(0),
+      ) as _i4.Future<int>);
 
   @override
   _i4.Future<void> batchInsertBilling(List<_i2.Billing>? billings) =>

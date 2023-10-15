@@ -84,7 +84,7 @@ class HMockBillingRepository implements BillingRepository {
   }
 
   @override
-  Future<void> insertBilling(Billing billing) {
+  Future<int> insertBilling(Billing billing) {
     // TODO: implement insertBilling
     throw UnimplementedError();
   }

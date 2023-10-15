@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:demo/page/billing_detail_page.dart';
 import 'package:demo/page/setting_page.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadBillingData().then((value) {
+        log('llllllldd');
         Provider.of<BillingProvider>(context, listen: false).setBillings(value);
       });
     });

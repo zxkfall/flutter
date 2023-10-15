@@ -10,7 +10,7 @@ class Billing {
       required this.description,
       required this.kind});
 
-  final int id;
+  int id;
   final BillingType type;
   final Decimal amount;
   final DateTime date;
