@@ -3,9 +3,11 @@ import 'package:demo/billing_detail_page.dart';
 import 'package:demo/setting_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 import 'billing.dart';
 import 'billing_list_view.dart';
 import 'billing_repository.dart';
+import 'main.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -15,14 +17,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<Billing> _billings = <Billing>[];
   final PageController _pageController = PageController(initialPage: 0);
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadBillingData();
+      _loadBillingData().then((value) {
+        Provider.of<BillingProvider>(context, listen: false).setBillings(value);
+      });
     });
   }
 
@@ -36,7 +39,7 @@ class _HomePageState extends State<HomePage> {
           controller: _pageController,
           children: <Widget>[
             // 展示页面
-            BillingListView(billings: _billings, removeBilling: _removeBilling),
+            BillingListView(removeBilling: _removeBilling),
             // 设置页面
             const SettingPage(),
           ],
@@ -89,13 +92,12 @@ class _HomePageState extends State<HomePage> {
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) =>
             const BillingDetailPage(),
-        transitionsBuilder:
-            (context, animation, secondaryAnimation, child) {
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
           const begin = Offset(1.0, 0.0);
           const end = Offset.zero;
           const curve = Curves.easeInOut;
-          var tween = Tween(begin: begin, end: end)
-              .chain(CurveTween(curve: curve));
+          var tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
           var offsetAnimation = animation.drive(tween);
           return SlideTransition(
             position: offsetAnimation,
@@ -106,18 +108,20 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<void> _loadBillingData() async {
-    _billings.clear();
+  Future<List<Billing>> _loadBillingData() async {
     var list = await GetIt.I<BillingRepository>().billings();
     list.sort((a, b) => b.date.compareTo(a.date));
-    _billings.addAll(list);
-    setState(() {});
+    return list;
   }
 
   Future<void> _removeBilling(int index) async {
-    await GetIt.I<BillingRepository>().deleteBilling(_billings[index].id);
-    setState(() {
-      _billings.removeAt(index);
-    });
+    final billingProvider =
+        Provider.of<BillingProvider>(context, listen: false);
+
+    final billing = billingProvider.billings[index];
+    await GetIt.I<BillingRepository>().deleteBilling(billing.id);
+
+    final updatedBillings = await GetIt.I<BillingRepository>().billings();
+    billingProvider.setBillings(updatedBillings);
   }
 }

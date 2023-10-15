@@ -5,9 +5,12 @@ import 'package:excel/excel.dart';
 import 'package:decimal/decimal.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
+import 'package:path/path.dart';
+import 'package:provider/provider.dart';
 
 import 'billing.dart';
 import 'billing_repository.dart';
+import 'main.dart';
 import 'utils.dart';
 
 class SettingPage extends StatelessWidget {
@@ -17,6 +20,7 @@ class SettingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     FToast fToast = FToast();
     fToast.init(context);
+    var billingProvider = Provider.of<BillingProvider>(context, listen: false);
     return Center(
       child: Column(children: <Widget>[
         const Text('Settings Page'),
@@ -27,7 +31,7 @@ class SettingPage extends StatelessWidget {
             children: <Widget>[
               TextButton(
                   onPressed: () => {
-                        openFilePickerAndRead().then((value) {
+                        openFilePickerAndRead(context).then((value) {
                           Utils.showToast('导入成功，共导入$value条数据', fToast);
                         })
                       },
@@ -38,6 +42,7 @@ class SettingPage extends StatelessWidget {
                             .clearBilling()
                             .then((value) {
                           Utils.showToast('清除成功，共清除$value条数据', fToast);
+                          billingProvider.setBillings(<Billing>[]);
                         })
                       },
                   child: const Text('清除数据'))
@@ -48,7 +53,7 @@ class SettingPage extends StatelessWidget {
     );
   }
 
-  Future<int> openFilePickerAndRead() async {
+  Future<int> openFilePickerAndRead(BuildContext context) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom, // 文件类型
         allowedExtensions: ['xlsx'],
@@ -85,6 +90,9 @@ class SettingPage extends StatelessWidget {
       }
 
       await GetIt.I<BillingRepository>().batchInsertBilling(billings);
+      await GetIt.I<BillingRepository>().billings().then((value) {
+        Provider.of<BillingProvider>(context, listen: false).setBillings(value);
+      });
       return totalRows;
     }
     // 用户取消了文件选择

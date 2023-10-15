@@ -4,11 +4,13 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import 'billing.dart';
 import 'billing_repository.dart';
 import 'home_page.dart';
 import 'kind_selection_wrap_widget.dart';
+import 'main.dart';
 import 'utils.dart';
 
 class BillingDetailPage extends StatefulWidget {
@@ -64,6 +66,7 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
         Utils.showToast('Amount can not be 0', fToast);
         return;
       }
+      final billingProvider = Provider.of<BillingProvider>(context, listen: false);
 
       // 获取当前页面的Navigator
       final currentNavigator = Navigator.of(context);
@@ -74,19 +77,24 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
         await GetIt.I<BillingRepository>().updateBilling(billing);
       }
 
+      // 更新 BillingProvider 中的数据
+      final updatedBillings = await GetIt.I<BillingRepository>().billings();
+      billingProvider.setBillings(updatedBillings);
+
       // 使用当前页面的Navigator来进行导航
       currentNavigator.pop();
       currentNavigator
           .pushReplacement(MaterialPageRoute(builder: (_) => const HomePage()));
-
-      setState(() {});
     }
   }
 
   Future<void> _delete() async {
     if (widget.billing != null) {
+      final billingProvider = Provider.of<BillingProvider>(context, listen: false);
       final currentNavigator = Navigator.of(context);
       await GetIt.I<BillingRepository>().deleteBilling(widget.billing!.id);
+      final updatedBillings = await GetIt.I<BillingRepository>().billings();
+      billingProvider.setBillings(updatedBillings);
       currentNavigator.pop();
       currentNavigator
           .pushReplacement(MaterialPageRoute(builder: (_) => const HomePage()));
