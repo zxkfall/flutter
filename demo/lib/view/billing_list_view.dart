@@ -1,18 +1,17 @@
 import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../model/billing.dart';
 import '../page/billing_detail_page.dart';
 import '../provider/billing_provider.dart';
+import '../repository/billing_repository.dart';
 import '../utils/utils.dart';
 
 class BillingListView extends StatelessWidget {
-  final Function(int) removeBilling;
-
   const BillingListView({
-    required this.removeBilling,
     Key? key,
   }) : super(key: key);
 
@@ -67,7 +66,7 @@ class BillingListView extends StatelessWidget {
                 Dismissible(
                   key: Key(currentBilling.id.toString()),
                   onDismissed: (direction) {
-                    removeBilling(index);
+                    _removeBilling(context, index);
                   },
                   background: Container(
                     color: Colors.red,
@@ -104,5 +103,16 @@ class BillingListView extends StatelessWidget {
         );
       },
     );
+  }
+
+  Future<void> _removeBilling(BuildContext context, int index) async {
+    final billingProvider =
+        Provider.of<BillingProvider>(context, listen: false);
+
+    final billing = billingProvider.billings[index];
+    await GetIt.I<BillingRepository>().deleteBilling(billing.id);
+
+    final updatedBillings = await GetIt.I<BillingRepository>().billings();
+    billingProvider.setBillings(updatedBillings);
   }
 }

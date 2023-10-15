@@ -37,11 +37,11 @@ class _HomePageState extends State<HomePage> {
         ),
         body: PageView(
           controller: _pageController,
-          children: <Widget>[
+          children: const <Widget>[
             // 展示页面
-            BillingListView(removeBilling: _removeBilling),
+            BillingListView(),
             // 设置页面
-            const SettingPage(),
+            SettingPage(),
           ],
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -112,16 +112,5 @@ class _HomePageState extends State<HomePage> {
     var list = await GetIt.I<BillingRepository>().billings();
     list.sort((a, b) => b.date.compareTo(a.date));
     return list;
-  }
-
-  Future<void> _removeBilling(int index) async {
-    final billingProvider =
-        Provider.of<BillingProvider>(context, listen: false);
-
-    final billing = billingProvider.billings[index];
-    await GetIt.I<BillingRepository>().deleteBilling(billing.id);
-
-    final updatedBillings = await GetIt.I<BillingRepository>().billings();
-    billingProvider.setBillings(updatedBillings);
   }
 }

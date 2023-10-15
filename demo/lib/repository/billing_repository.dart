@@ -147,8 +147,8 @@ class SqlBillingRepository implements BillingRepository {
   @override
   Future<List<Billing>> billings() async {
     final List<Map<String, dynamic>> maps = await (await _session).query('Billing');
+    log('query billings count: ${maps.length}');
     return List.generate(maps.length, (i) {
-      log('${maps[i]['kind']} ${BillingKind.values[maps[i]['kind']]}');
       return Billing(
         id: maps[i]['id'],
         type: maps[i]['type'] == 0 ? BillingType.income : BillingType.expense,
