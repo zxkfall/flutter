@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -124,14 +122,14 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
             KindSelectionWrapView(
               allKinds: _type == BillingType.expense
                   ? getExpenseValues()
-                  : getIncomeValues(), // 所有可选的kind
-              selectedKind: _selectedKind, // 当前选择的kind
+                  : getIncomeValues(),
+              selectedKind: _selectedKind,
               onKindSelected: (selectedKind) {
                 setState(() {
-                  _selectedKind = selectedKind; // 更新选择的kind
+                  _selectedKind = selectedKind;
                 });
               },
-              type: _type, // 收入或支出
+              type: _type,
             ),
             TextFormField(
               controller: _amountController,
@@ -156,9 +154,6 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
                 labelText: 'Description',
               ),
               validator: (value) {
-                // if (value == null || value.isEmpty) {
-                //   return 'Please enter description';
-                // }
                 return null;
               },
             ),
