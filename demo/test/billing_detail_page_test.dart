@@ -134,5 +134,45 @@ void main() {
             widget.value is BillingType &&
             widget.value == BillingType.expense),
         findsOneWidget);
+
+    await widgetTester.tap(find.text('Jan 1, 2021'));
+    await widgetTester.pumpAndSettle();
+    await widgetTester.tap(find.text('2'));
+    await widgetTester.pumpAndSettle();
+    await widgetTester.tap(find.text('OK'));
+    await widgetTester.pumpAndSettle();
+    expect(
+        find.byWidgetPredicate((widget) =>
+            widget is Text &&
+            widget.data == 'Jan 2, 2021'),
+        findsOneWidget);
+
+    await widgetTester.tap(find.text('Expense'));
+    await widgetTester.pumpAndSettle();
+    await widgetTester.tap(find.text('Income'));
+    await widgetTester.pumpAndSettle();
+    expect(
+        find.byWidgetPredicate((widget) =>
+            widget is DropdownButton &&
+            widget.value is BillingType &&
+            widget.value == BillingType.income),
+        findsOneWidget);
+    final allIncomeKinds = getIncomeValues();
+    for (var kind in allIncomeKinds.where((value) => value != BillingKind.salary).toList()) {
+      expect(
+          find.byWidgetPredicate((widget) =>
+              widget is Text &&
+              widget.data == kind.name &&
+              widget.style!.color == Colors.black),
+          findsOneWidget);
+      expect(find.byIcon(BillingIconMapper.getIcon(BillingType.income, kind)),
+          findsWidgets);
+    }
+    expect(
+        find.byWidgetPredicate((widget) =>
+            widget is Text &&
+            widget.data == BillingKind.salary.name &&
+            widget.style!.color == Colors.blue),
+        findsOneWidget);
   });
 }
