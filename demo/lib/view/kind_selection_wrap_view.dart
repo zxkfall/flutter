@@ -22,14 +22,12 @@ class KindSelectionWrapView extends StatefulWidget {
 }
 
 class _KindSelectionWrapViewState extends State<KindSelectionWrapView> {
-  Map<BillingType, BillingKind> selectedKinds = {}; // 用于保存每个type的选中kind
+  Map<BillingType, BillingKind> selectedKinds = {};
 
   @override
   void initState() {
     super.initState();
-    selectedKinds[widget.type] = widget.type == BillingType.expense
-        ? getExpenseValues()[0]
-        : getIncomeValues()[0]; // 设置默认选中的kind
+    selectedKinds[widget.type] = widget.selectedKind;
   }
 
   @override
