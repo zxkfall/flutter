@@ -9,6 +9,7 @@ import '../model/billing.dart';
 import '../view/billing_list_view.dart';
 import '../repository/billing_repository.dart';
 import '../provider/billing_provider.dart';
+import 'chart_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -41,6 +42,8 @@ class _HomePageState extends State<HomePage> {
           children: const <Widget>[
             // 展示页面
             BillingListView(),
+            // 图表页面
+            ChartPage(),
             // 设置页面
             SettingPage(),
           ],
@@ -63,24 +66,46 @@ class _HomePageState extends State<HomePage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                IconButton(
-                  onPressed: () {
-                    _pageController.animateToPage(0,
-                        duration: const Duration(milliseconds: 200),
-                        curve: Curves.easeInOut);
-                  },
-                  icon: const Icon(Icons.menu),
-                  color: Colors.white,
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        _pageController.animateToPage(0,
+                            duration: const Duration(milliseconds: 200),
+                            curve: Curves.easeInOut);
+                      },
+                      icon: const Icon(Icons.menu),
+                      color: Colors.white,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 36),
+                      child: IconButton(
+                        onPressed: () {
+                          _pageController.animateToPage(1,
+                              duration: const Duration(milliseconds: 200),
+                              curve: Curves.easeInOut);
+                        },
+                        icon: const Icon(Icons.bar_chart),
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
                 ),
-                IconButton(
-                  onPressed: () {
-                    _pageController.animateToPage(1,
-                        duration: const Duration(milliseconds: 200),
-                        curve: Curves.easeInOut);
-                  },
-                  icon: const Icon(Icons.settings),
-                  color: Colors.white,
-                ),
+                Row(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        _pageController.animateToPage(2,
+                            duration: const Duration(milliseconds: 200),
+                            curve: Curves.easeInOut);
+                      },
+                      icon: const Icon(Icons.settings),
+                      color: Colors.white,
+                    ),
+                  ],
+                )
               ],
             ),
           ),
