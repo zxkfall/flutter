@@ -25,7 +25,6 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadBillingData().then((value) {
-        log('llllllldd');
         Provider.of<BillingProvider>(context, listen: false).setBillings(value);
       });
     });
