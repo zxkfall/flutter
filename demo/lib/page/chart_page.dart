@@ -53,6 +53,7 @@ class _LineChartState extends State<ChartPage> {
             DateTime(currentDate.year, 1, 1),
             DateTime(currentDate.year + 1, 1, 1),
             chartPeriod);
+
         return Column(
           children: [
             TextButton(
@@ -135,11 +136,7 @@ class _LineChartState extends State<ChartPage> {
                       top: 30,
                       bottom: 12,
                     ),
-                    child: LineChart(chartPeriod == ChartPeriod.week
-                        ? generateLineChartData(weekSpots, false)
-                        : chartPeriod == ChartPeriod.month
-                            ? generateLineChartData(monthSpots, true)
-                            : generateLineChartData(yearSpots, false)),
+                    child: buildLineChart(weekSpots, monthSpots, yearSpots),
                   ),
                 ),
                 SizedBox(
@@ -159,6 +156,29 @@ class _LineChartState extends State<ChartPage> {
     );
   }
 
+  LineChart buildLineChart(List<FlSpot> weekSpots, List<FlSpot> monthSpots, List<FlSpot> yearSpots) {
+    if (chartPeriod == ChartPeriod.week) {
+      return LineChart(generateLineChartData(weekSpots, false));
+    } else if (chartPeriod == ChartPeriod.month) {
+      return LineChart(generateLineChartData(monthSpots, true));
+    } else if (chartPeriod == ChartPeriod.year) {
+      return LineChart(generateLineChartData(yearSpots, false));
+    }
+    return LineChart(generateLineChartData(weekSpots, false));
+  }
+
+  int getDayByPeriod(ChartPeriod chartPeriod, DateTime date) {
+    if (chartPeriod == ChartPeriod.week) {
+      return date.weekday;
+    } else if (chartPeriod == ChartPeriod.month) {
+      return date.day;
+    } else if (chartPeriod == ChartPeriod.year) {
+      return date.month;
+    } else {
+      return 0;
+    }
+  }
+
   List<FlSpot> generateSpots(
     List<Billing> billings,
     BillingType billingType,
@@ -166,21 +186,13 @@ class _LineChartState extends State<ChartPage> {
     DateTime endDate,
     ChartPeriod chartPeriod,
   ) {
-    List<FlSpot> spotsPre = billings
+    var spotsPre = billings
         .where((element) =>
             element.type == billingType &&
             element.date.isAfter(startDate) &&
             element.date.isBefore(endDate))
         .sortedBy((element) => element.date)
-        .groupBy((element) {
-          if (chartPeriod == ChartPeriod.week) {
-            return element.date.weekday;
-          } else if (chartPeriod == ChartPeriod.month) {
-            return element.date.day;
-          } else if (chartPeriod == ChartPeriod.year) {
-            return element.date.month;
-          }
-        })
+        .groupBy((element) => getDayByPeriod(chartPeriod, element.date))
         .map((day, values) {
           var total =
               values.fold(Decimal.zero, (sum, value) => sum + value.amount);
@@ -210,7 +222,7 @@ class _LineChartState extends State<ChartPage> {
 
   FlSpot getSpotForDay(
       List<FlSpot> spotsPre, int day, ChartPeriod chartPeriod) {
-    var spot = spotsPre.firstWhere((element) => element.x == (day + 1),
+    var spot = spotsPre.firstWhere((element) => element.x.toInt() == (day + 1),
         orElse: () => FlSpot(day + 1.0, 0));
     return spot;
   }
