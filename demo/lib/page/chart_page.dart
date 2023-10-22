@@ -25,8 +25,8 @@ class _LineChartSample2State extends State<ChartPage> {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<BillingProvider>(context, listen: false);
-    var billings = provider.billings.skip(20).takeFirst(30);
-    var spots = billings
+    var billings = provider.billings;
+    var weekSpotsPre = billings
         .where((element) => element.type == BillingType.expense)
         .sortedBy((element) => element.date)
         .groupBy((element) => DateFormat.yMMMd().format(element.date))
@@ -38,22 +38,40 @@ class _LineChartSample2State extends State<ChartPage> {
         .toList();
     var weekSpots = <FlSpot>[];
     for (var i = 1; i <= 7; i++) {
-      var spot = spots.where((element) => element.x == i).firstOrNull;
+      var spot = weekSpotsPre.where((element) => element.x == i).firstOrNull;
       if (spot == null) {
         weekSpots.add(FlSpot(i.toDouble(), 0));
       } else {
         weekSpots.add(spot);
       }
     }
-    var monthSpots = <FlSpot>[];
-    for (var i = 1; i <= 31; i++) {
-      var spot = spots.where((element) => element.x == i).firstOrNull;
-      if (spot == null) {
-        monthSpots.add(FlSpot(i.toDouble(), 0));
-      } else {
-        monthSpots.add(spot);
-      }
-    }
+    var now = DateTime.now();
+
+    DateTime currentDate = now.add(Duration(days: -60));
+
+    DateTime firstDayOfMonth = DateTime(currentDate.year, currentDate.month, 1);
+
+    DateTime lastDayOfMonth =
+        DateTime(currentDate.year, currentDate.month + 1, 1).subtract(const Duration(days: 1));
+
+    var monthSpotsPre = billings
+        .where((element) =>
+            element.type == BillingType.expense &&
+            element.date.isAfter(firstDayOfMonth) &&
+            element.date.isBefore(lastDayOfMonth))
+        .sortedBy((element) => element.date)
+        .groupBy((element) => element.date.day)
+        .map((day, values) => MapEntry(day.toString(),
+            values.sumBy((element) => element.amount.toDouble())))
+        .entries
+        .map((e) => FlSpot(double.parse(e.key), e.value))
+        .toList();
+
+    var monthSpots = List.generate(currentDate.daysInMonth, (day) {
+      var spot = monthSpotsPre.firstWhere((element) => element.x == (day + 1),
+          orElse: () => FlSpot(day + 1.0, 0));
+      return spot;
+    });
 
     return Stack(
       children: <Widget>[
@@ -141,7 +159,6 @@ class _LineChartSample2State extends State<ChartPage> {
   }
 
   LineChartData weekData(List<FlSpot> spots) {
-
     var maxY = spots.maxBy((element) => element.y.toDouble())!.y.toDouble();
     var minY = spots.minBy((element) => element.y.toDouble())!.y.toDouble();
     var maxX = spots.maxBy((element) => element.x.toDouble())!.x.toDouble();
@@ -179,10 +196,12 @@ class _LineChartSample2State extends State<ChartPage> {
             reservedSize: 30,
             interval: 1,
             getTitlesWidget: (value, meta) {
-              return Text(value.toString(), style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 15,
-              ), textAlign: TextAlign.left);
+              return Text(value.toString(),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                  ),
+                  textAlign: TextAlign.left);
             },
           ),
         ),
@@ -191,13 +210,15 @@ class _LineChartSample2State extends State<ChartPage> {
             showTitles: true,
             interval: 1,
             getTitlesWidget: (value, meta) {
-              if(value.toInt() % (maxY/10).toInt() != 0){
+              if (value.toInt() % (maxY / 10).toInt() != 0) {
                 return Container();
               }
-              return Text(value.toString(), style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 10,
-              ), textAlign: TextAlign.left);
+              return Text(value.toString(),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 10,
+                  ),
+                  textAlign: TextAlign.left);
             },
             reservedSize: 42,
           ),
@@ -237,8 +258,7 @@ class _LineChartSample2State extends State<ChartPage> {
   }
 
   LineChartData monthData(List<FlSpot> spots) {
-
-    var maxY = spots.maxBy((element) => element.y.toDouble())!.y.toDouble();
+    var maxY = spots.maxBy((element) => element.y.toDouble())!.y.toInt() == 0 ? 10.0 : spots.maxBy((element) => element.y.toDouble())!.y.toDouble();
     var minY = spots.minBy((element) => element.y.toDouble())!.y.toDouble();
     var maxX = spots.maxBy((element) => element.x.toDouble())!.x.toDouble();
     var minX = spots.minBy((element) => element.x.toDouble())!.x.toDouble();
@@ -275,10 +295,14 @@ class _LineChartSample2State extends State<ChartPage> {
             reservedSize: 30,
             interval: 1,
             getTitlesWidget: (value, meta) {
-              return value.toInt() % 5 != 0 ? Container() : Text(value.toInt().toString(), style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 15,
-              ), textAlign: TextAlign.left);
+              return value.toInt() % 5 != 0
+                  ? Container()
+                  : Text(value.toInt().toString(),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                      textAlign: TextAlign.left);
             },
           ),
         ),
@@ -287,13 +311,15 @@ class _LineChartSample2State extends State<ChartPage> {
             showTitles: true,
             interval: 1,
             getTitlesWidget: (value, meta) {
-              if(value.toInt() % (maxY/10).toInt() != 0){
+              if (value.toInt() % (maxY / 10).toInt() != 0) {
                 return Container();
               }
-              return Text(value.toString(), style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 10,
-              ), textAlign: TextAlign.left);
+              return Text(value.toString(),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 10,
+                  ),
+                  textAlign: TextAlign.left);
             },
             reservedSize: 42,
           ),
