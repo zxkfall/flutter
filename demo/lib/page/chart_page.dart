@@ -20,7 +20,6 @@ class _LineChartState extends State<ChartPage> {
     AppColors.contentColorBlue,
   ];
 
-  bool period = false;
   BillingType billingType = BillingType.expense;
   var currentDate = DateTime.now();
   var chartPeriod = ChartPeriod.week;
@@ -30,20 +29,21 @@ class _LineChartState extends State<ChartPage> {
     var provider = Provider.of<BillingProvider>(context, listen: false);
     var billings = provider.billings;
 
-    var firstDayOfWeek =
-        currentDate.subtract(Duration(days: currentDate.weekday - 1));
-    var lastDayOfWeek = currentDate
-        .add(Duration(days: DateTime.daysPerWeek - currentDate.weekday));
-
     var weekSpots = generateSpots(
-        billings, billingType, firstDayOfWeek, lastDayOfWeek, chartPeriod);
-
-    var firstDayOfMonth = DateTime(currentDate.year, currentDate.month, 1);
-    var lastDayOfMonth = DateTime(currentDate.year, currentDate.month + 1, 1)
-        .subtract(const Duration(days: 1));
+        billings,
+        billingType,
+        currentDate.subtract(Duration(days: currentDate.weekday - 1)),
+        currentDate
+            .add(Duration(days: DateTime.daysPerWeek - currentDate.weekday)),
+        chartPeriod);
 
     var monthSpots = generateSpots(
-        billings, billingType, firstDayOfMonth, lastDayOfMonth, chartPeriod);
+        billings,
+        billingType,
+        DateTime(currentDate.year, currentDate.month, 1),
+        DateTime(currentDate.year, currentDate.month + 1, 1)
+            .subtract(const Duration(days: 1)),
+        chartPeriod);
 
     var yearSpots = generateSpots(
         billings,
@@ -144,19 +144,11 @@ class _LineChartState extends State<ChartPage> {
             SizedBox(
               width: 60,
               height: 34,
-              child: TextButton(
-                onPressed: () {
-                  setState(() {
-                    period = !period;
-                  });
-                },
-                child: Text(
-                  'period',
-                  style: TextStyle(
+              child: Text(
+                chartPeriod.name,
+                style: TextStyle(
                     fontSize: 12,
-                    color:
-                        period ? Colors.black.withOpacity(0.5) : Colors.black,
-                  ),
+                    color: Colors.black.withOpacity(0.5)
                 ),
               ),
             ),
