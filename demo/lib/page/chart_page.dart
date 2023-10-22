@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dartx/dartx.dart';
 import 'package:decimal/decimal.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -31,7 +29,6 @@ class _LineChartState extends State<ChartPage> {
   Widget build(BuildContext context) {
     return Consumer<BillingProvider>(
       builder: (context, billingProvider, child) {
-        log('start');
         var billings = billingProvider.billings;
 
         var weekSpots = generateSpots(
@@ -56,7 +53,6 @@ class _LineChartState extends State<ChartPage> {
             DateTime(currentDate.year, 1, 1),
             DateTime(currentDate.year + 1, 1, 1),
             chartPeriod);
-        log('end');
         return Column(
           children: [
             TextButton(
@@ -170,7 +166,7 @@ class _LineChartState extends State<ChartPage> {
     DateTime endDate,
     ChartPeriod chartPeriod,
   ) {
-    Iterable<FlSpot> spotsPre = billings
+    List<FlSpot> spotsPre = billings
         .where((element) =>
             element.type == billingType &&
             element.date.isAfter(startDate) &&
@@ -191,20 +187,32 @@ class _LineChartState extends State<ChartPage> {
           return MapEntry(day.toString(), total);
         })
         .entries
-        .map((e) => FlSpot(e.key.toDouble(), e.value.toDouble()));
+        .map((e) => FlSpot(e.key.toDouble(), e.value.toDouble()))
+        .toList();
 
     return List.generate(
-        chartPeriod == ChartPeriod.week
-            ? endDate.weekday
-            : chartPeriod == ChartPeriod.month
-                ? endDate.day
-                : chartPeriod == ChartPeriod.year
-                    ? 12
-                    : 0, (day) {
-      var spot = spotsPre.firstWhere((element) => element.x == (day + 1),
-          orElse: () => FlSpot(day + 1.0, 0));
-      return spot;
-    });
+      getPeriodCountByDate(chartPeriod, endDate),
+      (day) => getSpotForDay(spotsPre, day, chartPeriod),
+    );
+  }
+
+  int getPeriodCountByDate(ChartPeriod chartPeriod, DateTime endDate) {
+    if (chartPeriod == ChartPeriod.week) {
+      return 7;
+    } else if (chartPeriod == ChartPeriod.month) {
+      return endDate.daysInMonth;
+    } else if (chartPeriod == ChartPeriod.year) {
+      return 12;
+    } else {
+      return 0;
+    }
+  }
+
+  FlSpot getSpotForDay(
+      List<FlSpot> spotsPre, int day, ChartPeriod chartPeriod) {
+    var spot = spotsPre.firstWhere((element) => element.x == (day + 1),
+        orElse: () => FlSpot(day + 1.0, 0));
+    return spot;
   }
 
   LineChartData generateLineChartData(List<FlSpot> spots, bool isMonthData) {
