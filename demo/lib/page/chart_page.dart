@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartx/dartx.dart';
 import 'package:decimal/decimal.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -36,15 +38,14 @@ class _LineChartState extends State<ChartPage> {
             billingType,
             currentDate.subtract(Duration(days: currentDate.weekday - 1)),
             currentDate.add(
-                Duration(days: DateTime.daysPerWeek - currentDate.weekday)),
+                Duration(days: DateTime.daysPerWeek - currentDate.weekday + 1)),
             chartPeriod);
 
         var monthSpots = generateSpots(
             billings,
             billingType,
             DateTime(currentDate.year, currentDate.month, 1),
-            DateTime(currentDate.year, currentDate.month + 1, 1)
-                .subtract(const Duration(days: 1)),
+            DateTime(currentDate.year, currentDate.month + 1, 1),
             chartPeriod);
 
         var yearSpots = generateSpots(
@@ -156,7 +157,8 @@ class _LineChartState extends State<ChartPage> {
     );
   }
 
-  LineChart buildLineChart(List<FlSpot> weekSpots, List<FlSpot> monthSpots, List<FlSpot> yearSpots) {
+  LineChart buildLineChart(
+      List<FlSpot> weekSpots, List<FlSpot> monthSpots, List<FlSpot> yearSpots) {
     if (chartPeriod == ChartPeriod.week) {
       return LineChart(generateLineChartData(weekSpots, false));
     } else if (chartPeriod == ChartPeriod.month) {
