@@ -1,5 +1,13 @@
+import 'dart:developer';
+
+import 'package:dartx/dartx.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
+import '../model/billing.dart';
+import '../provider/billing_provider.dart';
 
 class ChartPage extends StatefulWidget {
   const ChartPage({super.key});
@@ -18,6 +26,37 @@ class _LineChartSample2State extends State<ChartPage> {
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<BillingProvider>(context, listen: false);
+    var billings = provider.billings.skip(20).takeFirst(30);
+    var spots = billings
+        .where((element) => element.type == BillingType.expense)
+        .sortedBy((element) => element.date)
+        .groupBy((element) => DateFormat.yMMMd().format(element.date))
+        .map((key, values) =>
+            MapEntry(key, values.sumBy((element) => element.amount.toDouble())))
+        .entries
+        .map((e) =>
+            FlSpot(DateFormat.yMMMd().parse(e.key).weekday.toDouble(), e.value))
+        .toList();
+    var weekSpots = <FlSpot>[];
+    for (var i = 1; i <= 7; i++) {
+      var spot = spots.where((element) => element.x == i).firstOrNull;
+      if (spot == null) {
+        weekSpots.add(FlSpot(i.toDouble(), 0));
+      } else {
+        weekSpots.add(spot);
+      }
+    }
+    var monthSpots = <FlSpot>[];
+    for (var i = 1; i <= 31; i++) {
+      var spot = spots.where((element) => element.x == i).firstOrNull;
+      if (spot == null) {
+        monthSpots.add(FlSpot(i.toDouble(), 0));
+      } else {
+        monthSpots.add(spot);
+      }
+    }
+
     return Stack(
       children: <Widget>[
         AspectRatio(
@@ -26,11 +65,11 @@ class _LineChartSample2State extends State<ChartPage> {
             padding: const EdgeInsets.only(
               right: 18,
               left: 12,
-              top: 24,
+              top: 30,
               bottom: 12,
             ),
             child: LineChart(
-              showAvg ? avgData() : mainData(),
+              showAvg ? monthData(monthSpots) : weekData(weekSpots),
             ),
           ),
         ),
@@ -74,7 +113,6 @@ class _LineChartSample2State extends State<ChartPage> {
     String text = monthMap[value.toInt()] ?? '';
     Widget textWidget = Text(text, style: style);
 
-
     return SideTitleWidget(
       axisSide: meta.axisSide,
       child: textWidget,
@@ -104,8 +142,15 @@ class _LineChartSample2State extends State<ChartPage> {
     return Text(text, style: style, textAlign: TextAlign.left);
   }
 
-  LineChartData mainData() {
+  LineChartData weekData(List<FlSpot> spots) {
+
+    var maxY = spots.maxBy((element) => element.y.toDouble())!.y.toDouble();
+    var minY = spots.minBy((element) => element.y.toDouble())!.y.toDouble();
+    var maxX = spots.maxBy((element) => element.x.toDouble())!.x.toDouble();
+    var minX = spots.minBy((element) => element.x.toDouble())!.x.toDouble();
     return LineChartData(
+
+
       gridData: FlGridData(
         show: true,
         drawVerticalLine: true,
@@ -137,14 +182,27 @@ class _LineChartSample2State extends State<ChartPage> {
             showTitles: true,
             reservedSize: 30,
             interval: 1,
-            getTitlesWidget: bottomTitleWidgets,
+            getTitlesWidget: (value, meta) {
+              return Text(value.toString(), style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+              ), textAlign: TextAlign.left);
+            },
           ),
         ),
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
             interval: 1,
-            getTitlesWidget: leftTitleWidgets,
+            getTitlesWidget: (value, meta) {
+              if(value.toInt() % (maxY/10).toInt() != 0){
+                return Container();
+              }
+              return Text(value.toString(), style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 10,
+              ), textAlign: TextAlign.left);
+            },
             reservedSize: 42,
           ),
         ),
@@ -153,22 +211,112 @@ class _LineChartSample2State extends State<ChartPage> {
         show: true,
         border: Border.all(color: const Color(0xff37434d)),
       ),
-      minX: 0,
-      maxX: 6,
-      minY: 0,
-      maxY: 6,
+      minX: minX,
+      maxX: maxX,
+      minY: minY,
+      maxY: maxY,
       lineBarsData: [
         LineChartBarData(
-          spots: const [
-            FlSpot(0, 3),
-            FlSpot(1, 3.5),
-            FlSpot(2, 5),
-            FlSpot(3, 1),
-            FlSpot(4, 4),
-            FlSpot(5, 3),
-            FlSpot(6, 4),
-          ],
-          isCurved: true,
+          spots: spots,
+          isCurved: false,
+          gradient: LinearGradient(
+            colors: gradientColors,
+          ),
+          barWidth: 5,
+          isStrokeCapRound: true,
+          dotData: const FlDotData(
+            show: true,
+          ),
+          belowBarData: BarAreaData(
+            show: true,
+            gradient: LinearGradient(
+              colors: gradientColors
+                  .map((color) => color.withOpacity(0.3))
+                  .toList(),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  LineChartData monthData(List<FlSpot> spots) {
+
+    var maxY = spots.maxBy((element) => element.y.toDouble())!.y.toDouble();
+    var minY = spots.minBy((element) => element.y.toDouble())!.y.toDouble();
+    var maxX = spots.maxBy((element) => element.x.toDouble())!.x.toDouble();
+    var minX = spots.minBy((element) => element.x.toDouble())!.x.toDouble();
+    return LineChartData(
+
+
+      gridData: FlGridData(
+        show: true,
+        drawVerticalLine: true,
+        horizontalInterval: 1,
+        verticalInterval: 1,
+        getDrawingHorizontalLine: (value) {
+          return const FlLine(
+            color: AppColors.mainGridLineColor,
+            strokeWidth: 1,
+          );
+        },
+        getDrawingVerticalLine: (value) {
+          return const FlLine(
+            color: AppColors.mainGridLineColor,
+            strokeWidth: 1,
+          );
+        },
+      ),
+      titlesData: FlTitlesData(
+        show: true,
+        rightTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        topTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 30,
+            interval: 1,
+            getTitlesWidget: (value, meta) {
+              return value.toInt() % 5 != 0 ? Container() : Text(value.toInt().toString(), style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+              ), textAlign: TextAlign.left);
+            },
+          ),
+        ),
+        leftTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            interval: 1,
+            getTitlesWidget: (value, meta) {
+              if(value.toInt() % (maxY/10).toInt() != 0){
+                return Container();
+              }
+              return Text(value.toString(), style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 10,
+              ), textAlign: TextAlign.left);
+            },
+            reservedSize: 42,
+          ),
+        ),
+      ),
+      borderData: FlBorderData(
+        show: true,
+        border: Border.all(color: const Color(0xff37434d)),
+      ),
+      minX: minX,
+      maxX: maxX,
+      minY: minY,
+      maxY: maxY,
+      lineBarsData: [
+        LineChartBarData(
+          spots: spots,
+          isCurved: false,
           gradient: LinearGradient(
             colors: gradientColors,
           ),
