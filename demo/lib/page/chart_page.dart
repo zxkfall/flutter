@@ -23,6 +23,7 @@ class _LineChartState extends State<ChartPage> {
   bool period = false;
   BillingType billingType = BillingType.expense;
   var currentDate = DateTime.now();
+  var chartPeriod = ChartPeriod.week;
 
   @override
   Widget build(BuildContext context) {
@@ -35,14 +36,21 @@ class _LineChartState extends State<ChartPage> {
         .add(Duration(days: DateTime.daysPerWeek - currentDate.weekday));
 
     var weekSpots = generateSpots(
-        billings, billingType, firstDayOfWeek, lastDayOfWeek, true);
+        billings, billingType, firstDayOfWeek, lastDayOfWeek, chartPeriod);
 
     var firstDayOfMonth = DateTime(currentDate.year, currentDate.month, 1);
     var lastDayOfMonth = DateTime(currentDate.year, currentDate.month + 1, 1)
         .subtract(const Duration(days: 1));
 
     var monthSpots = generateSpots(
-        billings, billingType, firstDayOfMonth, lastDayOfMonth, false);
+        billings, billingType, firstDayOfMonth, lastDayOfMonth, chartPeriod);
+
+    var yearSpots = generateSpots(
+        billings,
+        billingType,
+        DateTime(currentDate.year, 1, 1),
+        DateTime(currentDate.year + 1, 1, 1),
+        chartPeriod);
 
     return Column(
       children: [
@@ -67,16 +75,37 @@ class _LineChartState extends State<ChartPage> {
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(period ? 'Month' : 'Week'),
-            Switch(
-              value: period,
+          children: <Widget>[
+            Radio(
+              value: ChartPeriod.week,
+              groupValue: chartPeriod,
               onChanged: (value) {
                 setState(() {
-                  period = value;
+                  chartPeriod = value!;
                 });
               },
             ),
+            const Text('Week'),
+            Radio(
+              value: ChartPeriod.month,
+              groupValue: chartPeriod,
+              onChanged: (value) {
+                setState(() {
+                  chartPeriod = value!;
+                });
+              },
+            ),
+            const Text('Month'),
+            Radio(
+              value: ChartPeriod.year,
+              groupValue: chartPeriod,
+              onChanged: (value) {
+                setState(() {
+                  chartPeriod = value!;
+                });
+              },
+            ),
+            const Text('Year'),
           ],
         ),
         Row(
@@ -105,11 +134,11 @@ class _LineChartState extends State<ChartPage> {
                   top: 30,
                   bottom: 12,
                 ),
-                child: LineChart(
-                  period
-                      ? generateLineChartData(monthSpots, true)
-                      : generateLineChartData(weekSpots, false),
-                ),
+                child: LineChart(chartPeriod == ChartPeriod.week
+                    ? generateLineChartData(weekSpots, false)
+                    : chartPeriod == ChartPeriod.month
+                        ? generateLineChartData(monthSpots, true)
+                        : generateLineChartData(yearSpots, false)),
               ),
             ),
             SizedBox(
@@ -142,22 +171,36 @@ class _LineChartState extends State<ChartPage> {
     BillingType billingType,
     DateTime startDate,
     DateTime endDate,
-    bool isWeek,
+    ChartPeriod chartPeriod,
   ) {
-    var spotsPre = billings
+    Iterable<FlSpot> spotsPre = billings
         .where((element) =>
             element.type == billingType &&
             element.date.isAfter(startDate) &&
             element.date.isBefore(endDate))
         .sortedBy((element) => element.date)
-        .groupBy((element) => isWeek ? element.date.weekday : element.date.day)
+        .groupBy((element) {
+          if (chartPeriod == ChartPeriod.week) {
+            return element.date.weekday;
+          } else if (chartPeriod == ChartPeriod.month) {
+            return element.date.day;
+          } else if (chartPeriod == ChartPeriod.year) {
+            return element.date.month;
+          }
+        })
         .map((day, values) => MapEntry(day.toString(),
             values.sumBy((element) => element.amount.toDouble())))
         .entries
-        .map((e) => FlSpot(double.parse(e.key), e.value))
-        .toList();
+        .map((e) => FlSpot(e.key.toDouble(), e.value.toDouble()));
 
-    return List.generate(isWeek ? endDate.weekday : endDate.day, (day) {
+    return List.generate(
+        chartPeriod == ChartPeriod.week
+            ? endDate.weekday
+            : chartPeriod == ChartPeriod.month
+                ? endDate.day
+                : chartPeriod == ChartPeriod.year
+                    ? 12
+                    : 0, (day) {
       var spot = spotsPre.firstWhere((element) => element.x == (day + 1),
           orElse: () => FlSpot(day + 1.0, 0));
       return spot;
@@ -281,6 +324,8 @@ class _LineChartState extends State<ChartPage> {
     );
   }
 }
+
+enum ChartPeriod { week, month, year }
 
 class AppColors {
   static const Color primary = contentColorCyan;
