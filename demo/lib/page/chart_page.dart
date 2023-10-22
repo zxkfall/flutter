@@ -234,10 +234,10 @@ class _LineChartState extends State<ChartPage> {
             showTitles: true,
             interval: 1,
             getTitlesWidget: (value, meta) {
-              if (value.toInt() % (maxY / 10).toInt() != 0) {
+              if (value.toInt() % (maxY ~/ 10) != 0) {
                 return Container();
               }
-              return Text(value.toString(),
+              return Text(value.toInt().toString(),
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 10,
