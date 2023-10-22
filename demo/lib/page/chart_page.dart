@@ -1,6 +1,7 @@
 import 'package:dartx/dartx.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../model/billing.dart';
@@ -20,65 +21,118 @@ class _LineChartSample2State extends State<ChartPage> {
   ];
 
   bool period = false;
+  BillingType billingType = BillingType.expense;
+  var currentDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<BillingProvider>(context, listen: false);
     var billings = provider.billings;
 
-    var now = DateTime.now();
-    DateTime currentDate = now;
-    var billingType = BillingType.expense;
-
     var firstDayOfWeek =
         currentDate.subtract(Duration(days: currentDate.weekday - 1));
     var lastDayOfWeek = currentDate
         .add(Duration(days: DateTime.daysPerWeek - currentDate.weekday));
 
-    var weekSpots =
-        generateSpots(billings, billingType, firstDayOfWeek, lastDayOfWeek, true);
+    var weekSpots = generateSpots(
+        billings, billingType, firstDayOfWeek, lastDayOfWeek, true);
 
     var firstDayOfMonth = DateTime(currentDate.year, currentDate.month, 1);
     var lastDayOfMonth = DateTime(currentDate.year, currentDate.month + 1, 1)
         .subtract(const Duration(days: 1));
 
-    var monthSpots =
-        generateSpots(billings, billingType, firstDayOfMonth, lastDayOfMonth, false);
+    var monthSpots = generateSpots(
+        billings, billingType, firstDayOfMonth, lastDayOfMonth, false);
 
-    return Stack(
-      children: <Widget>[
-        AspectRatio(
-          aspectRatio: 1.70,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              right: 18,
-              left: 12,
-              top: 30,
-              bottom: 12,
-            ),
-            child: LineChart(
-              period ? generateLineChartData(monthSpots, true) : generateLineChartData(weekSpots, false),
-            ),
+    return Column(
+      children: [
+        TextButton(
+          onPressed: () async {
+            var date = await showDatePicker(
+              context: context,
+              initialDate: currentDate,
+              firstDate: DateTime(2000),
+              lastDate: DateTime(2100),
+            );
+            if (date != null) {
+              setState(() {
+                currentDate = date;
+              });
+            }
+          },
+          child: Text(
+            DateFormat.yMMMd().format(currentDate),
+            style: const TextStyle(fontSize: 16.0),
           ),
         ),
-        SizedBox(
-          width: 60,
-          height: 34,
-          child: TextButton(
-            onPressed: () {
-              setState(() {
-                period = !period;
-              });
-            },
-            child: Text(
-              'period',
-              style: TextStyle(
-                fontSize: 12,
-                color: period ? Colors.black.withOpacity(0.5) : Colors.black,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(period ? 'Month' : 'Week'),
+            Switch(
+              value: period,
+              onChanged: (value) {
+                setState(() {
+                  period = value;
+                });
+              },
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(billingType == BillingType.income ? 'Income' : 'Expense'),
+            Switch(
+              value: billingType == BillingType.income,
+              onChanged: (value) {
+                setState(() {
+                  billingType =
+                      value ? BillingType.income : BillingType.expense;
+                });
+              },
+            ),
+          ],
+        ),
+        Stack(
+          children: <Widget>[
+            AspectRatio(
+              aspectRatio: 1.70,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  right: 18,
+                  left: 12,
+                  top: 30,
+                  bottom: 12,
+                ),
+                child: LineChart(
+                  period
+                      ? generateLineChartData(monthSpots, true)
+                      : generateLineChartData(weekSpots, false),
+                ),
               ),
             ),
-          ),
-        ),
+            SizedBox(
+              width: 60,
+              height: 34,
+              child: TextButton(
+                onPressed: () {
+                  setState(() {
+                    period = !period;
+                  });
+                },
+                child: Text(
+                  'period',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color:
+                        period ? Colors.black.withOpacity(0.5) : Colors.black,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        )
       ],
     );
   }
@@ -96,7 +150,7 @@ class _LineChartSample2State extends State<ChartPage> {
             element.date.isAfter(startDate) &&
             element.date.isBefore(endDate))
         .sortedBy((element) => element.date)
-        .groupBy((element) => isWeek ? element.date.weekday: element.date.day)
+        .groupBy((element) => isWeek ? element.date.weekday : element.date.day)
         .map((day, values) => MapEntry(day.toString(),
             values.sumBy((element) => element.amount.toDouble())))
         .entries
@@ -111,7 +165,11 @@ class _LineChartSample2State extends State<ChartPage> {
   }
 
   LineChartData generateLineChartData(List<FlSpot> spots, bool isMonthData) {
-    var maxY = spots.maxBy((element) => element.y.toDouble())!.y.toDouble().toInt() == 0 ? 10.0 : spots.maxBy((element) => element.y.toDouble())!.y.toDouble();
+    var maxY =
+        spots.maxBy((element) => element.y.toDouble())!.y.toDouble().toInt() ==
+                0
+            ? 10.0
+            : spots.maxBy((element) => element.y.toDouble())!.y.toDouble();
     var minY = spots.minBy((element) => element.y.toDouble())!.y.toDouble();
     var maxX = spots.maxBy((element) => element.x.toDouble())!.x.toDouble();
     var minX = spots.minBy((element) => element.x.toDouble())!.x.toDouble();
@@ -155,11 +213,11 @@ class _LineChartSample2State extends State<ChartPage> {
                 return value.toInt() % 5 != 0
                     ? Container()
                     : Text(value.toInt().toString(),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
-                    ),
-                    textAlign: TextAlign.left);
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
+                        textAlign: TextAlign.left);
               } else {
                 return Text(value.toInt().toString(),
                     style: const TextStyle(
