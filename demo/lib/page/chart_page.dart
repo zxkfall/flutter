@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:dartx/dartx.dart';
+import 'package:decimal/decimal.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -184,8 +185,11 @@ class _LineChartState extends State<ChartPage> {
             return element.date.month;
           }
         })
-        .map((day, values) => MapEntry(day.toString(),
-            values.sumBy((element) => element.amount.toDouble())))
+        .map((day, values) {
+          var total =
+              values.fold(Decimal.zero, (sum, value) => sum + value.amount);
+          return MapEntry(day.toString(), total);
+        })
         .entries
         .map((e) => FlSpot(e.key.toDouble(), e.value.toDouble()));
 
