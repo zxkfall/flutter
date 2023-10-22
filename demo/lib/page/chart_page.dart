@@ -11,10 +11,10 @@ class ChartPage extends StatefulWidget {
   const ChartPage({super.key});
 
   @override
-  State<ChartPage> createState() => _LineChartSample2State();
+  State<ChartPage> createState() => _LineChartState();
 }
 
-class _LineChartSample2State extends State<ChartPage> {
+class _LineChartState extends State<ChartPage> {
   List<Color> gradientColors = [
     AppColors.contentColorCyan,
     AppColors.contentColorBlue,
