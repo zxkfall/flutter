@@ -23,7 +23,7 @@ class _LineChartState extends State<ChartPage> {
     AppColors.contentColorBlue,
   ];
 
-  BillingType billingType = BillingType.expense;
+  var billingType = BillingType.expense;
   var currentDate = DateTime.now();
   var chartPeriod = ChartPeriod.week;
 
@@ -235,12 +235,13 @@ class _LineChartState extends State<ChartPage> {
                 0
             ? 10.0
             : spots.maxBy((element) => element.y.toDouble())!.y.toDouble();
-    var minY = spots.minBy((element) => element.y.toDouble())!.y.toDouble();
+    var minY = 0.0;
     var maxX = spots.maxBy((element) => element.x.toDouble())!.x.toDouble();
     var minX = spots.minBy((element) => element.x.toDouble())!.x.toDouble();
 
     var bottomTitlesInterval = isMonthData ? 5.0 : 1.0;
-    var leftTitlesInterval = (maxY ~/ 10).toDouble();
+    var tagCount = 8;
+    var leftTitlesInterval = (maxY ~/ tagCount).toDouble();
 
     return LineChartData(
       gridData: FlGridData(
@@ -300,7 +301,7 @@ class _LineChartState extends State<ChartPage> {
             showTitles: true,
             interval: leftTitlesInterval,
             getTitlesWidget: (value, meta) {
-              if (value.toInt() % (maxY ~/ 10) != 0) {
+              if (value.toInt() % (maxY ~/ tagCount) != 0) {
                 return Container();
               }
               return Text(value.toInt().toString(),
@@ -321,7 +322,10 @@ class _LineChartState extends State<ChartPage> {
       minX: minX,
       maxX: maxX,
       minY: minY,
-      maxY: maxY,
+      maxY: (((maxY - (maxY ~/ tagCount) * tagCount) / (maxY ~/ tagCount))
+                  .ceil() +
+              tagCount) *
+          (maxY ~/ tagCount).toDouble(),
       lineBarsData: [
         LineChartBarData(
           spots: spots,
