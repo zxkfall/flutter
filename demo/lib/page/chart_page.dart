@@ -26,135 +26,137 @@ class _LineChartState extends State<ChartPage> {
 
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<BillingProvider>(context, listen: false);
-    var billings = provider.billings;
+    return Consumer<BillingProvider>(
+      builder: (context, billingProvider, child) {
+        var billings = billingProvider.billings;
 
-    var weekSpots = generateSpots(
-        billings,
-        billingType,
-        currentDate.subtract(Duration(days: currentDate.weekday - 1)),
-        currentDate
-            .add(Duration(days: DateTime.daysPerWeek - currentDate.weekday)),
-        chartPeriod);
+        var weekSpots = generateSpots(
+            billings,
+            billingType,
+            currentDate.subtract(Duration(days: currentDate.weekday - 1)),
+            currentDate
+                .add(Duration(days: DateTime.daysPerWeek - currentDate.weekday)),
+            chartPeriod);
 
-    var monthSpots = generateSpots(
-        billings,
-        billingType,
-        DateTime(currentDate.year, currentDate.month, 1),
-        DateTime(currentDate.year, currentDate.month + 1, 1)
-            .subtract(const Duration(days: 1)),
-        chartPeriod);
+        var monthSpots = generateSpots(
+            billings,
+            billingType,
+            DateTime(currentDate.year, currentDate.month, 1),
+            DateTime(currentDate.year, currentDate.month + 1, 1)
+                .subtract(const Duration(days: 1)),
+            chartPeriod);
 
-    var yearSpots = generateSpots(
-        billings,
-        billingType,
-        DateTime(currentDate.year, 1, 1),
-        DateTime(currentDate.year + 1, 1, 1),
-        chartPeriod);
-
-    return Column(
-      children: [
-        TextButton(
-          onPressed: () async {
-            var date = await showDatePicker(
-              context: context,
-              initialDate: currentDate,
-              firstDate: DateTime(2000),
-              lastDate: DateTime(2100),
-            );
-            if (date != null) {
-              setState(() {
-                currentDate = date;
-              });
-            }
-          },
-          child: Text(
-            DateFormat.yMMMd().format(currentDate),
-            style: const TextStyle(fontSize: 16.0),
-          ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Radio(
-              value: ChartPeriod.week,
-              groupValue: chartPeriod,
-              onChanged: (value) {
-                setState(() {
-                  chartPeriod = value!;
-                });
-              },
-            ),
-            const Text('Week'),
-            Radio(
-              value: ChartPeriod.month,
-              groupValue: chartPeriod,
-              onChanged: (value) {
-                setState(() {
-                  chartPeriod = value!;
-                });
-              },
-            ),
-            const Text('Month'),
-            Radio(
-              value: ChartPeriod.year,
-              groupValue: chartPeriod,
-              onChanged: (value) {
-                setState(() {
-                  chartPeriod = value!;
-                });
-              },
-            ),
-            const Text('Year'),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        var yearSpots = generateSpots(
+            billings,
+            billingType,
+            DateTime(currentDate.year, 1, 1),
+            DateTime(currentDate.year + 1, 1, 1),
+            chartPeriod);
+        return Column(
           children: [
-            Text(billingType == BillingType.income ? 'Income' : 'Expense'),
-            Switch(
-              value: billingType == BillingType.income,
-              onChanged: (value) {
-                setState(() {
-                  billingType =
-                      value ? BillingType.income : BillingType.expense;
-                });
+            TextButton(
+              onPressed: () async {
+                var date = await showDatePicker(
+                  context: context,
+                  initialDate: currentDate,
+                  firstDate: DateTime(2000),
+                  lastDate: DateTime(2100),
+                );
+                if (date != null) {
+                  setState(() {
+                    currentDate = date;
+                  });
+                }
               },
+              child: Text(
+                DateFormat.yMMMd().format(currentDate),
+                style: const TextStyle(fontSize: 16.0),
+              ),
             ),
-          ],
-        ),
-        Stack(
-          children: <Widget>[
-            AspectRatio(
-              aspectRatio: 1.70,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  right: 18,
-                  left: 12,
-                  top: 30,
-                  bottom: 12,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Radio(
+                  value: ChartPeriod.week,
+                  groupValue: chartPeriod,
+                  onChanged: (value) {
+                    setState(() {
+                      chartPeriod = value!;
+                    });
+                  },
                 ),
-                child: LineChart(chartPeriod == ChartPeriod.week
-                    ? generateLineChartData(weekSpots, false)
-                    : chartPeriod == ChartPeriod.month
+                const Text('Week'),
+                Radio(
+                  value: ChartPeriod.month,
+                  groupValue: chartPeriod,
+                  onChanged: (value) {
+                    setState(() {
+                      chartPeriod = value!;
+                    });
+                  },
+                ),
+                const Text('Month'),
+                Radio(
+                  value: ChartPeriod.year,
+                  groupValue: chartPeriod,
+                  onChanged: (value) {
+                    setState(() {
+                      chartPeriod = value!;
+                    });
+                  },
+                ),
+                const Text('Year'),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(billingType == BillingType.income ? 'Income' : 'Expense'),
+                Switch(
+                  value: billingType == BillingType.income,
+                  onChanged: (value) {
+                    setState(() {
+                      billingType =
+                      value ? BillingType.income : BillingType.expense;
+                    });
+                  },
+                ),
+              ],
+            ),
+            Stack(
+              children: <Widget>[
+                AspectRatio(
+                  aspectRatio: 1.70,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      right: 18,
+                      left: 12,
+                      top: 30,
+                      bottom: 12,
+                    ),
+                    child: LineChart(chartPeriod == ChartPeriod.week
+                        ? generateLineChartData(weekSpots, false)
+                        : chartPeriod == ChartPeriod.month
                         ? generateLineChartData(monthSpots, true)
                         : generateLineChartData(yearSpots, false)),
-              ),
-            ),
-            SizedBox(
-              width: 60,
-              height: 34,
-              child: Text(
-                chartPeriod.name,
-                style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.black.withOpacity(0.5)
+                  ),
                 ),
-              ),
-            ),
+                SizedBox(
+                  width: 60,
+                  height: 34,
+                  child: Text(
+                    chartPeriod.name,
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.black.withOpacity(0.5)
+                    ),
+                  ),
+                ),
+              ],
+            )
           ],
-        )
-      ],
+        );
+      },
     );
   }
 
