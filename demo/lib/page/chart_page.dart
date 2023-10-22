@@ -19,7 +19,7 @@ class _LineChartSample2State extends State<ChartPage> {
     AppColors.contentColorBlue,
   ];
 
-  bool showAvg = false;
+  bool period = false;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +57,7 @@ class _LineChartSample2State extends State<ChartPage> {
               bottom: 12,
             ),
             child: LineChart(
-              showAvg ? generateLineChartData(monthSpots, true) : generateLineChartData(weekSpots, false),
+              period ? generateLineChartData(monthSpots, true) : generateLineChartData(weekSpots, false),
             ),
           ),
         ),
@@ -67,14 +67,14 @@ class _LineChartSample2State extends State<ChartPage> {
           child: TextButton(
             onPressed: () {
               setState(() {
-                showAvg = !showAvg;
+                period = !period;
               });
             },
             child: Text(
-              'avg',
+              'period',
               style: TextStyle(
                 fontSize: 12,
-                color: showAvg ? Colors.black.withOpacity(0.5) : Colors.black,
+                color: period ? Colors.black.withOpacity(0.5) : Colors.black,
               ),
             ),
           ),
