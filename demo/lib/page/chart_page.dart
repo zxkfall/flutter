@@ -28,61 +28,23 @@ class _LineChartSample2State extends State<ChartPage> {
     var billings = provider.billings;
 
     var now = DateTime.now();
-
-    DateTime currentDate = now.add(Duration(days: -60));
+    DateTime currentDate = now.add(const Duration(days: -60));
+    var billingType = BillingType.expense;
 
     var firstDayOfWeek =
         currentDate.subtract(Duration(days: currentDate.weekday - 1));
     var lastDayOfWeek = currentDate
         .add(Duration(days: DateTime.daysPerWeek - currentDate.weekday));
 
-    var weekSpotsPre = billings
-        .where((element) =>
-            element.type == BillingType.expense &&
-            element.date.isAfter(firstDayOfWeek) &&
-            element.date.isBefore(lastDayOfWeek))
-        .sortedBy((element) => element.date)
-        .groupBy((element) => DateFormat.yMMMd().format(element.date))
-        .map((key, values) =>
-            MapEntry(key, values.sumBy((element) => element.amount.toDouble())))
-        .entries
-        .map((e) =>
-            FlSpot(DateFormat.yMMMd().parse(e.key).weekday.toDouble(), e.value))
-        .toList();
-    var weekSpots = <FlSpot>[];
-    for (var i = 1; i <= 7; i++) {
-      var spot = weekSpotsPre.where((element) => element.x == i).firstOrNull;
-      if (spot == null) {
-        weekSpots.add(FlSpot(i.toDouble(), 0));
-      } else {
-        weekSpots.add(spot);
-      }
-    }
+    var weekSpots =
+        generateSpots(billings, billingType, firstDayOfWeek, lastDayOfWeek, true);
 
-    DateTime firstDayOfMonth = DateTime(currentDate.year, currentDate.month, 1);
+    var firstDayOfMonth = DateTime(currentDate.year, currentDate.month, 1);
+    var lastDayOfMonth = DateTime(currentDate.year, currentDate.month + 1, 1)
+        .subtract(const Duration(days: 1));
 
-    DateTime lastDayOfMonth =
-        DateTime(currentDate.year, currentDate.month + 1, 1)
-            .subtract(const Duration(days: 1));
-
-    var monthSpotsPre = billings
-        .where((element) =>
-            element.type == BillingType.expense &&
-            element.date.isAfter(firstDayOfMonth) &&
-            element.date.isBefore(lastDayOfMonth))
-        .sortedBy((element) => element.date)
-        .groupBy((element) => element.date.day)
-        .map((day, values) => MapEntry(day.toString(),
-            values.sumBy((element) => element.amount.toDouble())))
-        .entries
-        .map((e) => FlSpot(double.parse(e.key), e.value))
-        .toList();
-
-    var monthSpots = List.generate(currentDate.daysInMonth, (day) {
-      var spot = monthSpotsPre.firstWhere((element) => element.x == (day + 1),
-          orElse: () => FlSpot(day + 1.0, 0));
-      return spot;
-    });
+    var monthSpots =
+        generateSpots(billings, billingType, firstDayOfMonth, lastDayOfMonth, false);
 
     return Stack(
       children: <Widget>[
@@ -96,7 +58,7 @@ class _LineChartSample2State extends State<ChartPage> {
               bottom: 12,
             ),
             child: LineChart(
-              showAvg ? monthData(monthSpots) : weekData(weekSpots),
+              showAvg ? generateLineChartData(monthSpots, true) : generateLineChartData(weekSpots, false),
             ),
           ),
         ),
@@ -121,6 +83,147 @@ class _LineChartSample2State extends State<ChartPage> {
       ],
     );
   }
+
+  List<FlSpot> generateSpots(
+    List<Billing> billings,
+    BillingType billingType,
+    DateTime startDate,
+    DateTime endDate,
+    bool isWeek,
+  ) {
+    var spotsPre = billings
+        .where((element) =>
+            element.type == billingType &&
+            element.date.isAfter(startDate) &&
+            element.date.isBefore(endDate))
+        .sortedBy((element) => element.date)
+        .groupBy((element) => isWeek ? element.date.weekday: element.date.day)
+        .map((day, values) => MapEntry(day.toString(),
+            values.sumBy((element) => element.amount.toDouble())))
+        .entries
+        .map((e) => FlSpot(double.parse(e.key), e.value))
+        .toList();
+
+    return List.generate(isWeek ? endDate.weekday : endDate.day, (day) {
+      var spot = spotsPre.firstWhere((element) => element.x == (day + 1),
+          orElse: () => FlSpot(day + 1.0, 0));
+      return spot;
+    });
+  }
+
+  LineChartData generateLineChartData(List<FlSpot> spots, bool isMonthData) {
+    var maxY = spots.maxBy((element) => element.y.toDouble())!.y.toDouble();
+    var minY = spots.minBy((element) => element.y.toDouble())!.y.toDouble();
+    var maxX = spots.maxBy((element) => element.x.toDouble())!.x.toDouble();
+    var minX = spots.minBy((element) => element.x.toDouble())!.x.toDouble();
+
+    var bottomTitlesInterval = isMonthData ? 5.0 : 1.0;
+
+    return LineChartData(
+      gridData: FlGridData(
+        show: true,
+        drawVerticalLine: true,
+        horizontalInterval: 1,
+        verticalInterval: 1,
+        getDrawingHorizontalLine: (value) {
+          return const FlLine(
+            color: AppColors.mainGridLineColor,
+            strokeWidth: 1,
+          );
+        },
+        getDrawingVerticalLine: (value) {
+          return const FlLine(
+            color: AppColors.mainGridLineColor,
+            strokeWidth: 1,
+          );
+        },
+      ),
+      titlesData: FlTitlesData(
+        show: true,
+        rightTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        topTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 30,
+            interval: bottomTitlesInterval,
+            getTitlesWidget: (value, meta) {
+              if (isMonthData) {
+                return value.toInt() % 5 != 0
+                    ? Container()
+                    : Text(value.toInt().toString(),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
+                    textAlign: TextAlign.left);
+              } else {
+                return Text(value.toInt().toString(),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
+                    textAlign: TextAlign.left);
+              }
+            },
+          ),
+        ),
+        leftTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            interval: 1,
+            getTitlesWidget: (value, meta) {
+              if (value.toInt() % (maxY / 10).toInt() != 0) {
+                return Container();
+              }
+              return Text(value.toString(),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 10,
+                  ),
+                  textAlign: TextAlign.left);
+            },
+            reservedSize: 42,
+          ),
+        ),
+      ),
+      borderData: FlBorderData(
+        show: true,
+        border: Border.all(color: const Color(0xff37434d)),
+      ),
+      minX: minX,
+      maxX: maxX,
+      minY: minY,
+      maxY: maxY,
+      lineBarsData: [
+        LineChartBarData(
+          spots: spots,
+          isCurved: false,
+          gradient: LinearGradient(
+            colors: gradientColors,
+          ),
+          barWidth: 5,
+          isStrokeCapRound: true,
+          dotData: const FlDotData(
+            show: true,
+          ),
+          belowBarData: BarAreaData(
+            show: true,
+            gradient: LinearGradient(
+              colors: gradientColors
+                  .map((color) => color.withOpacity(0.3))
+                  .toList(),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
@@ -167,208 +270,6 @@ class _LineChartSample2State extends State<ChartPage> {
     }
 
     return Text(text, style: style, textAlign: TextAlign.left);
-  }
-
-  LineChartData weekData(List<FlSpot> spots) {
-    var maxY = spots.maxBy((element) => element.y.toDouble())!.y.toDouble();
-    var minY = spots.minBy((element) => element.y.toDouble())!.y.toDouble();
-    var maxX = spots.maxBy((element) => element.x.toDouble())!.x.toDouble();
-    var minX = spots.minBy((element) => element.x.toDouble())!.x.toDouble();
-    return LineChartData(
-      gridData: FlGridData(
-        show: true,
-        drawVerticalLine: true,
-        horizontalInterval: 1,
-        verticalInterval: 1,
-        getDrawingHorizontalLine: (value) {
-          return const FlLine(
-            color: AppColors.mainGridLineColor,
-            strokeWidth: 1,
-          );
-        },
-        getDrawingVerticalLine: (value) {
-          return const FlLine(
-            color: AppColors.mainGridLineColor,
-            strokeWidth: 1,
-          );
-        },
-      ),
-      titlesData: FlTitlesData(
-        show: true,
-        rightTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        topTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        bottomTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 30,
-            interval: 1,
-            getTitlesWidget: (value, meta) {
-              return Text(value.toString(),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                  ),
-                  textAlign: TextAlign.left);
-            },
-          ),
-        ),
-        leftTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            interval: 1,
-            getTitlesWidget: (value, meta) {
-              if (value.toInt() % (maxY / 10).toInt() != 0) {
-                return Container();
-              }
-              return Text(value.toString(),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 10,
-                  ),
-                  textAlign: TextAlign.left);
-            },
-            reservedSize: 42,
-          ),
-        ),
-      ),
-      borderData: FlBorderData(
-        show: true,
-        border: Border.all(color: const Color(0xff37434d)),
-      ),
-      minX: minX,
-      maxX: maxX,
-      minY: minY,
-      maxY: maxY,
-      lineBarsData: [
-        LineChartBarData(
-          spots: spots,
-          isCurved: false,
-          gradient: LinearGradient(
-            colors: gradientColors,
-          ),
-          barWidth: 5,
-          isStrokeCapRound: true,
-          dotData: const FlDotData(
-            show: true,
-          ),
-          belowBarData: BarAreaData(
-            show: true,
-            gradient: LinearGradient(
-              colors: gradientColors
-                  .map((color) => color.withOpacity(0.3))
-                  .toList(),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  LineChartData monthData(List<FlSpot> spots) {
-    var maxY = spots.maxBy((element) => element.y.toDouble())!.y.toInt() == 0
-        ? 10.0
-        : spots.maxBy((element) => element.y.toDouble())!.y.toDouble();
-    var minY = spots.minBy((element) => element.y.toDouble())!.y.toDouble();
-    var maxX = spots.maxBy((element) => element.x.toDouble())!.x.toDouble();
-    var minX = spots.minBy((element) => element.x.toDouble())!.x.toDouble();
-    return LineChartData(
-      gridData: FlGridData(
-        show: true,
-        drawVerticalLine: true,
-        horizontalInterval: 1,
-        verticalInterval: 1,
-        getDrawingHorizontalLine: (value) {
-          return const FlLine(
-            color: AppColors.mainGridLineColor,
-            strokeWidth: 1,
-          );
-        },
-        getDrawingVerticalLine: (value) {
-          return const FlLine(
-            color: AppColors.mainGridLineColor,
-            strokeWidth: 1,
-          );
-        },
-      ),
-      titlesData: FlTitlesData(
-        show: true,
-        rightTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        topTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        bottomTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 30,
-            interval: 1,
-            getTitlesWidget: (value, meta) {
-              return value.toInt() % 5 != 0
-                  ? Container()
-                  : Text(value.toInt().toString(),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
-                      ),
-                      textAlign: TextAlign.left);
-            },
-          ),
-        ),
-        leftTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            interval: 1,
-            getTitlesWidget: (value, meta) {
-              if (value.toInt() % (maxY / 10).toInt() != 0) {
-                return Container();
-              }
-              return Text(value.toString(),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 10,
-                  ),
-                  textAlign: TextAlign.left);
-            },
-            reservedSize: 42,
-          ),
-        ),
-      ),
-      borderData: FlBorderData(
-        show: true,
-        border: Border.all(color: const Color(0xff37434d)),
-      ),
-      minX: minX,
-      maxX: maxX,
-      minY: minY,
-      maxY: maxY,
-      lineBarsData: [
-        LineChartBarData(
-          spots: spots,
-          isCurved: false,
-          gradient: LinearGradient(
-            colors: gradientColors,
-          ),
-          barWidth: 5,
-          isStrokeCapRound: true,
-          dotData: const FlDotData(
-            show: true,
-          ),
-          belowBarData: BarAreaData(
-            show: true,
-            gradient: LinearGradient(
-              colors: gradientColors
-                  .map((color) => color.withOpacity(0.3))
-                  .toList(),
-            ),
-          ),
-        ),
-      ],
-    );
   }
 
   LineChartData avgData() {
