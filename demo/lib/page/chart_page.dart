@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dartx/dartx.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -149,8 +147,6 @@ class _LineChartSample2State extends State<ChartPage> {
     var maxX = spots.maxBy((element) => element.x.toDouble())!.x.toDouble();
     var minX = spots.minBy((element) => element.x.toDouble())!.x.toDouble();
     return LineChartData(
-
-
       gridData: FlGridData(
         show: true,
         drawVerticalLine: true,
@@ -247,8 +243,6 @@ class _LineChartSample2State extends State<ChartPage> {
     var maxX = spots.maxBy((element) => element.x.toDouble())!.x.toDouble();
     var minX = spots.minBy((element) => element.x.toDouble())!.x.toDouble();
     return LineChartData(
-
-
       gridData: FlGridData(
         show: true,
         drawVerticalLine: true,
