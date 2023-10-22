@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartx/dartx.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -28,14 +30,15 @@ class _LineChartState extends State<ChartPage> {
   Widget build(BuildContext context) {
     return Consumer<BillingProvider>(
       builder: (context, billingProvider, child) {
+        log('start');
         var billings = billingProvider.billings;
 
         var weekSpots = generateSpots(
             billings,
             billingType,
             currentDate.subtract(Duration(days: currentDate.weekday - 1)),
-            currentDate
-                .add(Duration(days: DateTime.daysPerWeek - currentDate.weekday)),
+            currentDate.add(
+                Duration(days: DateTime.daysPerWeek - currentDate.weekday)),
             chartPeriod);
 
         var monthSpots = generateSpots(
@@ -52,6 +55,7 @@ class _LineChartState extends State<ChartPage> {
             DateTime(currentDate.year, 1, 1),
             DateTime(currentDate.year + 1, 1, 1),
             chartPeriod);
+        log('end');
         return Column(
           children: [
             TextButton(
@@ -117,7 +121,7 @@ class _LineChartState extends State<ChartPage> {
                   onChanged: (value) {
                     setState(() {
                       billingType =
-                      value ? BillingType.income : BillingType.expense;
+                          value ? BillingType.income : BillingType.expense;
                     });
                   },
                 ),
@@ -137,8 +141,8 @@ class _LineChartState extends State<ChartPage> {
                     child: LineChart(chartPeriod == ChartPeriod.week
                         ? generateLineChartData(weekSpots, false)
                         : chartPeriod == ChartPeriod.month
-                        ? generateLineChartData(monthSpots, true)
-                        : generateLineChartData(yearSpots, false)),
+                            ? generateLineChartData(monthSpots, true)
+                            : generateLineChartData(yearSpots, false)),
                   ),
                 ),
                 SizedBox(
@@ -147,9 +151,7 @@ class _LineChartState extends State<ChartPage> {
                   child: Text(
                     chartPeriod.name,
                     style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.black.withOpacity(0.5)
-                    ),
+                        fontSize: 12, color: Colors.black.withOpacity(0.5)),
                   ),
                 ),
               ],
@@ -212,6 +214,7 @@ class _LineChartState extends State<ChartPage> {
     var minX = spots.minBy((element) => element.x.toDouble())!.x.toDouble();
 
     var bottomTitlesInterval = isMonthData ? 5.0 : 1.0;
+    var leftTitlesInterval = (maxY ~/ 10).toDouble();
 
     return LineChartData(
       gridData: FlGridData(
@@ -269,7 +272,7 @@ class _LineChartState extends State<ChartPage> {
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            interval: 1,
+            interval: leftTitlesInterval,
             getTitlesWidget: (value, meta) {
               if (value.toInt() % (maxY ~/ 10) != 0) {
                 return Container();
