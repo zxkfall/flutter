@@ -26,8 +26,21 @@ class _LineChartSample2State extends State<ChartPage> {
   Widget build(BuildContext context) {
     var provider = Provider.of<BillingProvider>(context, listen: false);
     var billings = provider.billings;
+
+    var now = DateTime.now();
+
+    DateTime currentDate = now.add(Duration(days: -60));
+
+    var firstDayOfWeek =
+        currentDate.subtract(Duration(days: currentDate.weekday - 1));
+    var lastDayOfWeek = currentDate
+        .add(Duration(days: DateTime.daysPerWeek - currentDate.weekday));
+
     var weekSpotsPre = billings
-        .where((element) => element.type == BillingType.expense)
+        .where((element) =>
+            element.type == BillingType.expense &&
+            element.date.isAfter(firstDayOfWeek) &&
+            element.date.isBefore(lastDayOfWeek))
         .sortedBy((element) => element.date)
         .groupBy((element) => DateFormat.yMMMd().format(element.date))
         .map((key, values) =>
@@ -45,14 +58,12 @@ class _LineChartSample2State extends State<ChartPage> {
         weekSpots.add(spot);
       }
     }
-    var now = DateTime.now();
-
-    DateTime currentDate = now.add(Duration(days: -60));
 
     DateTime firstDayOfMonth = DateTime(currentDate.year, currentDate.month, 1);
 
     DateTime lastDayOfMonth =
-        DateTime(currentDate.year, currentDate.month + 1, 1).subtract(const Duration(days: 1));
+        DateTime(currentDate.year, currentDate.month + 1, 1)
+            .subtract(const Duration(days: 1));
 
     var monthSpotsPre = billings
         .where((element) =>
@@ -258,7 +269,9 @@ class _LineChartSample2State extends State<ChartPage> {
   }
 
   LineChartData monthData(List<FlSpot> spots) {
-    var maxY = spots.maxBy((element) => element.y.toDouble())!.y.toInt() == 0 ? 10.0 : spots.maxBy((element) => element.y.toDouble())!.y.toDouble();
+    var maxY = spots.maxBy((element) => element.y.toDouble())!.y.toInt() == 0
+        ? 10.0
+        : spots.maxBy((element) => element.y.toDouble())!.y.toDouble();
     var minY = spots.minBy((element) => element.y.toDouble())!.y.toDouble();
     var maxX = spots.maxBy((element) => element.x.toDouble())!.x.toDouble();
     var minX = spots.minBy((element) => element.x.toDouble())!.x.toDouble();
