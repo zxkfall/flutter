@@ -28,7 +28,7 @@ class _LineChartSample2State extends State<ChartPage> {
     var billings = provider.billings;
 
     var now = DateTime.now();
-    DateTime currentDate = now.add(const Duration(days: -60));
+    DateTime currentDate = now;
     var billingType = BillingType.expense;
 
     var firstDayOfWeek =
@@ -112,7 +112,7 @@ class _LineChartSample2State extends State<ChartPage> {
   }
 
   LineChartData generateLineChartData(List<FlSpot> spots, bool isMonthData) {
-    var maxY = spots.maxBy((element) => element.y.toDouble())!.y.toDouble();
+    var maxY = spots.maxBy((element) => element.y.toDouble())!.y.toDouble().toInt() == 0 ? 10.0 : spots.maxBy((element) => element.y.toDouble())!.y.toDouble();
     var minY = spots.minBy((element) => element.y.toDouble())!.y.toDouble();
     var maxX = spots.maxBy((element) => element.x.toDouble())!.x.toDouble();
     var minX = spots.minBy((element) => element.x.toDouble())!.x.toDouble();
