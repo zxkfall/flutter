@@ -30,7 +30,16 @@ class _LineChartState extends State<ChartPage> {
     return Consumer<BillingProvider>(
       builder: (context, billingProvider, child) {
         var billings = billingProvider.billings;
-        return Column(
+
+        var allPeriodKindData = billings
+            .where((element) => element.type == billingType && isInDateRange(element))
+            .groupBy((element) => element.kind)
+            .map((kind, values) {
+          var total = values.fold(Decimal.zero, (sum, value) => sum + value.amount);
+          return MapEntry(kind, total);
+        }).toList();
+
+        return ListView(
           children: [
             TextButton(
               onPressed: () async {
@@ -125,11 +134,33 @@ class _LineChartState extends State<ChartPage> {
                   ),
                 ),
               ],
-            )
+            ),
+            Column(
+              children: allPeriodKindData.map((e) {
+                return ListTile(
+                  title: Text(e.first.name),
+                  trailing: Text(e.second.toString()),
+                );
+              }).toList(),
+            ),
           ],
         );
       },
     );
+  }
+
+  bool isInDateRange(Billing billing) {
+    if (chartPeriod == ChartPeriod.week) {
+      return billing.date.isAfter(currentDate.subtract(Duration(days: currentDate.weekday - 1))) &&
+          billing.date.isBefore(currentDate.add(Duration(days: DateTime.daysPerWeek - currentDate.weekday + 1)));
+          } else if (chartPeriod == ChartPeriod.month) {
+        return billing.date.isAfter(DateTime(currentDate.year, currentDate.month, 1)) &&
+            billing.date.isBefore(DateTime(currentDate.year, currentDate.month + 1, 1));
+      } else if (chartPeriod == ChartPeriod.year) {
+      return billing.date.isAfter(DateTime(currentDate.year, 1, 1)) &&
+          billing.date.isBefore(DateTime(currentDate.year + 1, 1, 1));
+    }
+    return false;
   }
 
   LineChart buildLineChart(List<Billing> billings) {
