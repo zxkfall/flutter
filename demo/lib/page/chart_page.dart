@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dartx/dartx.dart';
 import 'package:decimal/decimal.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -32,29 +30,6 @@ class _LineChartState extends State<ChartPage> {
     return Consumer<BillingProvider>(
       builder: (context, billingProvider, child) {
         var billings = billingProvider.billings;
-
-        var weekSpots = generateSpots(
-            billings,
-            billingType,
-            currentDate.subtract(Duration(days: currentDate.weekday - 1)),
-            currentDate.add(
-                Duration(days: DateTime.daysPerWeek - currentDate.weekday + 1)),
-            chartPeriod);
-
-        var monthSpots = generateSpots(
-            billings,
-            billingType,
-            DateTime(currentDate.year, currentDate.month, 1),
-            DateTime(currentDate.year, currentDate.month + 1, 1),
-            chartPeriod);
-
-        var yearSpots = generateSpots(
-            billings,
-            billingType,
-            DateTime(currentDate.year, 1, 1),
-            DateTime(currentDate.year + 1, 1, 1),
-            chartPeriod);
-
         return Column(
           children: [
             TextButton(
@@ -137,7 +112,7 @@ class _LineChartState extends State<ChartPage> {
                       top: 30,
                       bottom: 12,
                     ),
-                    child: buildLineChart(weekSpots, monthSpots, yearSpots),
+                    child: buildLineChart(billings),
                   ),
                 ),
                 SizedBox(
@@ -157,15 +132,40 @@ class _LineChartState extends State<ChartPage> {
     );
   }
 
-  LineChart buildLineChart(
-      List<FlSpot> weekSpots, List<FlSpot> monthSpots, List<FlSpot> yearSpots) {
+  LineChart buildLineChart(List<Billing> billings) {
     if (chartPeriod == ChartPeriod.week) {
+      var weekSpots = generateSpots(
+          billings,
+          billingType,
+          currentDate.subtract(Duration(days: currentDate.weekday - 1)),
+          currentDate.add(
+              Duration(days: DateTime.daysPerWeek - currentDate.weekday + 1)),
+          chartPeriod);
       return LineChart(generateLineChartData(weekSpots, false));
     } else if (chartPeriod == ChartPeriod.month) {
+      var monthSpots = generateSpots(
+          billings,
+          billingType,
+          DateTime(currentDate.year, currentDate.month, 1),
+          DateTime(currentDate.year, currentDate.month + 1, 1),
+          chartPeriod);
       return LineChart(generateLineChartData(monthSpots, true));
     } else if (chartPeriod == ChartPeriod.year) {
+      var yearSpots = generateSpots(
+          billings,
+          billingType,
+          DateTime(currentDate.year, 1, 1),
+          DateTime(currentDate.year + 1, 1, 1),
+          chartPeriod);
       return LineChart(generateLineChartData(yearSpots, false));
     }
+    var weekSpots = generateSpots(
+        billings,
+        billingType,
+        currentDate.subtract(Duration(days: currentDate.weekday - 1)),
+        currentDate.add(
+            Duration(days: DateTime.daysPerWeek - currentDate.weekday + 1)),
+        chartPeriod);
     return LineChart(generateLineChartData(weekSpots, false));
   }
 
