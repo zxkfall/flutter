@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 
@@ -63,6 +65,12 @@ enum BillingKind {
   bonus,
   manageFinances,
   lottery,
+  dailyExpenses,
+  help,
+  cosmetics,
+  wage,
+  tobaccoAndWine,
+  hobby,
 }
 
 class BillingIconMapper {
@@ -86,15 +94,21 @@ class BillingIconMapper {
       BillingKind.communication: Icons.phone,
       BillingKind.waterAndElectricity: Icons.flash_on,
       BillingKind.redEnvelope: Icons.card_giftcard,
+      BillingKind.dailyExpenses: Icons.satellite_outlined,
+      BillingKind.cosmetics: Icons.face,
+      BillingKind.tobaccoAndWine: Icons.smoking_rooms,
+      BillingKind.hobby: Icons.sports_esports,
       BillingKind.other: Icons.more_horiz,
       // 添加其他支出类型的图标映射
     },
     BillingType.income: {
       BillingKind.salary: Icons.attach_money,
+      BillingKind.wage: Icons.attach_money,
       BillingKind.bonus: Icons.monetization_on,
       BillingKind.manageFinances: Icons.account_balance,
       BillingKind.lottery: Icons.casino,
       BillingKind.redEnvelope: Icons.card_giftcard,
+      BillingKind.help: Icons.help,
       BillingKind.other: Icons.more_horiz
       // 添加其他收入类型的图标映射
     },
@@ -132,6 +146,10 @@ List<BillingKind> getExpenseValues() {
     BillingKind.communication,
     BillingKind.waterAndElectricity,
     BillingKind.redEnvelope,
+    BillingKind.dailyExpenses,
+    BillingKind.cosmetics,
+    BillingKind.tobaccoAndWine,
+    BillingKind.hobby,
     BillingKind.other,
   ];
 }
@@ -139,16 +157,26 @@ List<BillingKind> getExpenseValues() {
 List<BillingKind> getIncomeValues() {
   return [
     BillingKind.salary,
+    BillingKind.wage,
     BillingKind.bonus,
     BillingKind.manageFinances,
     BillingKind.lottery,
     BillingKind.redEnvelope,
+    BillingKind.help,
     BillingKind.other,
   ];
 }
 
 BillingKind stringToBillingKind(BillingType type, String value) {
   return type == BillingType.expense
-      ? getExpenseValues().firstWhere((element) => element.name.toLowerCase() == value.toLowerCase(), orElse: () => BillingKind.other)
-      : getIncomeValues().firstWhere((element) => element.name.toLowerCase() == value.toLowerCase(), orElse: () => BillingKind.other);
+      ? getExpenseValues().firstWhere(
+          (element) =>
+              element.name.toLowerCase() ==
+              value.replaceAll(' ', '').toLowerCase(),
+          orElse: () => BillingKind.other)
+      : getIncomeValues().firstWhere(
+          (element) =>
+              element.name.toLowerCase() ==
+              value.replaceAll(' ', '').toLowerCase(),
+          orElse: () => BillingKind.other);
 }

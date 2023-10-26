@@ -82,7 +82,24 @@ class SettingPage extends StatelessWidget {
               amount: Decimal.parse(element[1]!.value.toString()),
               type: billingType,
               kind: stringToBillingKind(
-                  billingType, element[3]!.value.toString()),
+                  billingType,
+                  element[3]!.value.toString() == 'Study'
+                      ? 'education'
+                      : element[3]!.value.toString() == 'Makeups'
+                          ? 'cosmetics'
+                          : element[3]!.value.toString() == 'Snacks'
+                              ? 'snack'
+                              : element[3]!.value.toString() == 'Hydropower'
+                                  ? 'waterAndElectricity'
+                                  : element[3]!.value.toString() == 'Clothes'
+                                      ? 'apparel'
+                                      : element[3]!.value.toString() ==
+                                              'Tobacco & wine'
+                                          ? 'tobaccoAndWine'
+                                          : element[3]!.value.toString() ==
+                                                  'Sports'
+                                              ? 'sport'
+                                              : element[3]!.value.toString()),
               description: '${element[3]!.value} ${element[4]!.value}');
           billings.add(billing);
         }
