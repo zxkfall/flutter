@@ -1,3 +1,6 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -5,6 +8,10 @@ import 'package:excel/excel.dart';
 import 'package:decimal/decimal.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 import '../model/billing.dart';
@@ -47,9 +54,54 @@ class SettingPage extends StatelessWidget {
                   child: const Text('清除数据'))
             ],
           ),
-        )
+        ),
+        TextButton(
+            onPressed: () => {
+                  exportExcel().then((value) {
+                    Utils.showToast('导出成功，共导出$value条数据', fToast);
+                  })
+                },
+            child: const Text('导出数据'))
       ]),
     );
+  }
+
+  Future<int> exportExcel() async {
+    var excel = Excel.createExcel();
+    Sheet sheetObject = excel['Sheet1'];
+
+    sheetObject.appendRow(['Date', 'Amount', 'Type', 'Kind', 'Description']);
+    var billings = await GetIt.I<BillingRepository>().billings();
+    for (var billing in billings) {
+      sheetObject.appendRow([
+        billing.date.toString(),
+        billing.amount,
+        billing.type == BillingType.expense ? 'COST' : 'INCOME',
+        billing.kind.name,
+        billing.description
+      ]);
+    }
+    var fileBytes = excel.save();
+    var status = await Permission.storage.status;
+    if (!status.isGranted) {
+      await Permission.storage.request();
+    }
+
+    var path = '';
+    if (Platform.isAndroid) {
+      path = '/storage/emulated/0/Download';
+    } else if (Platform.isIOS) {
+      var directory = await getApplicationDocumentsDirectory();
+      path = directory.path;
+    }
+    log('save: $path');
+
+    var file = File(join('$path/billingsInfo-${DateFormat('yyyy-MM-dd-HH-mm-ss').format(DateTime.now())}.xlsx'))
+      ..createSync(recursive: true)
+      ..writeAsBytesSync(fileBytes!);
+
+    log(file.path);
+    return billings.length;
   }
 
   Future<int> openFilePickerAndRead(BuildContext context) async {
