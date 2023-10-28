@@ -59,13 +59,15 @@ class SettingPage extends StatelessWidget {
         TextButton(
             onPressed: () => {
                   exportExcel().then((value) {
-                    Utils.showToast('导出成功，共导出$value条数据', fToast);
+                    Utils.showToast(
+                        '导出成功，共导出${value['count']}条数据${value['path'] == '' ? '!' : '，文件路径:${value['path']}'}',
+                        fToast);
                   })
                 },
-            child: const Text('分享数据')),
+            child: const Text('导出数据')),
         TextButton(
             onPressed: () => {
-              shareExcel().then((value) {
+                  shareExcel().then((value) {
                     Utils.showToast('分享成功，共导出$value条数据', fToast);
                   })
                 },
@@ -74,7 +76,7 @@ class SettingPage extends StatelessWidget {
     );
   }
 
-  Future<int> exportExcel() async {
+  Future<Map<String, String>> exportExcel() async {
     var excel = Excel.createExcel();
     Sheet sheetObject = excel['Sheet1'];
 
@@ -97,23 +99,33 @@ class SettingPage extends StatelessWidget {
 
     var path = '';
     if (Platform.isAndroid) {
-      path = '/storage/emulated/0/Download';
+      var directory = await getDownloadsDirectory();
+      path = '${directory!.path.split('Android')[0]}Download';
     } else if (Platform.isIOS) {
-      var directory = await getApplicationDocumentsDirectory();
+      var directory = await getApplicationCacheDirectory();
       path = directory.path;
     }
     log('save: $path');
-
-    var file = File(join('$path/billingsInfo-${DateFormat('yyyy-MM-dd-HH-mm-ss').format(DateTime.now())}.xlsx'))
+    var file = File(join(
+        '$path/billingsInfo-${DateFormat('yyyy-MM-dd-HH-mm-ss').format(DateTime.now())}.xlsx'))
       ..createSync(recursive: true)
       ..writeAsBytesSync(fileBytes!);
-
+    if (Platform.isIOS) {
+      final result =
+          await Share.shareXFiles([XFile(file.path)], text: 'Excel Data');
+      if (result.status == ShareResultStatus.success) {
+        log('Thank you for sharing the Excel!');
+      }
+    }
     log(file.path);
-    return billings.length;
+    var res = <String, String>{
+      'path': Platform.isIOS ? '' : file.path,
+      'count': billings.length.toString()
+    };
+    return res;
   }
 
   Future<int> shareExcel() async {
-
     var excel = Excel.createExcel();
     Sheet sheetObject = excel['Sheet1'];
 
@@ -134,13 +146,15 @@ class SettingPage extends StatelessWidget {
       await Permission.storage.request();
     }
 
-    var  tempDirectory  = await getApplicationCacheDirectory();
+    var tempDirectory = await getApplicationCacheDirectory();
     log('temp path: ${tempDirectory.path}');
-    var file = File(join('${tempDirectory.path}/billingsInfo-${DateFormat('yyyy-MM-dd-HH-mm-ss').format(DateTime.now())}.xlsx'))
+    var file = File(join(
+        '${tempDirectory.path}/billingsInfo-${DateFormat('yyyy-MM-dd-HH-mm-ss').format(DateTime.now())}.xlsx'))
       ..createSync(recursive: true)
       ..writeAsBytesSync(fileBytes!);
 
-    final result = await Share.shareXFiles([XFile(file.path)], text: 'Excel Data');
+    final result =
+        await Share.shareXFiles([XFile(file.path)], text: 'Excel Data');
 
     if (result.status == ShareResultStatus.success) {
       log('Thank you for sharing the Excel!');

@@ -10,7 +10,8 @@ class Utils {
         date1.day == date2.day;
   }
 
-  static Map<String, Decimal> calculateDailyTotal(DateTime targetDate, List<Billing> billings) {
+  static Map<String, Decimal> calculateDailyTotal(
+      DateTime targetDate, List<Billing> billings) {
     Decimal dailyTotalIncome = Decimal.zero;
     Decimal dailyTotalExpense = Decimal.zero;
 
@@ -36,15 +37,9 @@ class Utils {
         borderRadius: BorderRadius.circular(25.0),
         color: Colors.greenAccent,
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.check),
-          const SizedBox(
-            width: 12.0,
-          ),
-          Text(msg),
-        ],
+      child: Text(
+        msg,
+        softWrap: true,
       ),
     );
 
