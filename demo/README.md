@@ -24,3 +24,19 @@ flutter pub get
 ```bash
 flutter pub add <package_name>
 ```
+
+for ios 17, if can not find developer mode, need to start app use xcode, then debug mode will appear
+
+generate test steps
+```bash
+// before run test, run this command: flutter pub run build_runner build --delete-conflicting-outputs
+// steps:
+// 1. add @GenerateMocks
+// 2. run command: flutter pub run build_runner build --delete-conflicting-outputs
+// 3. import 'widget_test.mocks.dart';
+// 4. add mockRepository
+// 5. add when(mockRepository.billings()).thenAnswer((_) async {
+// 6. add await tester.pumpWidget(const MyApp());
+// 7. add await tester.pump();
+// 8. add expect(find.text('fake income'), findsOneWidget);
+```
