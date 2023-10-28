@@ -13,6 +13,7 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../model/billing.dart';
 import '../repository/billing_repository.dart';
@@ -61,7 +62,14 @@ class SettingPage extends StatelessWidget {
                     Utils.showToast('导出成功，共导出$value条数据', fToast);
                   })
                 },
-            child: const Text('导出数据'))
+            child: const Text('分享数据')),
+        TextButton(
+            onPressed: () => {
+              shareExcel().then((value) {
+                    Utils.showToast('分享成功，共导出$value条数据', fToast);
+                  })
+                },
+            child: const Text('分享数据'))
       ]),
     );
   }
@@ -101,6 +109,42 @@ class SettingPage extends StatelessWidget {
       ..writeAsBytesSync(fileBytes!);
 
     log(file.path);
+    return billings.length;
+  }
+
+  Future<int> shareExcel() async {
+
+    var excel = Excel.createExcel();
+    Sheet sheetObject = excel['Sheet1'];
+
+    sheetObject.appendRow(['Date', 'Amount', 'Type', 'Kind', 'Description']);
+    var billings = await GetIt.I<BillingRepository>().billings();
+    for (var billing in billings) {
+      sheetObject.appendRow([
+        billing.date.toString(),
+        billing.amount,
+        billing.type == BillingType.expense ? 'COST' : 'INCOME',
+        billing.kind.name,
+        billing.description
+      ]);
+    }
+    var fileBytes = excel.save();
+    var status = await Permission.storage.status;
+    if (!status.isGranted) {
+      await Permission.storage.request();
+    }
+
+    var  tempDirectory  = await getApplicationCacheDirectory();
+    log('temp path: ${tempDirectory.path}');
+    var file = File(join('${tempDirectory.path}/billingsInfo-${DateFormat('yyyy-MM-dd-HH-mm-ss').format(DateTime.now())}.xlsx'))
+      ..createSync(recursive: true)
+      ..writeAsBytesSync(fileBytes!);
+
+    final result = await Share.shareXFiles([XFile(file.path)], text: 'Excel Data');
+
+    if (result.status == ShareResultStatus.success) {
+      log('Thank you for sharing the Excel!');
+    }
     return billings.length;
   }
 
