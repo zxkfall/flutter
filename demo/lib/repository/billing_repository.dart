@@ -1,6 +1,8 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:decimal/decimal.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
@@ -36,8 +38,15 @@ class SqlBillingRepository implements BillingRepository {
   Future<Database?> _initDatabase() async {
     if (_db == null) {
       await _lock.synchronized(() async {
+        var dbPath = '';
+        if(Platform.isAndroid){
+          dbPath = await getDatabasesPath();
+        }else{
+          var directory = await getApplicationSupportDirectory();
+          dbPath = directory.path;
+        }
         _db ??= await openDatabase(
-          join(await getDatabasesPath(), 'billing_database.db'),
+          join(dbPath, 'billing_database.db'),
           onCreate: (db, version) {
             return db.execute(
               'CREATE TABLE Billing (id INTEGER PRIMARY KEY, type INTEGER, amount INTEGER, date TEXT, description TEXT, kind INTEGER)',
