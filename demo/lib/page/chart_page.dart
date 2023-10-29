@@ -140,6 +140,7 @@ class _LineChartState extends State<ChartPage> {
                 return ListTile(
                   title: Text(e.first.name),
                   trailing: Text(e.second.toString()),
+                  leading: Icon(BillingIconMapper.getIcon(billingType, e.first))
                 );
               }).toList(),
             ),

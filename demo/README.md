@@ -83,3 +83,7 @@ flutter run --release
 ```
 
 will install release version
+
+
+## resources
+https://plus.fluttercommunity.dev/

@@ -39,7 +39,9 @@ class SettingPage extends StatelessWidget {
               TextButton(
                   onPressed: () => {
                         openFilePickerAndRead(context).then((value) {
-                          Utils.showToast('导入成功，共导入$value条数据', fToast);
+                          Utils.showToast(
+                              value != 0 ? '导入成功，共导入$value条数据' : '未导入数据',
+                              fToast);
                         })
                       },
                   child: const Text('选择文件')),
