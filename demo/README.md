@@ -74,3 +74,12 @@ Execution failed for task ':app:checkDebugDuplicateClasses'.
 
 ```
 https://github.com/fluttercommunity/plus_plugins/issues/1673
+just change kotlin ext version to 1.8.10
+
+## app can not launch when exit debugging mode in IOS platform
+
+```bash
+flutter run --release
+```
+
+will install release version
