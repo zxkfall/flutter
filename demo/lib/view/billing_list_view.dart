@@ -48,6 +48,7 @@ class BillingListView extends StatelessWidget {
                   Column(
                     children: [
                       ListTile(
+                        dense: true,
                         title: Text(
                           DateFormat.yMMMd().format(currentBilling.date),
                           style: const TextStyle(
@@ -72,27 +73,30 @@ class BillingListView extends StatelessWidget {
                     color: Colors.red,
                     child: const Icon(Icons.delete, color: Colors.white),
                   ),
-                  child: InkWell(
-                    onTap: () {
-                      Future.delayed(const Duration(milliseconds: 150), () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) =>
-                                BillingDetailPage(billing: currentBilling),
-                          ),
-                        );
-                      });
-                    },
-                    highlightColor: Colors.transparent,
-                    child: ListTile(
-                      title: Text(currentBilling.kind.name),
-                      subtitle: Text(currentBilling.description),
-                      leading: Icon(
-                        BillingIconMapper.getIcon(
-                            currentBilling.type, currentBilling.kind),
-                      ),
-                      trailing: Text(
-                        '$amountPrefix\$$formattedAmount',
+                  child: Card(
+                    child: InkWell(
+                      onTap: () {
+                        Future.delayed(const Duration(milliseconds: 150), () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) =>
+                                  BillingDetailPage(billing: currentBilling),
+                            ),
+                          );
+                        });
+                      },
+                      highlightColor: Colors.transparent,
+                      child: ListTile(
+                        dense: true,
+                        title: Text(currentBilling.kind.name),
+                        subtitle: Text(currentBilling.description),
+                        leading: Icon(
+                          BillingIconMapper.getIcon(
+                              currentBilling.type, currentBilling.kind),
+                        ),
+                        trailing: Text(
+                          '$amountPrefix\$$formattedAmount',
+                        ),
                       ),
                     ),
                   ),

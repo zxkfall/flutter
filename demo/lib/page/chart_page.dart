@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dartx/dartx.dart';
 import 'package:decimal/decimal.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -142,21 +144,34 @@ class _LineChartState extends State<ChartPage> {
                 SizedBox(
                   width: 60,
                   height: 34,
-                  child: Text(
-                    chartPeriod.name,
-                    style: TextStyle(
-                        fontSize: 12, color: Colors.black.withOpacity(0.5)),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 12),
+                    child: Text(
+                      chartPeriod.name,
+                      style: TextStyle(
+                          fontSize: 12, color: Colors.black.withOpacity(0.5)),
+                    ),
                   ),
                 ),
               ],
             ),
             Column(
               children: allPeriodKindData.map((e) {
-                return ListTile(
-                  title: Text(e.first.name),
-                  trailing: Text(e.second.toString()),
-                  leading: Icon(BillingIconMapper.getIcon(billingType, e.first))
-                );
+                return Padding(
+                    padding: const EdgeInsets.only(top: 4, left: 12, right: 12),
+                    child: Card(
+                      color: Color.fromRGBO(Random().nextInt(255),
+                          Random().nextInt(255), Random().nextInt(255), 1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: ListTile(
+                        title: Text(e.first.name),
+                        trailing: Text(e.second.toString()),
+                        leading: Icon(
+                            BillingIconMapper.getIcon(billingType, e.first)),
+                      ),
+                    ));
               }).toList(),
             ),
           ],
