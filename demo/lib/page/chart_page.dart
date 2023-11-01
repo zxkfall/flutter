@@ -95,6 +95,21 @@ class _LineChartState extends State<ChartPage> {
                 const Text('Year'),
               ],
             ),
+            Row(mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(onPressed: (){
+                  chartPeriod == ChartPeriod.week ? currentDate = currentDate.subtract(const Duration(days: 7)) :
+                  chartPeriod == ChartPeriod.month ? currentDate = DateTime(currentDate.year, currentDate.month - 1, currentDate.day) :
+                  currentDate = DateTime(currentDate.year - 1, currentDate.month, currentDate.day);
+                  setState(() {});
+                }, child: const Text('Previous')),
+                TextButton(onPressed: (){
+                  chartPeriod == ChartPeriod.week ? currentDate = currentDate.add(const Duration(days: 7)) :
+                  chartPeriod == ChartPeriod.month ? currentDate = DateTime(currentDate.year, currentDate.month + 1, currentDate.day) :
+                  currentDate = DateTime(currentDate.year + 1, currentDate.month, currentDate.day);
+                  setState(() {});
+                }, child: const Text('Next'))
+              ],),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
