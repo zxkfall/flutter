@@ -12,8 +12,8 @@ import '../utils/utils.dart';
 
 class BillingListView extends StatelessWidget {
   const BillingListView({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +42,45 @@ class BillingListView extends StatelessWidget {
             var formattedAmount = currentBilling.amount.toStringAsFixed(2);
             var amountPrefix =
                 currentBilling.type == BillingType.income ? '+' : '-';
+            var totalExpense = billings.fold(
+                Decimal.zero,
+                (previousValue, element) =>
+                    previousValue +
+                    (element.type == BillingType.expense
+                        ? element.amount
+                        : Decimal.zero));
+            var totalIncome = billings.fold(
+                Decimal.zero,
+                (previousValue, element) =>
+                    previousValue +
+                    (element.type == BillingType.income
+                        ? element.amount
+                        : Decimal.zero));
             return Column(
               children: <Widget>[
                 if (showDateHeader)
                   Column(
                     children: [
+                      if (index == 0)
+                        Stack(
+                          children: [
+                            Image(
+                              image: Image.network(
+                                'https://proxy.pixivel.moe/c/540x540_70/img-master/img/2022/11/18/00/00/10/102875400_p0_master1200.jpg',
+                              ).image,
+                            ),
+                            Positioned(
+                                bottom: 0,
+                                left: 0,
+                                child: Container(
+                                  padding: const EdgeInsets.all(8),
+                                  child: Text(
+                                    'total expense: $totalExpense, total income: $totalIncome',
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                )),
+                          ],
+                        ),
                       ListTile(
                         dense: true,
                         title: Text(
