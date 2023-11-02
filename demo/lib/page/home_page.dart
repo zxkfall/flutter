@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          backgroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
         ),
         body: PageView(
           controller: _pageController,
@@ -56,12 +56,13 @@ class _HomePageState extends State<HomePage> {
           tooltip: 'Add Billing',
           shape: const CircleBorder(),
           child: const Icon(Icons.add),
+          backgroundColor: Theme.of(context).colorScheme.surface,
         ),
         bottomNavigationBar: SizedBox(
           height: 64,
           child: BottomAppBar(
             padding: const EdgeInsets.only(top: 0.0, left: 14, right: 14),
-            color: Theme.of(context).colorScheme.primary,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
             shape: const CircularNotchedRectangle(),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
