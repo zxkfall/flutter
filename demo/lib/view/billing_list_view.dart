@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -56,6 +58,13 @@ class BillingListView extends StatelessWidget {
                     (element.type == BillingType.income
                         ? element.amount
                         : Decimal.zero));
+            var imgUrls = [
+              'https://proxy.pixivel.moe/c/540x540_70/img-master/img/2022/11/18/00/00/10/102875400_p0_master1200.jpg',
+              'https://proxy.pixivel.moe/c/540x540_70/img-master/img/2018/11/17/19/41/38/71696037_p0_master1200.jpg',
+              'https://proxy.pixivel.moe/c/540x540_70/img-master/img/2021/05/27/00/00/05/90117491_p0_master1200.jpg',
+              'https://proxy.pixivel.moe/c/540x540_70/img-master/img/2017/05/12/00/18/08/62854438_p0_master1200.jpg',
+              'https://proxy.pixivel.moe/c/540x540_70/img-master/img/2021/01/11/00/04/49/86966041_p0_master1200.jpg',
+            ];
             return Column(
               children: <Widget>[
                 if (showDateHeader)
@@ -66,8 +75,11 @@ class BillingListView extends StatelessWidget {
                           children: [
                             Image(
                               image: Image.network(
-                                'https://proxy.pixivel.moe/c/540x540_70/img-master/img/2022/11/18/00/00/10/102875400_p0_master1200.jpg',
-                              ).image,
+                                      imgUrls[Random().nextInt(imgUrls.length)])
+                                  .image,
+                              width: double.infinity,
+                              height: null,
+                              fit: BoxFit.contain,
                             ),
                             Positioned(
                                 bottom: 0,
