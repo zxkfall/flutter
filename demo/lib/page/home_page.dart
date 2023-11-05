@@ -48,6 +48,7 @@ class _HomePageState extends State<HomePage> {
             SettingPage(),
           ],
         ),
+        resizeToAvoidBottomInset: false,
         extendBody: true,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
