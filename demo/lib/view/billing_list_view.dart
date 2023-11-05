@@ -1,13 +1,14 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'dart:developer' as developer;
-import 'dart:typed_data';
 
 import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:palette_generator/palette_generator.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../model/billing.dart';
@@ -28,15 +29,10 @@ class BillingListView extends StatefulWidget {
 }
 
 class _BillingListViewState extends State<BillingListView> {
-  var imgUrls = [
-    'https://proxy.pixivel.moe/c/540x540_70/img-master/img/2022/11/18/00/00/10/102875400_p0_master1200.jpg',
-    'https://proxy.pixivel.moe/c/540x540_70/img-master/img/2018/11/17/19/41/38/71696037_p0_master1200.jpg',
-    'https://proxy.pixivel.moe/c/540x540_70/img-master/img/2021/05/27/00/00/05/90117491_p0_master1200.jpg',
-    'https://proxy.pixivel.moe/c/540x540_70/img-master/img/2017/05/12/00/18/08/62854438_p0_master1200.jpg',
-    'https://proxy.pixivel.moe/c/540x540_70/img-master/img/2021/01/11/00/04/49/86966041_p0_master1200.jpg',
-  ];
+  var imgUrls = [];
   var color = Colors.white;
-  var image = Image.memory(Uint8List(0));
+  var image = Image.network(
+      'https://cdn.pixabay.com/photo/2023/10/27/17/04/dahlia-8345799_1280.jpg');
 
   @override
   void initState() {
@@ -44,7 +40,37 @@ class _BillingListViewState extends State<BillingListView> {
     _loadImage();
   }
 
+  Future<void> _loadImageUrls() async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/saved_text.txt');
+      if (file.existsSync()) {
+        var allUrls = file
+            .readAsStringSync()
+            .trim()
+            .split(';')
+            .where((element) => element != '')
+            .toList();
+        imgUrls = allUrls.isEmpty
+            ? [
+                'https://cdn.pixabay.com/photo/2023/10/27/17/04/dahlia-8345799_1280.jpg'
+              ]
+            : allUrls;
+      } else {
+        imgUrls = [
+          'https://cdn.pixabay.com/photo/2023/10/27/17/04/dahlia-8345799_1280.jpg'
+        ];
+      }
+    } catch (e) {
+      imgUrls = [
+        'https://cdn.pixabay.com/photo/2023/10/27/17/04/dahlia-8345799_1280.jpg'
+      ];
+    }
+  }
+
   Future<void> _loadImage() async {
+    await _loadImageUrls();
+    developer.log('$imgUrls');
     image = Image.network(
       imgUrls[Random().nextInt(imgUrls.length)],
       width: double.infinity,
@@ -59,9 +85,9 @@ class _BillingListViewState extends State<BillingListView> {
         var bytesLoaded = loadingProgress.cumulativeBytesLoaded;
         return Center(
             child: Padding(
-            padding: const EdgeInsets.all(64.0),
-            child: CircularProgressIndicator(
-              value: totalBytes != null ? bytesLoaded / totalBytes : null,
+          padding: const EdgeInsets.all(64.0),
+          child: CircularProgressIndicator(
+            value: totalBytes != null ? bytesLoaded / totalBytes : null,
           ),
         ));
       },
@@ -139,8 +165,7 @@ class _BillingListViewState extends State<BillingListView> {
                 if (showDateHeader)
                   Column(
                     children: [
-                      if (index == 0)
-                        buildHeader(totalExpense, totalIncome),
+                      if (index == 0) buildHeader(totalExpense, totalIncome),
                       ListTile(
                         dense: true,
                         title: Text(
@@ -205,25 +230,25 @@ class _BillingListViewState extends State<BillingListView> {
 
   GestureDetector buildHeader(Decimal totalExpense, Decimal totalIncome) {
     return GestureDetector(
-          onTap: () {
-            _loadImage();
-          },
-          child: Stack(
-            children: [
-              image,
-              Positioned(
-                  bottom: 0,
-                  left: 0,
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    child: Text(
-                      'total expense: $totalExpense, total income: $totalIncome',
-                      style: TextStyle(fontSize: 16, color: color),
-                    ),
-                  )),
-            ],
-          ),
-        );
+      onTap: () {
+        _loadImage();
+      },
+      child: Stack(
+        children: [
+          image,
+          Positioned(
+              bottom: 0,
+              left: 0,
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  'total expense: $totalExpense, total income: $totalIncome',
+                  style: TextStyle(fontSize: 16, color: color),
+                ),
+              )),
+        ],
+      ),
+    );
   }
 
   Future<PaletteGenerator> getImageMainColor(double imageWidth,
