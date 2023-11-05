@@ -87,3 +87,15 @@ will install release version
 
 ## resources
 https://plus.fluttercommunity.dev/
+
+## palette generator block ui thread
+related issue:
+https://github.com/flutter/flutter/issues/10647
+https://github.com/flutter/flutter/issues/122788
+
+key reason is that palette generator is using dart:ui, which is not supported in isolate
+
+maybe has two method to solve this issue:
+1. make isolate support dart:ui
+2. write a package to parse image color in isolate
+

@@ -37,27 +37,14 @@ class _BillingListViewState extends State<BillingListView> {
   ];
   var color = Colors.white;
   var image = Image.memory(Uint8List(0));
+
   @override
   void initState() {
     super.initState();
-    loadImage();
-    image.image
-        .resolve(const ImageConfiguration())
-        .addListener(ImageStreamListener((ImageInfo info, bool _) {
-      if (info.sizeBytes > 0) {
-        getImageMainColor(info.image.width.toDouble(),
-            info.image.height.toDouble(), image.image)
-            .then((value) {
-          var computeLuminance =
-          value.dominantColor!.color.computeLuminance();
-          color = computeLuminance > 0.5 ? Colors.black : Colors.white;
-          setState(() {});
-        });
-      }
-    }));
+    _loadImage();
   }
 
-  Future<void> loadImage() async {
+  Future<void> _loadImage() async {
     image = Image.network(
       imgUrls[Random().nextInt(imgUrls.length)],
       width: double.infinity,
@@ -71,15 +58,28 @@ class _BillingListViewState extends State<BillingListView> {
         var totalBytes = loadingProgress.expectedTotalBytes;
         var bytesLoaded = loadingProgress.cumulativeBytesLoaded;
         return Center(
-          child: Padding(
+            child: Padding(
             padding: const EdgeInsets.all(64.0),
             child: CircularProgressIndicator(
               value: totalBytes != null ? bytesLoaded / totalBytes : null,
-            ),
-          )
-        );
+          ),
+        ));
       },
     );
+    setState(() {});
+    image.image
+        .resolve(const ImageConfiguration())
+        .addListener(ImageStreamListener((ImageInfo info, bool _) {
+      if (info.sizeBytes > 0) {
+        getImageMainColor(info.image.width.toDouble(),
+                info.image.height.toDouble(), image.image)
+            .then((value) {
+          var computeLuminance = value.dominantColor!.color.computeLuminance();
+          color = computeLuminance > 0.5 ? Colors.black : Colors.white;
+          setState(() {});
+        });
+      }
+    }));
   }
 
   @override
@@ -87,6 +87,30 @@ class _BillingListViewState extends State<BillingListView> {
     return Consumer<BillingProvider>(
       builder: (context, billingProvider, child) {
         final billings = billingProvider.billings;
+        var totalExpense = billings.fold(
+            Decimal.zero,
+            (previousValue, element) =>
+                previousValue +
+                (element.type == BillingType.expense
+                    ? element.amount
+                    : Decimal.zero));
+        var totalIncome = billings.fold(
+            Decimal.zero,
+            (previousValue, element) =>
+                previousValue +
+                (element.type == BillingType.income
+                    ? element.amount
+                    : Decimal.zero));
+        if (billings.isEmpty) {
+          return ListView(
+            children: [
+              buildHeader(totalExpense, totalIncome),
+              const Center(
+                child: Text('No billing yet'),
+              ),
+            ],
+          );
+        }
         return ListView.builder(
           itemCount: billings.length,
           itemBuilder: (BuildContext context, int index) {
@@ -96,35 +120,19 @@ class _BillingListViewState extends State<BillingListView> {
                 !Utils.isSameDay(currentBilling.date, previousBilling.date);
 
             final dailyTotalMap =
-            Utils.calculateDailyTotal(currentBilling.date, billings);
+                Utils.calculateDailyTotal(currentBilling.date, billings);
 
             var hasIncome = dailyTotalMap['income'] != Decimal.zero;
             var hasExpense = dailyTotalMap['expense'] != Decimal.zero;
 
             var incomeAmount =
-            !hasIncome ? '' : '+\$${dailyTotalMap['income']}';
+                !hasIncome ? '' : '+\$${dailyTotalMap['income']}';
             var spaceAndComma = hasIncome && hasExpense ? ', ' : '';
             var expenseAmount =
-            !hasExpense ? '' : '-\$${dailyTotalMap['expense']}';
+                !hasExpense ? '' : '-\$${dailyTotalMap['expense']}';
             var formattedAmount = currentBilling.amount.toStringAsFixed(2);
             var amountPrefix =
-            currentBilling.type == BillingType.income ? '+' : '-';
-            var totalExpense = billings.fold(
-                Decimal.zero,
-                    (previousValue, element) =>
-                previousValue +
-                    (element.type == BillingType.expense
-                        ? element.amount
-                        : Decimal.zero));
-            var totalIncome = billings.fold(
-                Decimal.zero,
-                    (previousValue, element) =>
-                previousValue +
-                    (element.type == BillingType.income
-                        ? element.amount
-                        : Decimal.zero));
-
-
+                currentBilling.type == BillingType.income ? '+' : '-';
 
             return Column(
               children: <Widget>[
@@ -132,21 +140,7 @@ class _BillingListViewState extends State<BillingListView> {
                   Column(
                     children: [
                       if (index == 0)
-                        Stack(
-                          children: [
-                            image,
-                            Positioned(
-                                bottom: 0,
-                                left: 0,
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  child: Text(
-                                    'total expense: $totalExpense, total income: $totalIncome',
-                                    style: TextStyle(fontSize: 16,color: color),
-                                  ),
-                                )),
-                          ],
-                        ),
+                        buildHeader(totalExpense, totalIncome),
                       ListTile(
                         dense: true,
                         title: Text(
@@ -209,12 +203,32 @@ class _BillingListViewState extends State<BillingListView> {
     );
   }
 
-  Future<PaletteGenerator> getImageMainColor(
-      double imageWidth, double imageHeight, ImageProvider<Object> image) async {
-    var rect = Rect.fromCenter(
-        center: Offset(imageWidth / 2, imageHeight / 2),
-        width: imageWidth,
-        height: imageHeight);
+  GestureDetector buildHeader(Decimal totalExpense, Decimal totalIncome) {
+    return GestureDetector(
+          onTap: () {
+            _loadImage();
+          },
+          child: Stack(
+            children: [
+              image,
+              Positioned(
+                  bottom: 0,
+                  left: 0,
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    child: Text(
+                      'total expense: $totalExpense, total income: $totalIncome',
+                      style: TextStyle(fontSize: 16, color: color),
+                    ),
+                  )),
+            ],
+          ),
+        );
+  }
+
+  Future<PaletteGenerator> getImageMainColor(double imageWidth,
+      double imageHeight, ImageProvider<Object> image) async {
+    var rect = Rect.fromLTRB(0, imageHeight * 4 / 5, imageWidth, imageHeight);
     var color = await PaletteGenerator.fromImageProvider(
       image,
       region: rect,
@@ -225,7 +239,7 @@ class _BillingListViewState extends State<BillingListView> {
 
   Future<void> _removeBilling(BuildContext context, int index) async {
     final billingProvider =
-    Provider.of<BillingProvider>(context, listen: false);
+        Provider.of<BillingProvider>(context, listen: false);
 
     final billing = billingProvider.billings[index];
     await GetIt.I<BillingRepository>().deleteBilling(billing.id);
