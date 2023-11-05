@@ -20,8 +20,21 @@ import '../repository/billing_repository.dart';
 import '../provider/billing_provider.dart';
 import '../utils/utils.dart';
 
-class SettingPage extends StatelessWidget {
+class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _SettingPageState();
+}
+
+class _SettingPageState extends State<SettingPage> {
+  String _savedText = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadText();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,9 +86,71 @@ class SettingPage extends StatelessWidget {
                     Utils.showToast('分享成功，共导出$value条数据', fToast);
                   })
                 },
-            child: const Text('分享数据'))
+            child: const Text('分享数据')),
+        Column(
+          children: [
+            TextField(
+              controller: _textController,
+              maxLines: null,
+              decoration: InputDecoration(
+                labelText: 'Enter Text',
+                border: OutlineInputBorder(),
+                suffixIcon: IconButton(
+                  icon: Icon(_isKeyboardVisible
+                      ? Icons.keyboard_hide
+                      : Icons.keyboard),
+                  onPressed: () {
+                    // 切换键盘的可见性
+                    setState(() {
+                      _isKeyboardVisible = !_isKeyboardVisible;
+                      if (_isKeyboardVisible) {
+                        FocusScope.of(context).unfocus(); // 隐藏键盘
+                      } else {
+                        FocusScope.of(context)
+                            .requestFocus(FocusNode()); // 显示键盘
+                      }
+                    });
+                  },
+                ),
+              ),
+              onChanged: (value) {
+                _savedText = value;
+                _saveText();
+              },
+            ),
+          ],
+        )
       ]),
     );
+  }
+
+  final TextEditingController _textController = TextEditingController();
+  bool _isKeyboardVisible = false;
+
+  Future<void> _loadText() async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/saved_text.txt');
+      if (file.existsSync()) {
+        setState(() {
+          _savedText = file.readAsStringSync();
+          _textController.text = _savedText;
+        });
+      }
+    } catch (e) {
+      print('Failed to load text: $e');
+    }
+  }
+
+  Future<void> _saveText() async {
+    final text = _textController.text;
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/saved_text.txt');
+      await file.writeAsString(text);
+    } catch (e) {
+      print('Failed to save text: $e');
+    }
   }
 
   Future<Map<String, String>> exportExcel() async {
@@ -227,3 +302,84 @@ class SettingPage extends StatelessWidget {
     return 0;
   }
 }
+
+// class MyTextEditorScreen extends StatefulWidget {
+//   @override
+//   State<MyTextEditorScreen> createState() => _MyTextEditorScreenState();
+// }
+//
+// class _MyTextEditorScreenState extends State<MyTextEditorScreen> {
+//   final TextEditingController _textController = TextEditingController();
+//   String _savedText = '';
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     _loadText();
+//   }
+//
+//   Future<void> _loadText() async {
+//     try {
+//       final directory = await getApplicationDocumentsDirectory();
+//       final file = File('${directory.path}/saved_text.txt');
+//       if (file.existsSync()) {
+//         setState(() {
+//           _savedText = file.readAsStringSync();
+//         });
+//       }
+//     } catch (e) {
+//       print('Failed to load text: $e');
+//     }
+//   }
+//
+//   Future<void> _saveText() async {
+//     final text = _textController.text;
+//     try {
+//       final directory = await getApplicationDocumentsDirectory();
+//       final file = File('${directory.path}/saved_text.txt');
+//       await file.writeAsString(text);
+//     } catch (e) {
+//       print('Failed to save text: $e');
+//     }
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Text Editor'),
+//       ),
+//       body: Padding(
+//         padding: const EdgeInsets.all(16.0),
+//         child: Column(
+//           children: [
+//             TextField(
+//               controller: _textController,
+//               maxLines: null,
+//               decoration: InputDecoration(
+//                 labelText: 'Enter Text',
+//                 border: OutlineInputBorder(),
+//               ),
+//             ),
+//             SizedBox(height: 16),
+//             ElevatedButton(
+//               onPressed: () {
+//                 _saveText();
+//               },
+//               child: Text('Save'),
+//             ),
+//             SizedBox(height: 16),
+//             Text('Saved Text:'),
+//             Text(_savedText),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+//
+//   @override
+//   void dispose() {
+//     _textController.dispose();
+//     super.dispose();
+//   }
+// }
