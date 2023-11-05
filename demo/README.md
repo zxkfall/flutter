@@ -99,3 +99,7 @@ maybe has two method to solve this issue:
 1. make isolate support dart:ui
 2. write a package to parse image color in isolate
 
+## show log
+```bash
+flutter logs
+```
