@@ -47,10 +47,10 @@ class _HomePageState extends State<HomePage> {
             SettingPage(),
           ],
         ),
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         extendBody: true,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: FloatingActionButton(
+        floatingActionButton: MediaQuery.of(context).viewInsets.bottom != 0 ? null : FloatingActionButton(
           onPressed: () {
             _goToBillingDetailPage(context);
           },

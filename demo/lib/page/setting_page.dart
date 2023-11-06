@@ -41,86 +41,89 @@ class _SettingPageState extends State<SettingPage> {
     FToast fToast = FToast();
     fToast.init(context);
     var billingProvider = Provider.of<BillingProvider>(context, listen: false);
-    return Center(
-      child: Column(children: <Widget>[
-        const Text('Settings Page'),
-        Align(
-          alignment: Alignment.center,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              TextButton(
-                  onPressed: () => {
-                        openFilePickerAndRead(context).then((value) {
-                          Utils.showToast(
-                              value != 0 ? '导入成功，共导入$value条数据' : '未导入数据',
-                              fToast);
-                        })
-                      },
-                  child: const Text('选择文件')),
-              TextButton(
-                  onPressed: () => {
-                        GetIt.I<BillingRepository>()
-                            .clearBilling()
-                            .then((value) {
-                          Utils.showToast('清除成功，共清除$value条数据', fToast);
-                          billingProvider.setBillings(<Billing>[]);
-                        })
-                      },
-                  child: const Text('清除数据'))
-            ],
-          ),
-        ),
-        TextButton(
-            onPressed: () => {
-                  exportExcel().then((value) {
-                    Utils.showToast(
-                        '导出成功，共导出${value['count']}条数据${value['path'] == '' ? '!' : '，文件路径:${value['path']}'}',
-                        fToast);
-                  })
-                },
-            child: const Text('导出数据')),
-        TextButton(
-            onPressed: () => {
-                  shareExcel().then((value) {
-                    Utils.showToast('分享成功，共导出$value条数据', fToast);
-                  })
-                },
-            child: const Text('分享数据')),
-        Column(
-          children: [
-            TextField(
-              controller: _textController,
-              maxLines: null,
-              decoration: InputDecoration(
-                labelText: 'Enter Text',
-                border: const OutlineInputBorder(),
-                suffixIcon: IconButton(
-                  icon: Icon(_isKeyboardVisible
-                      ? Icons.keyboard_hide
-                      : Icons.keyboard),
-                  onPressed: () {
-                    // 切换键盘的可见性
-                    setState(() {
-                      _isKeyboardVisible = !_isKeyboardVisible;
-                      if (_isKeyboardVisible) {
-                        FocusScope.of(context).unfocus(); // 隐藏键盘
-                      } else {
-                        FocusScope.of(context)
-                            .requestFocus(FocusNode()); // 显示键盘
-                      }
-                    });
-                  },
-                ),
-              ),
-              onChanged: (value) {
-                _savedText = value;
-                _saveText();
-              },
+    return ListView(
+      children: [
+        Column(children: <Widget>[
+          const Text('Settings Page'),
+          Align(
+            alignment: Alignment.center,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                TextButton(
+                    onPressed: () => {
+                          openFilePickerAndRead(context).then((value) {
+                            Utils.showToast(
+                                value != 0 ? '导入成功，共导入$value条数据' : '未导入数据',
+                                fToast);
+                          })
+                        },
+                    child: const Text('选择文件')),
+                TextButton(
+                    onPressed: () => {
+                          GetIt.I<BillingRepository>()
+                              .clearBilling()
+                              .then((value) {
+                            Utils.showToast('清除成功，共清除$value条数据', fToast);
+                            billingProvider.setBillings(<Billing>[]);
+                          })
+                        },
+                    child: const Text('清除数据'))
+              ],
             ),
-          ],
-        )
-      ]),
+          ),
+          TextButton(
+              onPressed: () => {
+                    exportExcel().then((value) {
+                      Utils.showToast(
+                          '导出成功，共导出${value['count']}条数据${value['path'] == '' ? '!' : '，文件路径:${value['path']}'}',
+                          fToast);
+                    })
+                  },
+              child: const Text('导出数据')),
+          TextButton(
+              onPressed: () => {
+                    shareExcel().then((value) {
+                      Utils.showToast('分享成功，共导出$value条数据', fToast);
+                    })
+                  },
+              child: const Text('分享数据')),
+          Column(
+            children: [
+              TextField(
+                controller: _textController,
+                maxLines: null,
+                decoration: InputDecoration(
+                  labelText: 'Enter Text',
+                  border: const OutlineInputBorder(),
+                  suffixIcon: IconButton(
+                    icon: Icon(_isKeyboardVisible
+                        ? Icons.keyboard_hide
+                        : Icons.keyboard),
+                    onPressed: () {
+                      // 切换键盘的可见性
+                      setState(() {
+                        _isKeyboardVisible = !_isKeyboardVisible;
+                        if (_isKeyboardVisible) {
+                          FocusScope.of(context).unfocus(); // 隐藏键盘
+                        } else {
+                          FocusScope.of(context)
+                              .requestFocus(FocusNode()); // 显示键盘
+                        }
+                      });
+                    },
+                  ),
+                ),
+                onChanged: (value) {
+                  _savedText = value;
+                  _saveText();
+                },
+              ),
+            ],
+          )
+        ]),
+        TextField()
+      ],
     );
   }
 
