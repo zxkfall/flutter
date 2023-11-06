@@ -61,7 +61,7 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Theme.of(context).colorScheme.surface,
         ),
         bottomNavigationBar: SizedBox(
-          height: 64,
+          height: kBottomNavigationBarHeight,
           child: BottomAppBar(
             padding: const EdgeInsets.only(top: 0.0, left: 14, right: 14),
             color: Theme.of(context).colorScheme.onSurfaceVariant,
