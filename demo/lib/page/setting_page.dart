@@ -94,7 +94,7 @@ class _SettingPageState extends State<SettingPage> {
               maxLines: null,
               decoration: InputDecoration(
                 labelText: 'Enter Text',
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
                 suffixIcon: IconButton(
                   icon: Icon(_isKeyboardVisible
                       ? Icons.keyboard_hide
@@ -138,7 +138,7 @@ class _SettingPageState extends State<SettingPage> {
         });
       }
     } catch (e) {
-      print('Failed to load text: $e');
+      log('Failed to load text: $e');
     }
   }
 
@@ -149,7 +149,7 @@ class _SettingPageState extends State<SettingPage> {
       final file = File('${directory.path}/saved_text.txt');
       await file.writeAsString(text);
     } catch (e) {
-      print('Failed to save text: $e');
+      log('Failed to save text: $e');
     }
   }
 

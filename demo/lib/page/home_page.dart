@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'package:demo/page/billing_detail_page.dart';
 import 'package:demo/page/setting_page.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +11,7 @@ import '../provider/billing_provider.dart';
 import 'chart_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -57,8 +56,8 @@ class _HomePageState extends State<HomePage> {
           },
           tooltip: 'Add Billing',
           shape: const CircleBorder(),
-          child: const Icon(Icons.add),
           backgroundColor: Theme.of(context).colorScheme.surface,
+          child: const Icon(Icons.add),
         ),
         bottomNavigationBar: SizedBox(
           height: kBottomNavigationBarHeight,

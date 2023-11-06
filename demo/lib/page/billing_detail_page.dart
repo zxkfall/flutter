@@ -14,7 +14,7 @@ import '../view/kind_selection_wrap_view.dart';
 import '../utils/utils.dart';
 
 class BillingDetailPage extends StatefulWidget {
-  const BillingDetailPage({Key? key, this.billing}) : super(key: key);
+  const BillingDetailPage({super.key, this.billing});
 
   final Billing? billing;
 
