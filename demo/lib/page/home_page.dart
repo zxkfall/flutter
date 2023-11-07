@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:demo/page/billing_detail_page.dart';
 import 'package:demo/page/setting_page.dart';
 import 'package:flutter/material.dart';
@@ -60,7 +61,9 @@ class _HomePageState extends State<HomePage> {
           child: const Icon(Icons.add),
         ),
         bottomNavigationBar: SizedBox(
-          height: kBottomNavigationBarHeight,
+          height: Platform.isIOS
+              ? kBottomNavigationBarHeight * 3 / 2
+              : kBottomNavigationBarHeight * 6 / 5,
           child: BottomAppBar(
             padding: const EdgeInsets.only(top: 0.0, left: 14, right: 14),
             color: Theme.of(context).colorScheme.onSurfaceVariant,
