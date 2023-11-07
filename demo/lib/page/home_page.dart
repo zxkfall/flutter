@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 import 'package:demo/page/billing_detail_page.dart';
 import 'package:demo/page/setting_page.dart';
@@ -20,6 +21,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final PageController _pageController = PageController(initialPage: 0);
+  var currentPage = 0;
 
   @override
   void initState() {
@@ -28,6 +30,10 @@ class _HomePageState extends State<HomePage> {
       _loadBillingData().then((value) {
         Provider.of<BillingProvider>(context, listen: false).setBillings(value);
       });
+    });
+    _pageController.addListener(() {
+      currentPage = _pageController.page!.round();
+      setState(() {});
     });
   }
 
@@ -93,12 +99,13 @@ class _HomePageState extends State<HomePage> {
                                     curve: Curves.easeInOut);
                               },
                               icon: const Icon(Icons.menu),
-                              color: Colors.white,
+                              color: _getCurrentColor(0),
                             ),
                           ),
-                          const Text(
+                          Text(
                             'Home',
-                            style: TextStyle(fontSize: 12, color: Colors.white),
+                            style: TextStyle(
+                                fontSize: 12, color: _getCurrentColor(0)),
                             textAlign: TextAlign.center,
                           )
                         ],
@@ -123,13 +130,13 @@ class _HomePageState extends State<HomePage> {
                                       curve: Curves.easeInOut);
                                 },
                                 icon: const Icon(Icons.bar_chart),
-                                color: Colors.white,
+                                color: _getCurrentColor(1),
                               ),
                             ),
-                            const Text(
+                            Text(
                               'Chart',
-                              style:
-                                  TextStyle(fontSize: 12, color: Colors.white),
+                              style: TextStyle(
+                                  fontSize: 12, color: _getCurrentColor(1)),
                               textAlign: TextAlign.center,
                             )
                           ],
@@ -151,17 +158,18 @@ class _HomePageState extends State<HomePage> {
                             child: IconButton(
                               padding: EdgeInsets.zero,
                               onPressed: () {
-                                _pageController.animateToPage(1,
+                                _pageController.animateToPage(2,
                                     duration: const Duration(milliseconds: 200),
                                     curve: Curves.easeInOut);
                               },
                               icon: const Icon(Icons.settings),
-                              color: Colors.white,
+                              color: _getCurrentColor(2),
                             ),
                           ),
-                          const Text(
+                          Text(
                             'Setting',
-                            style: TextStyle(fontSize: 12, color: Colors.white),
+                            style: TextStyle(
+                                fontSize: 12, color: _getCurrentColor(2)),
                             textAlign: TextAlign.center,
                           )
                         ],
@@ -174,6 +182,15 @@ class _HomePageState extends State<HomePage> {
           ),
         ));
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _pageController.dispose();
+  }
+
+  Color _getCurrentColor(page) =>
+      currentPage == page ? Colors.pink : Colors.white;
 
   void _goToBillingDetailPage(BuildContext context) {
     Navigator.push(
