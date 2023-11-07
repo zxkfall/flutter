@@ -51,21 +51,23 @@ class _HomePageState extends State<HomePage> {
         resizeToAvoidBottomInset: true,
         extendBody: true,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: MediaQuery.of(context).viewInsets.bottom != 0 ? null : FloatingActionButton(
-          onPressed: () {
-            _goToBillingDetailPage(context);
-          },
-          tooltip: 'Add Billing',
-          shape: const CircleBorder(),
-          backgroundColor: Theme.of(context).colorScheme.surface,
-          child: const Icon(Icons.add),
-        ),
+        floatingActionButton: MediaQuery.of(context).viewInsets.bottom != 0
+            ? null
+            : FloatingActionButton(
+                onPressed: () {
+                  _goToBillingDetailPage(context);
+                },
+                tooltip: 'Add Billing',
+                shape: const CircleBorder(),
+                backgroundColor: Theme.of(context).colorScheme.surface,
+                child: const Icon(Icons.add),
+              ),
         bottomNavigationBar: SizedBox(
           height: Platform.isIOS
               ? kBottomNavigationBarHeight * 3 / 2
               : kBottomNavigationBarHeight * 6 / 5,
           child: BottomAppBar(
-            padding: const EdgeInsets.only(top: 0.0, left: 14, right: 14),
+            padding: const EdgeInsets.only(left: 30, right: 30),
             color: Theme.of(context).colorScheme.onSurfaceVariant,
             shape: const CircularNotchedRectangle(),
             child: Row(
@@ -75,39 +77,95 @@ class _HomePageState extends State<HomePage> {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    IconButton(
-                      onPressed: () {
-                        _pageController.animateToPage(0,
-                            duration: const Duration(milliseconds: 200),
-                            curve: Curves.easeInOut);
-                      },
-                      icon: const Icon(Icons.menu),
-                      color: Colors.white,
+                    Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 32,
+                            width: 32,
+                            child: IconButton(
+                              padding: EdgeInsets.zero,
+                              onPressed: () {
+                                _pageController.animateToPage(0,
+                                    duration: const Duration(milliseconds: 200),
+                                    curve: Curves.easeInOut);
+                              },
+                              icon: const Icon(Icons.menu),
+                              color: Colors.white,
+                            ),
+                          ),
+                          const Text(
+                            'Home',
+                            style: TextStyle(fontSize: 12, color: Colors.white),
+                            textAlign: TextAlign.center,
+                          )
+                        ],
+                      ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 36),
-                      child: IconButton(
-                        onPressed: () {
-                          _pageController.animateToPage(1,
-                              duration: const Duration(milliseconds: 200),
-                              curve: Curves.easeInOut);
-                        },
-                        icon: const Icon(Icons.bar_chart),
-                        color: Colors.white,
+                      padding: const EdgeInsets.only(left: 48),
+                      child: Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              height: 32,
+                              width: 32,
+                              child: IconButton(
+                                padding: EdgeInsets.zero,
+                                onPressed: () {
+                                  _pageController.animateToPage(1,
+                                      duration:
+                                          const Duration(milliseconds: 200),
+                                      curve: Curves.easeInOut);
+                                },
+                                icon: const Icon(Icons.bar_chart),
+                                color: Colors.white,
+                              ),
+                            ),
+                            const Text(
+                              'Chart',
+                              style:
+                                  TextStyle(fontSize: 12, color: Colors.white),
+                              textAlign: TextAlign.center,
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ],
                 ),
                 Row(
                   children: [
-                    IconButton(
-                      onPressed: () {
-                        _pageController.animateToPage(2,
-                            duration: const Duration(milliseconds: 200),
-                            curve: Curves.easeInOut);
-                      },
-                      icon: const Icon(Icons.settings),
-                      color: Colors.white,
+                    Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 32,
+                            width: 32,
+                            child: IconButton(
+                              padding: EdgeInsets.zero,
+                              onPressed: () {
+                                _pageController.animateToPage(1,
+                                    duration: const Duration(milliseconds: 200),
+                                    curve: Curves.easeInOut);
+                              },
+                              icon: const Icon(Icons.settings),
+                              color: Colors.white,
+                            ),
+                          ),
+                          const Text(
+                            'Setting',
+                            style: TextStyle(fontSize: 12, color: Colors.white),
+                            textAlign: TextAlign.center,
+                          )
+                        ],
+                      ),
                     ),
                   ],
                 )
