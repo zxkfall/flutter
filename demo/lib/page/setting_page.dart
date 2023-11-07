@@ -108,7 +108,8 @@ class _SettingPageState extends State<SettingPage> {
                         if (_isKeyboardVisible) {
                           FocusManager.instance.primaryFocus?.unfocus();
                         } else {
-                          FocusManager.instance.primaryFocus?.requestFocus(focusNode);
+                          FocusManager.instance.primaryFocus
+                              ?.requestFocus(focusNode);
                         }
                       });
                     },
@@ -122,12 +123,47 @@ class _SettingPageState extends State<SettingPage> {
             ],
           )
         ]),
-        TextField()
+        ..._urlTags.map((element) {
+          return TextButton(
+            onPressed: () {
+              Clipboard.setData(ClipboardData(text: element));
+              Utils.showToast('复制成功', fToast);
+            },
+            onLongPress: () {
+              _urlTags.remove(element);
+              setState(() {});
+            },
+            child: Text(element),
+          );
+        }),
+        TextField(
+          focusNode: listNode,
+          controller: _myController,
+          maxLines: 1,
+          decoration: const InputDecoration(
+            labelText: 'Enter Text',
+            border: OutlineInputBorder(),
+          ),
+          onSubmitted: (value) {
+            autoFocus = true;
+            if (value.trim() == '') {
+              return;
+            }
+            _urlTags.add(value);
+            _myController.text = '';
+            setState(() {});
+          },
+          autofocus: autoFocus,
+        )
       ],
     );
   }
 
+  var autoFocus = false;
+  final List<String> _urlTags = [];
   final TextEditingController _textController = TextEditingController();
+  final TextEditingController _myController = TextEditingController();
+  final listNode = FocusNode();
   bool _isKeyboardVisible = false;
 
   Future<void> _loadText() async {
