@@ -4,6 +4,7 @@ import 'dart:math';
 import 'dart:developer' as developer;
 
 import 'package:decimal/decimal.dart';
+import 'package:demo/page/preview_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
@@ -232,6 +233,27 @@ class _BillingListViewState extends State<BillingListView> {
     return GestureDetector(
       onTap: () {
         _loadImage();
+      },
+      onHorizontalDragEnd: (longPressDetails){
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+            PreviewPage(image: image,),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              const begin = Offset(1.0, 1.0);
+              const end = Offset.zero;
+              const curve = Curves.easeInOut;
+              var tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+              var offsetAnimation = animation.drive(tween);
+              return SlideTransition(
+                position: offsetAnimation,
+                child: child,
+              );
+            },
+          ),
+        );
       },
       child: Stack(
         children: [
