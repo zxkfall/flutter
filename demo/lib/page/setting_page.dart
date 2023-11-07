@@ -131,6 +131,7 @@ class _SettingPageState extends State<SettingPage> {
             },
             onLongPress: () {
               _urlTags.remove(element);
+              _saveTextForList();
               setState(() {});
             },
             child: Text(element),
@@ -151,6 +152,7 @@ class _SettingPageState extends State<SettingPage> {
             }
             _urlTags.add(value);
             _myController.text = '';
+            _saveTextForList();
             setState(() {});
           },
           autofocus: autoFocus,
@@ -160,7 +162,7 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   var autoFocus = false;
-  final List<String> _urlTags = [];
+  List<String> _urlTags = [];
   final TextEditingController _textController = TextEditingController();
   final TextEditingController _myController = TextEditingController();
   final listNode = FocusNode();
@@ -174,6 +176,11 @@ class _SettingPageState extends State<SettingPage> {
         setState(() {
           _savedText = file.readAsStringSync();
           _textController.text = _savedText;
+          _urlTags = _savedText
+              .trim()
+              .split(';')
+              .where((element) => element != '')
+              .toList();
         });
       }
     } catch (e) {
@@ -183,6 +190,17 @@ class _SettingPageState extends State<SettingPage> {
 
   Future<void> _saveText() async {
     final text = _textController.text;
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/saved_text.txt');
+      await file.writeAsString(text);
+    } catch (e) {
+      log('Failed to save text: $e');
+    }
+  }
+
+  Future<void> _saveTextForList() async {
+    final text = _urlTags.join(';');
     try {
       final directory = await getApplicationDocumentsDirectory();
       final file = File('${directory.path}/saved_text.txt');
