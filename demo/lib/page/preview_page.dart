@@ -8,11 +8,21 @@ class PreviewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    ;
     return GestureDetector(
       onTap: () {
         Navigator.pop(context);
       },
-      child: image,
+      child: Center(
+        child: InteractiveViewer(
+          panEnabled: true,
+          boundaryMargin: const EdgeInsets.all(100),
+          minScale: 0.2,
+          maxScale: 10,
+          child: image,
+        ),
+      ),
     );
   }
 }
