@@ -33,6 +33,7 @@ class _HomePageState extends State<HomePage> {
     });
     _pageController.addListener(() {
       currentPage = _pageController.page!.round();
+      FocusScope.of(context).unfocus();
       setState(() {});
     });
   }
@@ -187,6 +188,7 @@ class _HomePageState extends State<HomePage> {
   void dispose() {
     super.dispose();
     _pageController.dispose();
+    log('disposed');
   }
 
   Color _getCurrentColor(page) =>
