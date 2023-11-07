@@ -28,7 +28,6 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
-  String _savedText = '';
   var focusNode = FocusNode();
 
   @override
@@ -89,39 +88,6 @@ class _SettingPageState extends State<SettingPage> {
                     })
                   },
               child: const Text('分享数据')),
-          Column(
-            children: [
-              TextField(
-                focusNode: focusNode,
-                controller: _textController,
-                maxLines: null,
-                decoration: InputDecoration(
-                  labelText: 'Enter Text',
-                  border: const OutlineInputBorder(),
-                  suffixIcon: IconButton(
-                    icon: Icon(_isKeyboardVisible
-                        ? Icons.keyboard_hide
-                        : Icons.keyboard),
-                    onPressed: () {
-                      setState(() {
-                        _isKeyboardVisible = !_isKeyboardVisible;
-                        if (_isKeyboardVisible) {
-                          FocusManager.instance.primaryFocus?.unfocus();
-                        } else {
-                          FocusManager.instance.primaryFocus
-                              ?.requestFocus(focusNode);
-                        }
-                      });
-                    },
-                  ),
-                ),
-                onChanged: (value) {
-                  _savedText = value;
-                  _saveText();
-                },
-              ),
-            ],
-          )
         ]),
         ..._urlTags.map((element) {
           return TextButton(
@@ -131,19 +97,35 @@ class _SettingPageState extends State<SettingPage> {
             },
             onLongPress: () {
               _urlTags.remove(element);
-              _saveTextForList();
+              _saveUrls();
               setState(() {});
             },
             child: Text(element),
           );
         }),
         TextField(
-          focusNode: listNode,
-          controller: _myController,
+          focusNode: focusNode,
+          controller: _textController,
           maxLines: 1,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             labelText: 'Enter Text',
-            border: OutlineInputBorder(),
+            border: const OutlineInputBorder(),
+            suffixIcon: IconButton(
+              icon: Icon(_isKeyboardVisible
+                  ? Icons.keyboard_hide
+                  : Icons.keyboard),
+              onPressed: () {
+                setState(() {
+                  _isKeyboardVisible = !_isKeyboardVisible;
+                  if (_isKeyboardVisible) {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  } else {
+                    FocusManager.instance.primaryFocus
+                        ?.requestFocus(focusNode);
+                  }
+                });
+              },
+            ),
           ),
           onSubmitted: (value) {
             autoFocus = true;
@@ -151,8 +133,8 @@ class _SettingPageState extends State<SettingPage> {
               return;
             }
             _urlTags.add(value);
-            _myController.text = '';
-            _saveTextForList();
+            _textController.text = '';
+            _saveUrls();
             setState(() {});
           },
           autofocus: autoFocus,
@@ -164,8 +146,6 @@ class _SettingPageState extends State<SettingPage> {
   var autoFocus = false;
   List<String> _urlTags = [];
   final TextEditingController _textController = TextEditingController();
-  final TextEditingController _myController = TextEditingController();
-  final listNode = FocusNode();
   bool _isKeyboardVisible = false;
 
   Future<void> _loadText() async {
@@ -174,9 +154,7 @@ class _SettingPageState extends State<SettingPage> {
       final file = File('${directory.path}/saved_text.txt');
       if (file.existsSync()) {
         setState(() {
-          _savedText = file.readAsStringSync();
-          _textController.text = _savedText;
-          _urlTags = _savedText
+          _urlTags = file.readAsStringSync()
               .trim()
               .split(';')
               .where((element) => element != '')
@@ -188,18 +166,7 @@ class _SettingPageState extends State<SettingPage> {
     }
   }
 
-  Future<void> _saveText() async {
-    final text = _textController.text;
-    try {
-      final directory = await getApplicationDocumentsDirectory();
-      final file = File('${directory.path}/saved_text.txt');
-      await file.writeAsString(text);
-    } catch (e) {
-      log('Failed to save text: $e');
-    }
-  }
-
-  Future<void> _saveTextForList() async {
+  Future<void> _saveUrls() async {
     final text = _urlTags.join(';');
     try {
       final directory = await getApplicationDocumentsDirectory();
