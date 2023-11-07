@@ -103,3 +103,10 @@ maybe has two method to solve this issue:
 ```bash
 flutter logs
 ```
+
+## fix keyboard hide
+```dart
+FocusScope.of(context).requestFocus(FocusNode());
+```
+
+https://stackoverflow.com/questions/44991968/how-can-i-dismiss-the-on-screen-keyboard/56946311#56946311

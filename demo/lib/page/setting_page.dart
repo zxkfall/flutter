@@ -29,6 +29,7 @@ class SettingPage extends StatefulWidget {
 
 class _SettingPageState extends State<SettingPage> {
   String _savedText = '';
+  var focusNode = FocusNode();
 
   @override
   void initState() {
@@ -91,6 +92,7 @@ class _SettingPageState extends State<SettingPage> {
           Column(
             children: [
               TextField(
+                focusNode: focusNode,
                 controller: _textController,
                 maxLines: null,
                 decoration: InputDecoration(
@@ -101,14 +103,12 @@ class _SettingPageState extends State<SettingPage> {
                         ? Icons.keyboard_hide
                         : Icons.keyboard),
                     onPressed: () {
-                      // 切换键盘的可见性
                       setState(() {
                         _isKeyboardVisible = !_isKeyboardVisible;
                         if (_isKeyboardVisible) {
-                          FocusScope.of(context).unfocus(); // 隐藏键盘
+                          FocusManager.instance.primaryFocus?.unfocus();
                         } else {
-                          FocusScope.of(context)
-                              .requestFocus(FocusNode()); // 显示键盘
+                          FocusManager.instance.primaryFocus?.requestFocus(focusNode);
                         }
                       });
                     },

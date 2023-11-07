@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
     });
     _pageController.addListener(() {
       currentPage = _pageController.page!.round();
-      FocusScope.of(context).unfocus();
+      FocusManager.instance.primaryFocus?.unfocus();
       setState(() {});
     });
   }
