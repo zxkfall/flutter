@@ -110,3 +110,10 @@ FocusScope.of(context).requestFocus(FocusNode());
 ```
 
 https://stackoverflow.com/questions/44991968/how-can-i-dismiss-the-on-screen-keyboard/56946311#56946311
+
+## replace icon
+replace `assets/icons/ic_launcher.png`
+run command
+```bash
+flutter pub run flutter_launcher_icons
+```
