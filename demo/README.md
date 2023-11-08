@@ -117,3 +117,11 @@ run command
 ```bash
 flutter pub run flutter_launcher_icons
 ```
+
+## change app name
+
+```bash
+ flutter pub run rename_app:main all="MapleBilling"
+```
+
+don't use it, just look which file changed and change it manually
