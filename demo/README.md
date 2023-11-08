@@ -136,3 +136,4 @@ Tasks:
 6. [] use icon to replace kind icon
 7. [] add feedback email
 8. [] IOS app icon has black background
+9. [] add query page
