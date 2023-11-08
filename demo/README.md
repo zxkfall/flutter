@@ -125,3 +125,14 @@ flutter pub run flutter_launcher_icons
 ```
 
 don't use it, just look which file changed and change it manually
+
+
+Tasks:
+1. [] bottom navigation bar can click with icon and text
+2. [] change theme
+3. [] add global translation
+4. [] add global theme
+5. [] add test
+6. [] use icon to replace kind icon
+7. [] add feedback email
+8. [] IOS app icon has black background
