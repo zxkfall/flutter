@@ -104,7 +104,7 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
         title: Text(widget.billing == null ? 'Add Billing' : 'Edit Billing'),
         actions: [
           if (widget.billing != null)
