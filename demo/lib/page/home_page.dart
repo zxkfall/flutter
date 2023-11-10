@@ -11,6 +11,7 @@ import '../view/billing_list_view.dart';
 import '../repository/billing_repository.dart';
 import '../provider/billing_provider.dart';
 import 'chart_page.dart';
+import 'search_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -47,11 +48,9 @@ class _HomePageState extends State<HomePage> {
         body: PageView(
           controller: _pageController,
           children: const <Widget>[
-            // 展示页面
             BillingListView(),
-            // 图表页面
             ChartPage(),
-            // 设置页面
+            SearchPage(),
             SettingPage(),
           ],
         ),
@@ -148,7 +147,8 @@ class _HomePageState extends State<HomePage> {
                 ),
                 Row(
                   children: [
-                    Center(
+                    Padding(padding: const EdgeInsets.only(right: 36),
+                    child: Center(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -163,14 +163,43 @@ class _HomePageState extends State<HomePage> {
                                     duration: const Duration(milliseconds: 200),
                                     curve: Curves.easeInOut);
                               },
-                              icon: const Icon(Icons.settings),
+                              icon: const Icon(Icons.search),
                               color: _getCurrentColor(2),
+                            ),
+                          ),
+                          Text(
+                            'Search',
+                            style: TextStyle(
+                                fontSize: 12, color: _getCurrentColor(2)),
+                            textAlign: TextAlign.center,
+                          )
+                        ],
+                      ),
+                    ),
+                    ),
+                    Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 32,
+                            width: 32,
+                            child: IconButton(
+                              padding: EdgeInsets.zero,
+                              onPressed: () {
+                                _pageController.animateToPage(3,
+                                    duration: const Duration(milliseconds: 200),
+                                    curve: Curves.easeInOut);
+                              },
+                              icon: const Icon(Icons.settings),
+                              color: _getCurrentColor(3),
                             ),
                           ),
                           Text(
                             'Setting',
                             style: TextStyle(
-                                fontSize: 12, color: _getCurrentColor(2)),
+                                fontSize: 12, color: _getCurrentColor(3)),
                             textAlign: TextAlign.center,
                           )
                         ],
