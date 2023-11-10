@@ -31,4 +31,13 @@ class BillingProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  List<Billing> _searchResult = <Billing>[];
+
+  List<Billing> get searchResult => _searchResult;
+
+  void search(String text) {
+    _searchResult = _billings.where((element) => element.description.contains(text)).toList();
+    notifyListeners();
+  }
 }
