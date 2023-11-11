@@ -16,6 +16,7 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   String? searchType = 'All';
+  BillingKind? searchKind;
 
   @override
   Widget build(BuildContext context) {
@@ -69,12 +70,46 @@ class _SearchPageState extends State<SearchPage> {
                       if (value == 'All') {
                         searchType = 'All';
                         provider.searchByType(null);
+                        provider.searchByKind(null);
                       } else if (value == 'Expense') {
                         searchType = 'Expense';
                         provider.searchByType(BillingType.expense);
+                        getExpenseValues().contains(searchKind) ? provider.searchByKind(searchKind) : provider.searchByKind(null);
                       } else if (value == 'Income') {
                         searchType = 'Income';
                         provider.searchByType(BillingType.income);
+                        getIncomeValues().contains(searchKind) ? provider.searchByKind(searchKind) : provider.searchByKind(null);
+                      }
+                    },
+                  ),
+                  DropdownButton<String>(
+                    items: [const DropdownMenuItem(value: 'All', child: Text('All')),
+                      if (searchType == 'Expense')
+                        ...(getExpenseValues()
+                            .map((e) => DropdownMenuItem(
+                                value: e.name, child: Text(e.name)))
+                            .toList())
+                      else if (searchType == 'Income')
+                        ...(getIncomeValues()
+                            .map((e) => DropdownMenuItem(
+                                value: e.name, child: Text(e.name)))
+                            .toList())
+                    ],
+                    value: searchKind == null ? 'All' :
+                    searchType == 'Expense' && getExpenseValues().contains(searchKind) ? searchKind!.name :
+                    searchType == 'Income' && getIncomeValues().contains(searchKind) ? searchKind!.name : 'All',
+                    onChanged: (value) {
+                      if (value == 'All') {
+                        searchKind = null;
+                        provider.searchByKind(null);
+                      } else if (searchType == 'Expense') {
+                        searchKind = getExpenseValues()
+                            .firstWhere((element) => element.name == value);
+                        provider.searchByKind(searchKind);
+                      } else if (searchType == 'Income') {
+                        searchKind = getIncomeValues()
+                            .firstWhere((element) => element.name == value);
+                        provider.searchByKind(searchKind);
                       }
                     },
                   ),
@@ -92,7 +127,8 @@ class _SearchPageState extends State<SearchPage> {
                           Future.delayed(const Duration(milliseconds: 150), () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (_) => BillingDetailPage(billing: billing),
+                                builder: (_) =>
+                                    BillingDetailPage(billing: billing),
                               ),
                             );
                           });
@@ -102,7 +138,8 @@ class _SearchPageState extends State<SearchPage> {
                           title: Text(billing.kind.name),
                           subtitle: Text(billing.description),
                           leading: Icon(
-                            BillingIconMapper.getIcon(billing.type, billing.kind),
+                            BillingIconMapper.getIcon(
+                                billing.type, billing.kind),
                           ),
                           trailing: Text(
                             billing.amount.toString(),

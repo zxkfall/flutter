@@ -40,6 +40,8 @@ class BillingProvider with ChangeNotifier {
 
   BillingType? _searchType;
 
+  BillingKind? _searchKind;
+
   void searchByDescription(String text) {
     _searchDescription = text;
     _search();
@@ -52,10 +54,17 @@ class BillingProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void searchByKind(BillingKind? kind) {
+    _searchKind = kind;
+    _search();
+    notifyListeners();
+  }
+
   void _search() {
     _searchResult = _billings
         .where((element) => element.description.contains(_searchDescription)
-        && (_searchType == null ? true : element.type == _searchType))
+        && (_searchType == null ? true : element.type == _searchType)
+        && (_searchKind == null ? true : element.kind == _searchKind))
         .toList();
   }
 
