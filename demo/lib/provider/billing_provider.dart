@@ -36,8 +36,31 @@ class BillingProvider with ChangeNotifier {
 
   List<Billing> get searchResult => _searchResult;
 
-  void search(String text) {
-    _searchResult = _billings.where((element) => element.description.contains(text)).toList();
+  String _searchDescription = '';
+
+  BillingType? _searchType;
+
+  void searchByDescription(String text) {
+    _searchDescription = text;
+    _search();
+    notifyListeners();
+  }
+
+  void searchByType(BillingType? type) {
+    _searchType = type;
+    _search();
+    notifyListeners();
+  }
+
+  void _search() {
+    _searchResult = _billings
+        .where((element) => element.description.contains(_searchDescription)
+        && (_searchType == null ? true : element.type == _searchType))
+        .toList();
+  }
+
+  void clearSearch() {
+    _searchResult.clear();
     notifyListeners();
   }
 }
