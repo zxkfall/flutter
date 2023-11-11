@@ -17,6 +17,8 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   String? searchType = 'All';
   BillingKind? searchKind;
+  DateTime startDate = DateTime.now().add(const Duration(days: -365));
+  DateTime endDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -114,6 +116,41 @@ class _SearchPageState extends State<SearchPage> {
                     },
                   ),
                 ],
+              ),
+              // search by date range
+              TextButton(
+                onPressed: () {
+                  showDatePicker(
+                    context: context,
+                    initialDate:startDate,
+                    firstDate: DateTime(2010),
+                    lastDate: endDate.add(const Duration(days: -1)),
+                  ).then((value) {
+                    setState(() {
+                      startDate = value!;
+                      provider.searchByDateRange(startDate, endDate);
+                    });
+                  });
+                },
+                child: Text(startDate.toString()),
+              ),
+              TextButton(
+                onPressed: () {
+                  showDatePicker(
+                    context: context,
+                    initialDate: endDate,
+                    firstDate: startDate.add(Duration(days: 1)),
+                    lastDate: DateTime(2050),
+                  ).then((value) {
+                    setState(() {
+                      value == null || value.isBefore(startDate)
+                          ? endDate = startDate.add(const Duration(days: 1))
+                          : endDate = value;
+                      provider.searchByDateRange(startDate, endDate);
+                    });
+                  });
+                },
+                child: Text(endDate.toString()),
               ),
               Expanded(
                 // 使用 Expanded 来确保 ListView.builder 占用剩余的高度

@@ -42,6 +42,10 @@ class BillingProvider with ChangeNotifier {
 
   BillingKind? _searchKind;
 
+  DateTime _startDate = DateTime(2010);
+
+DateTime _endDate = DateTime(2050);
+
   void searchByDescription(String text) {
     _searchDescription = text;
     _search();
@@ -60,11 +64,21 @@ class BillingProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void searchByDateRange(DateTime start, DateTime end) {
+    _startDate = start;
+    _endDate = end;
+    _search();
+    notifyListeners();
+  }
+
   void _search() {
     _searchResult = _billings
-        .where((element) => element.description.contains(_searchDescription)
-        && (_searchType == null ? true : element.type == _searchType)
-        && (_searchKind == null ? true : element.kind == _searchKind))
+        .where((element) =>
+            element.description.contains(_searchDescription) &&
+            (_searchType == null ? true : element.type == _searchType) &&
+            (_searchKind == null ? true : element.kind == _searchKind) &&
+            (element.date.isAfter(_startDate) &&
+                element.date.isBefore(_endDate)))
         .toList();
   }
 
