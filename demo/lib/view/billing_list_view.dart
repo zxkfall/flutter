@@ -168,6 +168,9 @@ class _BillingListViewState extends State<BillingListView> {
                     children: [
                       if (index == 0) buildHeader(totalExpense, totalIncome),
                       ListTile(
+                        visualDensity: const VisualDensity(
+                          vertical: VisualDensity.minimumDensity,
+                        ),
                         dense: true,
                         title: Text(
                           DateFormat.yMMMd().format(currentBilling.date),
@@ -184,38 +187,48 @@ class _BillingListViewState extends State<BillingListView> {
                       ),
                     ],
                   ),
-                Dismissible(
-                  key: Key(currentBilling.id.toString()),
-                  onDismissed: (direction) {
-                    _removeBilling(context, index);
-                  },
-                  background: Container(
-                    color: Colors.red,
-                    child: const Icon(Icons.delete, color: Colors.white),
-                  ),
-                  child: Card(
-                    child: InkWell(
-                      onTap: () {
-                        Future.delayed(const Duration(milliseconds: 150), () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) =>
-                                  BillingDetailPage(billing: currentBilling),
-                            ),
-                          );
-                        });
-                      },
-                      highlightColor: Colors.transparent,
-                      child: ListTile(
-                        dense: true,
-                        title: Text(currentBilling.kind.name),
-                        subtitle: Text(currentBilling.description),
-                        leading: Icon(
-                          BillingIconMapper.getIcon(
-                              currentBilling.type, currentBilling.kind),
-                        ),
-                        trailing: Text(
-                          '$amountPrefix\$$formattedAmount',
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Dismissible(
+                    key: Key(currentBilling.id.toString()),
+                    onDismissed: (direction) {
+                      _removeBilling(context, index);
+                    },
+                    background: Container(
+                      color: Colors.red,
+                      child: const Icon(Icons.delete, color: Colors.white),
+                    ),
+                    child: Card(
+                      margin: EdgeInsets.only(
+                        top: showDateHeader ? 0 : 6,
+                      ),
+                      color: currentBilling.type == BillingType.expense
+                          ? Colors.red.shade50
+                          : Colors.green.shade50,
+                      child: InkWell(
+                        onTap: () {
+                          Future.delayed(const Duration(milliseconds: 150), () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    BillingDetailPage(billing: currentBilling),
+                              ),
+                            );
+                          });
+                        },
+                        highlightColor: Colors.transparent,
+                        child: ListTile(
+                          visualDensity: VisualDensity.compact,
+                          dense: true,
+                          title: Text(currentBilling.kind.name),
+                          subtitle: Text(currentBilling.description),
+                          leading: Icon(
+                            BillingIconMapper.getIcon(
+                                currentBilling.type, currentBilling.kind),
+                          ),
+                          trailing: Text(
+                            '$amountPrefix\$$formattedAmount',
+                          ),
                         ),
                       ),
                     ),
@@ -234,18 +247,21 @@ class _BillingListViewState extends State<BillingListView> {
       onTap: () {
         _loadImage();
       },
-      onHorizontalDragEnd: (longPressDetails){
+      onHorizontalDragEnd: (longPressDetails) {
         Navigator.push(
           context,
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
-            PreviewPage(image: image,),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                PreviewPage(
+              image: image,
+            ),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
               const begin = Offset(1.0, 1.0);
               const end = Offset.zero;
               const curve = Curves.easeInOut;
               var tween =
-              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
               var offsetAnimation = animation.drive(tween);
               return SlideTransition(
                 position: offsetAnimation,
