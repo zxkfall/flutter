@@ -42,9 +42,9 @@ class BillingProvider with ChangeNotifier {
 
   BillingKind? _searchKind;
 
-  DateTime _startDate = DateTime(2010);
+  DateTime? _startDate = DateTime(2010);
 
-DateTime _endDate = DateTime(2050);
+  DateTime? _endDate = DateTime(2050);
 
   void searchByDescription(String text) {
     _searchDescription = text;
@@ -64,7 +64,7 @@ DateTime _endDate = DateTime(2050);
     notifyListeners();
   }
 
-  void searchByDateRange(DateTime start, DateTime end) {
+  void searchByDateRange(DateTime? start, DateTime? end) {
     _startDate = start;
     _endDate = end;
     _search();
@@ -73,13 +73,25 @@ DateTime _endDate = DateTime(2050);
 
   void _search() {
     _searchResult = _billings
-        .where((element) =>
-            element.description.contains(_searchDescription) &&
-            (_searchType == null ? true : element.type == _searchType) &&
-            (_searchKind == null ? true : element.kind == _searchKind) &&
-            (element.date.isAfter(_startDate) &&
-                element.date.isBefore(_endDate)))
+        .where((billing) =>
+            billing.description.contains(_searchDescription) &&
+            (_searchType == null ? true : billing.type == _searchType) &&
+            (_searchKind == null ? true : billing.kind == _searchKind) &&
+            _filterByDate(billing))
         .toList();
+  }
+
+  bool _filterByDate(Billing billing) {
+    if (_startDate == null && _endDate == null) {
+      return true;
+    } else if (_startDate == null && _endDate != null) {
+      return billing.date.isBefore(_endDate!);
+    } else if (_startDate != null && _endDate == null) {
+      return billing.date.isAfter(_startDate!);
+    } else {
+      return billing.date.isAfter(_startDate!) &&
+          billing.date.isBefore(_endDate!);
+    }
   }
 
   void clearSearch() {

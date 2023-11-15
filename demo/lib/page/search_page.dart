@@ -20,6 +20,7 @@ class _SearchPageState extends State<SearchPage> {
   BillingKind? searchKind;
   DateTime startDate = DateTime.now().add(const Duration(days: -365));
   DateTime endDate = DateTime.now();
+  bool allTime = false;
 
   @override
   Widget build(BuildContext context) {
@@ -53,125 +54,130 @@ class _SearchPageState extends State<SearchPage> {
               ),
               Row(
                 children: [
-                  DropdownButton(
-                    value: searchType,
-                    items: const [
-                      DropdownMenuItem(
-                        value: 'All',
-                        child: Text('All'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'Expense',
-                        child: Text('Expense'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'Income',
-                        child: Text('Income'),
-                      ),
+                  Row(
+                    children: [
+                      const Text('Type: '),
+                      DropdownButton(
+                        value: searchType,
+                        items: const [
+                          DropdownMenuItem(
+                            value: 'All',
+                            child: Text('All'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'Expense',
+                            child: Text('Expense'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'Income',
+                            child: Text('Income'),
+                          ),
+                        ],
+                        onChanged: (value) {
+                          if (value == 'All') {
+                            searchType = 'All';
+                            provider.searchByType(null);
+                            provider.searchByKind(null);
+                          } else if (value == 'Expense') {
+                            searchType = 'Expense';
+                            provider.searchByType(BillingType.expense);
+                            getExpenseValues().contains(searchKind)
+                                ? provider.searchByKind(searchKind)
+                                : provider.searchByKind(null);
+                          } else if (value == 'Income') {
+                            searchType = 'Income';
+                            provider.searchByType(BillingType.income);
+                            getIncomeValues().contains(searchKind)
+                                ? provider.searchByKind(searchKind)
+                                : provider.searchByKind(null);
+                          }
+                        },
+                      )
                     ],
-                    onChanged: (value) {
-                      if (value == 'All') {
-                        searchType = 'All';
-                        provider.searchByType(null);
-                        provider.searchByKind(null);
-                      } else if (value == 'Expense') {
-                        searchType = 'Expense';
-                        provider.searchByType(BillingType.expense);
-                        getExpenseValues().contains(searchKind) ? provider.searchByKind(searchKind) : provider.searchByKind(null);
-                      } else if (value == 'Income') {
-                        searchType = 'Income';
-                        provider.searchByType(BillingType.income);
-                        getIncomeValues().contains(searchKind) ? provider.searchByKind(searchKind) : provider.searchByKind(null);
-                      }
-                    },
                   ),
-                  DropdownButton<String>(
-                    items: [const DropdownMenuItem(value: 'All', child: Text('All')),
-                      if (searchType == 'Expense')
-                        ...(getExpenseValues()
-                            .map((e) => DropdownMenuItem(
-                                value: e.name, child: Text(e.name)))
-                            .toList())
-                      else if (searchType == 'Income')
-                        ...(getIncomeValues()
-                            .map((e) => DropdownMenuItem(
-                                value: e.name, child: Text(e.name)))
-                            .toList())
+                  const Spacer(),
+                  Row(
+                    children: [
+                      const Text('Kind: '),
+                      DropdownButton<String>(
+                        items: [
+                          const DropdownMenuItem(
+                              value: 'All', child: Text('All')),
+                          if (searchType == 'Expense')
+                            ...(getExpenseValues()
+                                .map((e) => DropdownMenuItem(
+                                    value: e.name, child: Text(e.name)))
+                                .toList())
+                          else if (searchType == 'Income')
+                            ...(getIncomeValues()
+                                .map((e) => DropdownMenuItem(
+                                    value: e.name, child: Text(e.name)))
+                                .toList())
+                        ],
+                        value: searchKind == null
+                            ? 'All'
+                            : searchType == 'Expense' &&
+                                    getExpenseValues().contains(searchKind)
+                                ? searchKind!.name
+                                : searchType == 'Income' &&
+                                        getIncomeValues().contains(searchKind)
+                                    ? searchKind!.name
+                                    : 'All',
+                        onChanged: (value) {
+                          if (value == 'All') {
+                            searchKind = null;
+                            provider.searchByKind(null);
+                          } else if (searchType == 'Expense') {
+                            searchKind = getExpenseValues()
+                                .firstWhere((element) => element.name == value);
+                            provider.searchByKind(searchKind);
+                          } else if (searchType == 'Income') {
+                            searchKind = getIncomeValues()
+                                .firstWhere((element) => element.name == value);
+                            provider.searchByKind(searchKind);
+                          }
+                        },
+                      )
                     ],
-                    value: searchKind == null ? 'All' :
-                    searchType == 'Expense' && getExpenseValues().contains(searchKind) ? searchKind!.name :
-                    searchType == 'Income' && getIncomeValues().contains(searchKind) ? searchKind!.name : 'All',
-                    onChanged: (value) {
-                      if (value == 'All') {
-                        searchKind = null;
-                        provider.searchByKind(null);
-                      } else if (searchType == 'Expense') {
-                        searchKind = getExpenseValues()
-                            .firstWhere((element) => element.name == value);
-                        provider.searchByKind(searchKind);
-                      } else if (searchType == 'Income') {
-                        searchKind = getIncomeValues()
-                            .firstWhere((element) => element.name == value);
-                        provider.searchByKind(searchKind);
-                      }
-                    },
                   ),
                 ],
               ),
-              // search by date range
               Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  const Text('Date: '),
                   TextButton(
-                    onPressed: () {
-                      showDatePicker(
-                        context: context,
-                        initialDate: startDate,
-                        firstDate: DateTime(2010),
-                        lastDate: endDate.add(const Duration(days: -1)),
-                      ).then((value) {
-                        setState(() {
-                          startDate = value!;
-                          provider.searchByDateRange(startDate, endDate);
+                      onPressed: () {
+                        showDateRangePicker(
+                          context: context,
+                          firstDate: DateTime(2010),
+                          lastDate: DateTime(2050),
+                          initialDateRange:
+                              DateTimeRange(start: startDate, end: endDate),
+                        ).then((value) {
+                          setState(() {
+                            startDate = value!.start;
+                            endDate = value.end;
+                            provider.searchByDateRange(startDate, endDate);
+                          });
                         });
-                      });
+                      },
+                      child: Text(
+                          '${DateFormat('yyyy.MM.dd').format(startDate)} - ${DateFormat('yyyy.MM.dd').format(endDate)}')),
+                  Checkbox(
+                    value: allTime,
+                    onChanged: (value) {
+                      if (value == true) {
+                        allTime = true;
+                        provider.searchByDateRange(null, null);
+                      } else {
+                        allTime = false;
+                        provider.searchByDateRange(startDate, endDate);
+                      }
                     },
-                    child: Text(DateFormat('yyyy.MM.dd').format(startDate)),
                   ),
-                  TextButton(
-                    onPressed: () {
-                      showDatePicker(
-                        context: context,
-                        initialDate: endDate,
-                        firstDate: startDate.add(Duration(days: 1)),
-                        lastDate: DateTime(2050),
-                      ).then((value) {
-                        setState(() {
-                          value == null || value.isBefore(startDate)
-                              ? endDate = startDate.add(const Duration(days: 1))
-                              : endDate = value;
-                          provider.searchByDateRange(startDate, endDate);
-                        });
-                      });
-                    },
-                    child: Text(DateFormat('yyyy.MM.dd').format(endDate)),
-                  ),
+                  const Text('All the time'),
                 ],
               ),
-              TextButton(onPressed: (){
-                showDateRangePicker(
-                  context: context,
-                  firstDate: DateTime(2010),
-                  lastDate: DateTime(2050),
-                  initialDateRange: DateTimeRange(start: startDate, end: endDate),
-                ).then((value) {
-                  setState(() {
-                    startDate = value!.start;
-                    endDate = value.end;
-                    provider.searchByDateRange(startDate, endDate);
-                  });
-                });
-              }, child: Text('${DateFormat('yyyy.MM.dd').format(startDate)} - ${DateFormat('yyyy.MM.dd').format(endDate)}')),
               Expanded(
                 // 使用 Expanded 来确保 ListView.builder 占用剩余的高度
                 child: ListView.builder(
