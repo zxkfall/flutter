@@ -83,36 +83,14 @@ class _HomePageState extends State<HomePage> {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            height: 32,
-                            width: 32,
-                            child: IconButton(
-                              padding: EdgeInsets.zero,
-                              onPressed: () {
-                                _pageController.animateToPage(0,
-                                    duration: const Duration(milliseconds: 200),
-                                    curve: Curves.easeInOut);
-                              },
-                              icon: const Icon(Icons.menu),
-                              color: _getCurrentColor(0),
-                            ),
-                          ),
-                          Text(
-                            'Home',
-                            style: TextStyle(
-                                fontSize: 12, color: _getCurrentColor(0)),
-                            textAlign: TextAlign.center,
-                          )
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 48),
+                    InkWell(
+                      onTap: () {
+                        _pageController.animateToPage(0,
+                            duration: const Duration(milliseconds: 100),
+                            curve: Curves.easeInOut);
+                      },
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
                       child: Center(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -121,25 +99,52 @@ class _HomePageState extends State<HomePage> {
                             SizedBox(
                               height: 32,
                               width: 32,
-                              child: IconButton(
-                                padding: EdgeInsets.zero,
-                                onPressed: () {
-                                  _pageController.animateToPage(1,
-                                      duration:
-                                          const Duration(milliseconds: 200),
-                                      curve: Curves.easeInOut);
-                                },
-                                icon: const Icon(Icons.bar_chart),
-                                color: _getCurrentColor(1),
+                              child: Icon(
+                                Icons.menu,
+                                color: _getCurrentColor(0),
                               ),
                             ),
                             Text(
-                              'Chart',
+                              'Home',
                               style: TextStyle(
-                                  fontSize: 12, color: _getCurrentColor(1)),
+                                  fontSize: 12, color: _getCurrentColor(0)),
                               textAlign: TextAlign.center,
                             )
                           ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 48),
+                      child: InkWell(
+                        onTap: () {
+                          _pageController.animateToPage(1,
+                              duration: const Duration(milliseconds: 100),
+                              curve: Curves.easeInOut);
+                        },
+                        highlightColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                        child: Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                height: 32,
+                                width: 32,
+                                child: Icon(
+                                  Icons.bar_chart,
+                                  color: _getCurrentColor(1),
+                                ),
+                              ),
+                              Text(
+                                'Chart',
+                                style: TextStyle(
+                                    fontSize: 12, color: _getCurrentColor(1)),
+                                textAlign: TextAlign.center,
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -147,64 +152,70 @@ class _HomePageState extends State<HomePage> {
                 ),
                 Row(
                   children: [
-                    Padding(padding: const EdgeInsets.only(right: 36),
-                    child: Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            height: 32,
-                            width: 32,
-                            child: IconButton(
-                              padding: EdgeInsets.zero,
-                              onPressed: () {
-                                _pageController.animateToPage(2,
-                                    duration: const Duration(milliseconds: 200),
-                                    curve: Curves.easeInOut);
-                              },
-                              icon: const Icon(Icons.search),
-                              color: _getCurrentColor(2),
-                            ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 36),
+                      child: InkWell(
+                        onTap: () {
+                          _pageController.animateToPage(2,
+                              duration: const Duration(milliseconds: 100),
+                              curve: Curves.easeInOut);
+                        },
+                        highlightColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                        child: Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                  height: 32,
+                                  width: 32,
+                                  child: Icon(
+                                    Icons.search,
+                                    color: _getCurrentColor(2),
+                                  )),
+                              Text(
+                                'Search',
+                                style: TextStyle(
+                                    fontSize: 12, color: _getCurrentColor(2)),
+                                textAlign: TextAlign.center,
+                              )
+                            ],
                           ),
-                          Text(
-                            'Search',
-                            style: TextStyle(
-                                fontSize: 12, color: _getCurrentColor(2)),
-                            textAlign: TextAlign.center,
-                          )
-                        ],
+                        ),
                       ),
                     ),
-                    ),
-                    Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            height: 32,
-                            width: 32,
-                            child: IconButton(
-                              padding: EdgeInsets.zero,
-                              onPressed: () {
-                                _pageController.animateToPage(3,
-                                    duration: const Duration(milliseconds: 200),
-                                    curve: Curves.easeInOut);
-                              },
-                              icon: const Icon(Icons.settings),
-                              color: _getCurrentColor(3),
+                    InkWell(
+                      onTap: () {
+                        _pageController.animateToPage(3,
+                            duration: const Duration(milliseconds: 100),
+                            curve: Curves.easeInOut);
+                      },
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      child: Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              height: 32,
+                              width: 32,
+                              child: Icon(
+                                Icons.settings,
+                                color: _getCurrentColor(3),
+                              ),
                             ),
-                          ),
-                          Text(
-                            'Setting',
-                            style: TextStyle(
-                                fontSize: 12, color: _getCurrentColor(3)),
-                            textAlign: TextAlign.center,
-                          )
-                        ],
+                            Text(
+                              'Setting',
+                              style: TextStyle(
+                                  fontSize: 12, color: _getCurrentColor(3)),
+                              textAlign: TextAlign.center,
+                            )
+                          ],
+                        ),
                       ),
-                    ),
+                    )
                   ],
                 )
               ],
