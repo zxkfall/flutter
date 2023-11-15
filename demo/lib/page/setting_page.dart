@@ -44,7 +44,6 @@ class _SettingPageState extends State<SettingPage> {
     return ListView(
       children: [
         Column(children: <Widget>[
-          const Text('Settings Page'),
           Align(
             alignment: Alignment.center,
             child: Row(
