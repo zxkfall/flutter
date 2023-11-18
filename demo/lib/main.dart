@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         title: 'Maple Billing',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlueAccent),
           useMaterial3: true,
         ),
         home: const HomePage(),
