@@ -128,7 +128,7 @@ don't use it, just look which file changed and change it manually
 
 
 Tasks:
-1. [] bottom navigation bar can click with icon and text
+1. [x] bottom navigation bar can click with icon and text
 2. [] change theme
 3. [] add global translation
 4. [] add global theme
