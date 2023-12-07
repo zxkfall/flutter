@@ -3,11 +3,13 @@ import 'package:demo/model/billing.dart';
 import 'package:demo/page/billing_detail_page.dart';
 import 'package:demo/provider/billing_provider.dart';
 import 'package:demo/repository/billing_repository.dart';
+import 'package:demo/view/billing_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:mocktail_image_network/mocktail_image_network.dart';
 import 'package:provider/provider.dart';
 
 import 'billing_detail_page_test.mocks.dart';
@@ -239,7 +241,7 @@ void main() {
     await widgetTester.pumpAndSettle();
 
     await widgetTester.tap(find.byIcon(Icons.delete));
-    await widgetTester.pumpAndSettle();
+    await mockNetworkImages(() async => widgetTester.pumpAndSettle());
     expect(find.byIcon(Icons.delete), findsNothing);
     expect(find.text('Edit Billing'), findsNothing);
 
@@ -327,7 +329,7 @@ void main() {
         findsOneWidget);
 
     await widgetTester.tap(find.text('Save'));
-    await widgetTester.pumpAndSettle();
+    await mockNetworkImages(() async => widgetTester.pumpAndSettle());
     expect(find.text('Edit Billing'), findsNothing);
 
     verify(mockBillingProvider.updateBilling(argThat(predicate((billing) {
