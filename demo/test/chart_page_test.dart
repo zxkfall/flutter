@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 
-void main(){
-
+void main() {
   testWidgets('should show empty chart page', (widgetTester) async {
     await widgetTester.pumpWidget(
       MultiProvider(
@@ -15,14 +14,12 @@ void main(){
           ),
         ],
         child: const MaterialApp(
-            home: Scaffold(
-              body: Directionality(
-                textDirection: TextDirection.rtl,
-                child: SingleChildScrollView(
-                  child: ChartPage(),
-                ),
-              ),
+          home: Scaffold(
+            body: Directionality(
+              textDirection: TextDirection.rtl,
+              child: ChartPage(),
             ),
+          ),
         ),
       ),
     );
@@ -32,6 +29,5 @@ void main(){
     expect(find.text('Month'), findsOneWidget);
     expect(find.text('Year'), findsOneWidget);
     expect(find.text('Expense'), findsOneWidget);
-
   });
 }
