@@ -7,6 +7,7 @@ import 'package:get_it/get_it.dart';
 import 'package:demo/main.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:mocktail_image_network/mocktail_image_network.dart';
 import 'package:provider/provider.dart';
 import 'package:demo/provider/billing_provider.dart';
 
@@ -69,16 +70,16 @@ void main() {
       ];
     });
 
-    await tester.pumpWidget(
-      MultiProvider(
-        providers: [
-          ChangeNotifierProvider<BillingProvider>(
-            create: (_) => BillingProvider(), // 这里你需要提供BillingProvider的实例
+    await mockNetworkImages(() async => await tester.pumpWidget(
+          MultiProvider(
+            providers: [
+              ChangeNotifierProvider<BillingProvider>(
+                create: (_) => BillingProvider(), // 这里你需要提供BillingProvider的实例
+              ),
+            ],
+            child: const MyApp(),
           ),
-        ],
-        child: const MyApp(),
-      ),
-    );
+        ));
     await tester.pump();
     expect(find.text('Jan 1, 2021'), findsOneWidget);
     expect(find.text('fake income'), findsOneWidget);
@@ -106,16 +107,16 @@ void main() {
       return [];
     });
 
-    await tester.pumpWidget(
-      MultiProvider(
-        providers: [
-          ChangeNotifierProvider<BillingProvider>(
-            create: (_) => BillingProvider(), // 这里你需要提供BillingProvider的实例
+    await mockNetworkImages(() async => await tester.pumpWidget(
+          MultiProvider(
+            providers: [
+              ChangeNotifierProvider<BillingProvider>(
+                create: (_) => BillingProvider(), // 这里你需要提供BillingProvider的实例
+              ),
+            ],
+            child: const MyApp(),
           ),
-        ],
-        child: const MyApp(),
-      ),
-    );
+        ));
     await tester.pump();
 
     await tester.tap(find.byIcon(Icons.add));
@@ -138,16 +139,16 @@ void main() {
       ];
     });
 
-    await tester.pumpWidget(
-      MultiProvider(
-        providers: [
-          ChangeNotifierProvider<BillingProvider>(
-            create: (_) => BillingProvider(), // 这里你需要提供BillingProvider的实例
+    await mockNetworkImages(() async => await tester.pumpWidget(
+          MultiProvider(
+            providers: [
+              ChangeNotifierProvider<BillingProvider>(
+                create: (_) => BillingProvider(), // 这里你需要提供BillingProvider的实例
+              ),
+            ],
+            child: const MyApp(),
           ),
-        ],
-        child: const MyApp(),
-      ),
-    );
+        ));
     await tester.pump();
 
     await tester.tap(find.text('fake income'));

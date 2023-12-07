@@ -6,6 +6,7 @@ import 'package:demo/main.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mocktail_image_network/mocktail_image_network.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -14,7 +15,7 @@ void main() {
   });
   testWidgets('Should delete billing when swipe billing item',
       (widgetTester) async {
-    await widgetTester.pumpWidget(
+    await mockNetworkImages(() async=> await widgetTester.pumpWidget(
       MultiProvider(
         providers: [
           ChangeNotifierProvider<BillingProvider>(
@@ -23,9 +24,9 @@ void main() {
         ],
         child: const MyApp(),
       ),
-    );
-    await widgetTester.pump();
-    // swipe to delete
+    ));
+
+    await widgetTester.pump();    // swipe to delete
     expect(find.text('fake income'), findsOneWidget);
     expect(find.text('fake expense'), findsOneWidget);
     expect(find.text('Jan 1, 2021'), findsOneWidget);
