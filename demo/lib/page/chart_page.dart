@@ -51,17 +51,20 @@ class _LineChartState extends State<ChartPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                      billingType == BillingType.income ? 'Income' : 'Expense'),
-                  Switch(
-                    value: billingType == BillingType.income,
-                    onChanged: (value) {
-                      setState(() {
-                        billingType =
-                            value ? BillingType.income : BillingType.expense;
-                      });
-                    },
-                  ),
+                  TextButton(
+                      onPressed: () {
+                        setState(() {
+                          billingType == BillingType.expense
+                              ? billingType = BillingType.income
+                              : billingType = BillingType.expense;
+                        });
+                      },
+                      child: Text(
+                        billingType == BillingType.income
+                            ? 'Income'
+                            : 'Expense',
+                        style: const TextStyle(color: Colors.black),
+                      )),
                 ],
               ),
             ),
