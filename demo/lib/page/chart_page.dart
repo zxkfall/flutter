@@ -34,34 +34,17 @@ class _LineChartState extends State<ChartPage> {
         var billings = billingProvider.billings;
 
         var allPeriodKindData = billings
-            .where((element) => element.type == billingType && isInDateRange(element))
+            .where((element) =>
+                element.type == billingType && isInDateRange(element))
             .groupBy((element) => element.kind)
             .map((kind, values) {
-          var total = values.fold(Decimal.zero, (sum, value) => sum + value.amount);
+          var total =
+              values.fold(Decimal.zero, (sum, value) => sum + value.amount);
           return MapEntry(kind, total);
         }).toList();
 
         return ListView(
           children: [
-            TextButton(
-              onPressed: () async {
-                var date = await showDatePicker(
-                  context: context,
-                  initialDate: currentDate,
-                  firstDate: DateTime(2000),
-                  lastDate: DateTime(2100),
-                );
-                if (date != null) {
-                  setState(() {
-                    currentDate = date;
-                  });
-                }
-              },
-              child: Text(
-                DateFormat.yMMMd().format(currentDate),
-                style: const TextStyle(fontSize: 16.0),
-              ),
-            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -97,21 +80,37 @@ class _LineChartState extends State<ChartPage> {
                 const Text('Year'),
               ],
             ),
-            Row(mainAxisAlignment: MainAxisAlignment.center,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TextButton(onPressed: (){
-                  chartPeriod == ChartPeriod.week ? currentDate = currentDate.subtract(const Duration(days: 7)) :
-                  chartPeriod == ChartPeriod.month ? currentDate = DateTime(currentDate.year, currentDate.month - 1, currentDate.day) :
-                  currentDate = DateTime(currentDate.year - 1, currentDate.month, currentDate.day);
-                  setState(() {});
-                }, child: const Text('Previous')),
-                TextButton(onPressed: (){
-                  chartPeriod == ChartPeriod.week ? currentDate = currentDate.add(const Duration(days: 7)) :
-                  chartPeriod == ChartPeriod.month ? currentDate = DateTime(currentDate.year, currentDate.month + 1, currentDate.day) :
-                  currentDate = DateTime(currentDate.year + 1, currentDate.month, currentDate.day);
-                  setState(() {});
-                }, child: const Text('Next'))
-              ],),
+                TextButton(
+                    onPressed: () {
+                      chartPeriod == ChartPeriod.week
+                          ? currentDate =
+                              currentDate.subtract(const Duration(days: 7))
+                          : chartPeriod == ChartPeriod.month
+                              ? currentDate = DateTime(currentDate.year,
+                                  currentDate.month - 1, currentDate.day)
+                              : currentDate = DateTime(currentDate.year - 1,
+                                  currentDate.month, currentDate.day);
+                      setState(() {});
+                    },
+                    child: const Text('Previous')),
+                TextButton(
+                    onPressed: () {
+                      chartPeriod == ChartPeriod.week
+                          ? currentDate =
+                              currentDate.add(const Duration(days: 7))
+                          : chartPeriod == ChartPeriod.month
+                              ? currentDate = DateTime(currentDate.year,
+                                  currentDate.month + 1, currentDate.day)
+                              : currentDate = DateTime(currentDate.year + 1,
+                                  currentDate.month, currentDate.day);
+                      setState(() {});
+                    },
+                    child: const Text('Next'))
+              ],
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -130,29 +129,49 @@ class _LineChartState extends State<ChartPage> {
             Stack(
               children: <Widget>[
                 AspectRatio(
-                  aspectRatio: 1.70,
+                  aspectRatio: 1.50,
                   child: Padding(
                     padding: const EdgeInsets.only(
                       right: 18,
                       left: 12,
-                      top: 30,
+                      top: 32,
                       bottom: 12,
                     ),
                     child: buildLineChart(billings),
                   ),
                 ),
-                SizedBox(
-                  width: 60,
-                  height: 34,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 12),
-                    child: Text(
-                      chartPeriod.name,
-                      style: TextStyle(
-                          fontSize: 12, color: Colors.black.withOpacity(0.5)),
-                    ),
+                Positioned(
+                  top: 6,
+                  left: 12,
+                  child: Text(
+                    chartPeriod.name,
+                    style: TextStyle(
+                        fontSize: 12, color: Colors.black.withOpacity(0.5)),
                   ),
                 ),
+                Positioned(
+                  top: -6,
+                  right: 6,
+                  child: TextButton(
+                    onPressed: () async {
+                      var date = await showDatePicker(
+                        context: context,
+                        initialDate: currentDate,
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100),
+                      );
+                      if (date != null) {
+                        setState(() {
+                          currentDate = date;
+                        });
+                      }
+                    },
+                    child: Text(
+                      DateFormat.yMMMd().format(currentDate),
+                      style: const TextStyle(fontSize: 14.0),
+                    ),
+                  ),
+                )
               ],
             ),
             Column(
@@ -182,12 +201,16 @@ class _LineChartState extends State<ChartPage> {
 
   bool isInDateRange(Billing billing) {
     if (chartPeriod == ChartPeriod.week) {
-      return billing.date.isAfter(currentDate.subtract(Duration(days: currentDate.weekday - 1))) &&
-          billing.date.isBefore(currentDate.add(Duration(days: DateTime.daysPerWeek - currentDate.weekday + 1)));
-          } else if (chartPeriod == ChartPeriod.month) {
-        return billing.date.isAfter(DateTime(currentDate.year, currentDate.month, 1)) &&
-            billing.date.isBefore(DateTime(currentDate.year, currentDate.month + 1, 1));
-      } else if (chartPeriod == ChartPeriod.year) {
+      return billing.date.isAfter(
+              currentDate.subtract(Duration(days: currentDate.weekday - 1))) &&
+          billing.date.isBefore(currentDate.add(
+              Duration(days: DateTime.daysPerWeek - currentDate.weekday + 1)));
+    } else if (chartPeriod == ChartPeriod.month) {
+      return billing.date
+              .isAfter(DateTime(currentDate.year, currentDate.month, 1)) &&
+          billing.date
+              .isBefore(DateTime(currentDate.year, currentDate.month + 1, 1));
+    } else if (chartPeriod == ChartPeriod.year) {
       return billing.date.isAfter(DateTime(currentDate.year, 1, 1)) &&
           billing.date.isBefore(DateTime(currentDate.year + 1, 1, 1));
     }
