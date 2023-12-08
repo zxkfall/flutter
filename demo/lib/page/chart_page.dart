@@ -77,18 +77,17 @@ class _LineChartState extends State<ChartPage> {
                       chartPeriod = ChartPeriod.week;
                     });
                   },
-                  style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                          chartPeriod == ChartPeriod.week
-                              ? Theme.of(context).colorScheme.onSurfaceVariant
-                              : Colors.white),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                      fixedSize:
-                          MaterialStateProperty.all<Size>(const Size(96, 16))),
+                  style: TextButton.styleFrom(
+                    backgroundColor: chartPeriod == ChartPeriod.week
+                        ? Theme.of(context).colorScheme.onSurfaceVariant
+                        : Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0),
+                    ),
+                    fixedSize: const Size(96, 16),
+                    padding: const EdgeInsets.all(0),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
                   child: Text(
                     'Week',
                     style: TextStyle(
@@ -104,18 +103,17 @@ class _LineChartState extends State<ChartPage> {
                       chartPeriod = ChartPeriod.month;
                     });
                   },
-                  style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                          chartPeriod == ChartPeriod.month
-                              ? Theme.of(context).colorScheme.onSurfaceVariant
-                              : Colors.white),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                      fixedSize:
-                          MaterialStateProperty.all<Size>(const Size(96, 16))),
+                  style: TextButton.styleFrom(
+                    backgroundColor: chartPeriod == ChartPeriod.month
+                        ? Theme.of(context).colorScheme.onSurfaceVariant
+                        : Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0),
+                    ),
+                    fixedSize: const Size(96, 16),
+                    padding: const EdgeInsets.all(0),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
                   child: Text(
                     'Month',
                     style: TextStyle(
@@ -131,18 +129,17 @@ class _LineChartState extends State<ChartPage> {
                       chartPeriod = ChartPeriod.year;
                     });
                   },
-                  style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                          chartPeriod == ChartPeriod.year
-                              ? Theme.of(context).colorScheme.onSurfaceVariant
-                              : Colors.white),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                      fixedSize:
-                          MaterialStateProperty.all<Size>(const Size(96, 16))),
+                  style: TextButton.styleFrom(
+                    backgroundColor: chartPeriod == ChartPeriod.year
+                        ? Theme.of(context).colorScheme.onSurfaceVariant
+                        : Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0),
+                    ),
+                    fixedSize: const Size(96, 16),
+                    padding: const EdgeInsets.all(0),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
                   child: Text(
                     'Year',
                     style: TextStyle(
