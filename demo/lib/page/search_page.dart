@@ -50,6 +50,13 @@ class _SearchPageState extends State<SearchPage> {
                   IconButton(
                     onPressed: () {
                       provider.clearSearch();
+                      setState(() {
+                        searchType = 'All';
+                        searchKind = null;
+                        startDate = DateTime.now().add(const Duration(days: -365));
+                        endDate = DateTime.now();
+                        allTime = false;
+                      });
                     },
                     icon: const Icon(Icons.clear),
                   ),
