@@ -21,10 +21,12 @@ class _SearchPageState extends State<SearchPage> {
   DateTime startDate = DateTime.now().add(const Duration(days: -365));
   DateTime endDate = DateTime.now();
   bool allTime = false;
+  TextEditingController descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Consumer<BillingProvider>(builder: (context, provider, child) {
+      descriptionController.text = provider.searchDescription;
       return Scaffold(
         body: Container(
           padding: const EdgeInsets.all(10),
@@ -39,6 +41,7 @@ class _SearchPageState extends State<SearchPage> {
                         border: OutlineInputBorder(),
                         labelText: 'Search',
                       ),
+                      controller: descriptionController,
                       onChanged: (text) {
                         provider.searchByDescription(text);
                       },

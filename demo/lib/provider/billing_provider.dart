@@ -34,8 +34,6 @@ class BillingProvider with ChangeNotifier {
 
   List<Billing> _searchResult = <Billing>[];
 
-  List<Billing> get searchResult => _searchResult;
-
   String _searchDescription = '';
 
   BillingType? _searchType;
@@ -45,6 +43,10 @@ class BillingProvider with ChangeNotifier {
   DateTime? _startDate = DateTime(2010);
 
   DateTime? _endDate = DateTime(2050);
+
+  List<Billing> get searchResult => _searchResult;
+
+  String get searchDescription => _searchDescription;
 
   void searchByDescription(String text) {
     _searchDescription = text;
