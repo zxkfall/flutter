@@ -45,6 +45,26 @@ class _LineChartState extends State<ChartPage> {
 
         return ListView(
           children: [
+            Container(
+              height: 50,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                      billingType == BillingType.income ? 'Income' : 'Expense'),
+                  Switch(
+                    value: billingType == BillingType.income,
+                    onChanged: (value) {
+                      setState(() {
+                        billingType =
+                            value ? BillingType.income : BillingType.expense;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -128,21 +148,6 @@ class _LineChartState extends State<ChartPage> {
                       setState(() {});
                     },
                     child: const Text('Next'))
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(billingType == BillingType.income ? 'Income' : 'Expense'),
-                Switch(
-                  value: billingType == BillingType.income,
-                  onChanged: (value) {
-                    setState(() {
-                      billingType =
-                          value ? BillingType.income : BillingType.expense;
-                    });
-                  },
-                ),
               ],
             ),
             Stack(
