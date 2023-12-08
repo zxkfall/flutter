@@ -33,34 +33,44 @@ class _SearchPageState extends State<SearchPage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Search',
+              SizedBox(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.only(
+                              left: 14, top: 14, bottom: 14, right: 14),
+                          border: OutlineInputBorder(),
+                          labelText: 'Description',
+                          isCollapsed: false,
+                        ),
+                        controller: descriptionController,
+                        maxLines: 1,
+                        onChanged: (text) {
+                          provider.searchByDescription(text);
+                        },
                       ),
-                      controller: descriptionController,
-                      onChanged: (text) {
-                        provider.searchByDescription(text);
-                      },
                     ),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      provider.clearSearch();
-                      setState(() {
-                        searchType = 'All';
-                        searchKind = null;
-                        startDate = DateTime.now().add(const Duration(days: -365));
-                        endDate = DateTime.now();
-                        allTime = false;
-                      });
-                    },
-                    icon: const Icon(Icons.clear),
-                  ),
-                ],
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: IconButton(
+                        onPressed: () {
+                          provider.clearSearch();
+                          setState(() {
+                            searchType = 'All';
+                            searchKind = null;
+                            startDate =
+                                DateTime.now().add(const Duration(days: -365));
+                            endDate = DateTime.now();
+                            allTime = false;
+                          });
+                        },
+                        icon: const Icon(Icons.clear, size: 32),
+                      ),
+                    ),
+                  ],
+                ),
               ),
               Row(
                 children: [
