@@ -180,7 +180,10 @@ class _LineChartState extends State<ChartPage> {
                                   currentDate.month, currentDate.day);
                       setState(() {});
                     },
-                    child: const Text('Previous')),
+                    child: const Icon(
+                      Icons.arrow_back_ios_new,
+                      size: 16,
+                    )),
                 TextButton(
                   onPressed: () async {
                     var date = await showDatePicker(
@@ -212,7 +215,10 @@ class _LineChartState extends State<ChartPage> {
                                   currentDate.month, currentDate.day);
                       setState(() {});
                     },
-                    child: const Text('Next'))
+                    child: const Icon(
+                      Icons.arrow_forward_ios,
+                      size: 16,
+                    )),
               ],
             ),
             Stack(
