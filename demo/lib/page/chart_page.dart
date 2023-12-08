@@ -97,6 +97,25 @@ class _LineChartState extends State<ChartPage> {
                     },
                     child: const Text('Previous')),
                 TextButton(
+                  onPressed: () async {
+                    var date = await showDatePicker(
+                      context: context,
+                      initialDate: currentDate,
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                    );
+                    if (date != null) {
+                      setState(() {
+                        currentDate = date;
+                      });
+                    }
+                  },
+                  child: Text(
+                    DateFormat.yMMMd().format(currentDate),
+                    style: const TextStyle(fontSize: 14.0),
+                  ),
+                ),
+                TextButton(
                     onPressed: () {
                       chartPeriod == ChartPeriod.week
                           ? currentDate =
@@ -149,29 +168,6 @@ class _LineChartState extends State<ChartPage> {
                         fontSize: 12, color: Colors.black.withOpacity(0.5)),
                   ),
                 ),
-                Positioned(
-                  top: -6,
-                  right: 6,
-                  child: TextButton(
-                    onPressed: () async {
-                      var date = await showDatePicker(
-                        context: context,
-                        initialDate: currentDate,
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime(2100),
-                      );
-                      if (date != null) {
-                        setState(() {
-                          currentDate = date;
-                        });
-                      }
-                    },
-                    child: Text(
-                      DateFormat.yMMMd().format(currentDate),
-                      style: const TextStyle(fontSize: 14.0),
-                    ),
-                  ),
-                )
               ],
             ),
             Column(
