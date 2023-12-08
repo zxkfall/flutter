@@ -71,36 +71,87 @@ class _LineChartState extends State<ChartPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Radio(
-                  value: ChartPeriod.week,
-                  groupValue: chartPeriod,
-                  onChanged: (value) {
+                TextButton(
+                  onPressed: () {
                     setState(() {
-                      chartPeriod = value!;
+                      chartPeriod = ChartPeriod.week;
                     });
                   },
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          chartPeriod == ChartPeriod.week
+                              ? Theme.of(context).colorScheme.onSurfaceVariant
+                              : Colors.white),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                      fixedSize:
+                          MaterialStateProperty.all<Size>(const Size(96, 16))),
+                  child: Text(
+                    'Week',
+                    style: TextStyle(
+                        color: chartPeriod == ChartPeriod.week
+                            ? Colors.white
+                            : Theme.of(context).colorScheme.onSurfaceVariant,
+                        fontSize: 14),
+                  ),
                 ),
-                const Text('Week'),
-                Radio(
-                  value: ChartPeriod.month,
-                  groupValue: chartPeriod,
-                  onChanged: (value) {
+                TextButton(
+                  onPressed: () {
                     setState(() {
-                      chartPeriod = value!;
+                      chartPeriod = ChartPeriod.month;
                     });
                   },
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          chartPeriod == ChartPeriod.month
+                              ? Theme.of(context).colorScheme.onSurfaceVariant
+                              : Colors.white),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                      fixedSize:
+                          MaterialStateProperty.all<Size>(const Size(96, 16))),
+                  child: Text(
+                    'Month',
+                    style: TextStyle(
+                        color: chartPeriod == ChartPeriod.month
+                            ? Colors.white
+                            : Theme.of(context).colorScheme.onSurfaceVariant,
+                        fontSize: 14),
+                  ),
                 ),
-                const Text('Month'),
-                Radio(
-                  value: ChartPeriod.year,
-                  groupValue: chartPeriod,
-                  onChanged: (value) {
+                TextButton(
+                  onPressed: () {
                     setState(() {
-                      chartPeriod = value!;
+                      chartPeriod = ChartPeriod.year;
                     });
                   },
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          chartPeriod == ChartPeriod.year
+                              ? Theme.of(context).colorScheme.onSurfaceVariant
+                              : Colors.white),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                      fixedSize:
+                          MaterialStateProperty.all<Size>(const Size(96, 16))),
+                  child: Text(
+                    'Year',
+                    style: TextStyle(
+                        color: chartPeriod == ChartPeriod.year
+                            ? Colors.white
+                            : Theme.of(context).colorScheme.onSurfaceVariant,
+                        fontSize: 14),
+                  ),
                 ),
-                const Text('Year'),
               ],
             ),
             Row(
