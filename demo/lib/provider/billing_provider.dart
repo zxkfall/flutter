@@ -99,6 +99,10 @@ class BillingProvider with ChangeNotifier {
   void clearSearch() {
     _searchResult.clear();
     _searchDescription = '';
+    _searchType = null;
+    _searchKind = null;
+    _startDate = null;
+    _endDate = null;
     notifyListeners();
   }
 }

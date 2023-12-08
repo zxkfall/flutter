@@ -40,7 +40,7 @@ class _SearchPageState extends State<SearchPage> {
                       child: TextField(
                         decoration: const InputDecoration(
                           contentPadding: EdgeInsets.only(
-                              left: 14, top: 14, bottom: 14, right: 14),
+                              left: 14, top: 12, bottom: 12, right: 14),
                           border: OutlineInputBorder(),
                           labelText: 'Description',
                           isCollapsed: false,
