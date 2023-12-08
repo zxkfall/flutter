@@ -7,20 +7,20 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import '../model/billing.dart';
-import '../view/billing_list_view.dart';
+import '../page/billing_list_page.dart';
 import '../repository/billing_repository.dart';
 import '../provider/billing_provider.dart';
-import 'chart_page.dart';
-import 'search_page.dart';
+import '../page/chart_page.dart';
+import '../page/search_page.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class PageViewContainer extends StatefulWidget {
+  const PageViewContainer({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<PageViewContainer> createState() => _PageViewContainerState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _PageViewContainerState extends State<PageViewContainer> {
   final PageController _pageController = PageController(initialPage: 0);
   var currentPage = 0;
 
@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
         body: PageView(
           controller: _pageController,
           children: const <Widget>[
-            BillingListView(),
+            BillingListPage(),
             ChartPage(),
             SearchPage(),
             SettingPage(),

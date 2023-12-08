@@ -5,7 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'page/billing_detail_page.dart';
 import 'package:provider/provider.dart';
 
-import 'page/home_page.dart';
+import 'container/page_view_container.dart';
 
 Future<void> main() async {
   GetIt.I.registerSingleton<BillingRepository>(SqlBillingRepository());
@@ -28,9 +28,9 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlueAccent),
           useMaterial3: true,
         ),
-        home: const HomePage(),
+        home: const PageViewContainer(),
         routes: <String, WidgetBuilder>{
-          '/home': (BuildContext context) => const HomePage(),
+          '/home': (BuildContext context) => const PageViewContainer(),
           '/billing-detail': (BuildContext context) => const BillingDetailPage(
                 billing: null,
               ),

@@ -12,7 +12,6 @@ import 'package:mocktail_image_network/mocktail_image_network.dart';
 import 'package:provider/provider.dart';
 
 import 'billing_detail_page_test.mocks.dart';
-import 'widget_test.mocks.dart';
 
 @GenerateNiceMocks([MockSpec<BillingProvider>(), MockSpec<BillingRepository>()])
 void main() {

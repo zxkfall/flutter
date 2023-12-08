@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 import '../model/billing.dart';
 import '../provider/billing_provider.dart';
 import '../repository/billing_repository.dart';
-import 'home_page.dart';
+import '../container/page_view_container.dart';
 import '../view/kind_selection_wrap_view.dart';
 import '../utils/utils.dart';
 
@@ -84,7 +84,7 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
       // 使用当前页面的Navigator来进行导航
       currentNavigator.pop();
       currentNavigator
-          .pushReplacement(MaterialPageRoute(builder: (_) => const HomePage()));
+          .pushReplacement(MaterialPageRoute(builder: (_) => const PageViewContainer()));
     }
   }
 
@@ -96,7 +96,7 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
       billingProvider.removeBilling(widget.billing!.id);
       currentNavigator.pop();
       currentNavigator
-          .pushReplacement(MaterialPageRoute(builder: (_) => const HomePage()));
+          .pushReplacement(MaterialPageRoute(builder: (_) => const PageViewContainer()));
     }
   }
 

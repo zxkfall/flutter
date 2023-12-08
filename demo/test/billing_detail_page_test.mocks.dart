@@ -3,10 +3,12 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'dart:async' as _i6;
 import 'dart:ui' as _i4;
 
-import 'package:demo/model/billing.dart' as _i3;
-import 'package:demo/provider/billing_provider.dart' as _i2;
+import 'package:demo/model/billing.dart' as _i2;
+import 'package:demo/provider/billing_provider.dart' as _i3;
+import 'package:demo/repository/billing_repository.dart' as _i5;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -20,16 +22,33 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
+class _FakeBilling_0 extends _i1.SmartFake implements _i2.Billing {
+  _FakeBilling_0(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
 /// A class which mocks [BillingProvider].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockBillingProvider extends _i1.Mock implements _i2.BillingProvider {
+class MockBillingProvider extends _i1.Mock implements _i3.BillingProvider {
   @override
-  List<_i3.Billing> get billings => (super.noSuchMethod(
+  List<_i2.Billing> get billings => (super.noSuchMethod(
         Invocation.getter(#billings),
-        returnValue: <_i3.Billing>[],
-        returnValueForMissingStub: <_i3.Billing>[],
-      ) as List<_i3.Billing>);
+        returnValue: <_i2.Billing>[],
+        returnValueForMissingStub: <_i2.Billing>[],
+      ) as List<_i2.Billing>);
+
+  @override
+  List<_i2.Billing> get searchResult => (super.noSuchMethod(
+        Invocation.getter(#searchResult),
+        returnValue: <_i2.Billing>[],
+        returnValueForMissingStub: <_i2.Billing>[],
+      ) as List<_i2.Billing>);
 
   @override
   bool get hasListeners => (super.noSuchMethod(
@@ -39,7 +58,7 @@ class MockBillingProvider extends _i1.Mock implements _i2.BillingProvider {
       ) as bool);
 
   @override
-  void setBillings(List<_i3.Billing>? newBillings) => super.noSuchMethod(
+  void setBillings(List<_i2.Billing>? newBillings) => super.noSuchMethod(
         Invocation.method(
           #setBillings,
           [newBillings],
@@ -57,7 +76,7 @@ class MockBillingProvider extends _i1.Mock implements _i2.BillingProvider {
       );
 
   @override
-  void updateBilling(_i3.Billing? billing) => super.noSuchMethod(
+  void updateBilling(_i2.Billing? billing) => super.noSuchMethod(
         Invocation.method(
           #updateBilling,
           [billing],
@@ -66,10 +85,62 @@ class MockBillingProvider extends _i1.Mock implements _i2.BillingProvider {
       );
 
   @override
-  void addBilling(_i3.Billing? billing) => super.noSuchMethod(
+  void addBilling(_i2.Billing? billing) => super.noSuchMethod(
         Invocation.method(
           #addBilling,
           [billing],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void searchByDescription(String? text) => super.noSuchMethod(
+        Invocation.method(
+          #searchByDescription,
+          [text],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void searchByType(_i2.BillingType? type) => super.noSuchMethod(
+        Invocation.method(
+          #searchByType,
+          [type],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void searchByKind(_i2.BillingKind? kind) => super.noSuchMethod(
+        Invocation.method(
+          #searchByKind,
+          [kind],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void searchByDateRange(
+    DateTime? start,
+    DateTime? end,
+  ) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #searchByDateRange,
+          [
+            start,
+            end,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void clearSearch() => super.noSuchMethod(
+        Invocation.method(
+          #clearSearch,
+          [],
         ),
         returnValueForMissingStub: null,
       );
@@ -109,4 +180,106 @@ class MockBillingProvider extends _i1.Mock implements _i2.BillingProvider {
         ),
         returnValueForMissingStub: null,
       );
+}
+
+/// A class which mocks [BillingRepository].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockBillingRepository extends _i1.Mock implements _i5.BillingRepository {
+  @override
+  _i6.Future<int> insertBilling(_i2.Billing? billing) => (super.noSuchMethod(
+        Invocation.method(
+          #insertBilling,
+          [billing],
+        ),
+        returnValue: _i6.Future<int>.value(0),
+        returnValueForMissingStub: _i6.Future<int>.value(0),
+      ) as _i6.Future<int>);
+
+  @override
+  _i6.Future<void> batchInsertBilling(List<_i2.Billing>? billings) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #batchInsertBilling,
+          [billings],
+        ),
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
+
+  @override
+  _i6.Future<void> deleteBilling(int? id) => (super.noSuchMethod(
+        Invocation.method(
+          #deleteBilling,
+          [id],
+        ),
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
+
+  @override
+  _i6.Future<int> clearBilling() => (super.noSuchMethod(
+        Invocation.method(
+          #clearBilling,
+          [],
+        ),
+        returnValue: _i6.Future<int>.value(0),
+        returnValueForMissingStub: _i6.Future<int>.value(0),
+      ) as _i6.Future<int>);
+
+  @override
+  _i6.Future<_i2.Billing> updateBilling(_i2.Billing? billing) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #updateBilling,
+          [billing],
+        ),
+        returnValue: _i6.Future<_i2.Billing>.value(_FakeBilling_0(
+          this,
+          Invocation.method(
+            #updateBilling,
+            [billing],
+          ),
+        )),
+        returnValueForMissingStub: _i6.Future<_i2.Billing>.value(_FakeBilling_0(
+          this,
+          Invocation.method(
+            #updateBilling,
+            [billing],
+          ),
+        )),
+      ) as _i6.Future<_i2.Billing>);
+
+  @override
+  _i6.Future<_i2.Billing> billing(int? id) => (super.noSuchMethod(
+        Invocation.method(
+          #billing,
+          [id],
+        ),
+        returnValue: _i6.Future<_i2.Billing>.value(_FakeBilling_0(
+          this,
+          Invocation.method(
+            #billing,
+            [id],
+          ),
+        )),
+        returnValueForMissingStub: _i6.Future<_i2.Billing>.value(_FakeBilling_0(
+          this,
+          Invocation.method(
+            #billing,
+            [id],
+          ),
+        )),
+      ) as _i6.Future<_i2.Billing>);
+
+  @override
+  _i6.Future<List<_i2.Billing>> billings() => (super.noSuchMethod(
+        Invocation.method(
+          #billings,
+          [],
+        ),
+        returnValue: _i6.Future<List<_i2.Billing>>.value(<_i2.Billing>[]),
+        returnValueForMissingStub:
+            _i6.Future<List<_i2.Billing>>.value(<_i2.Billing>[]),
+      ) as _i6.Future<List<_i2.Billing>>);
 }

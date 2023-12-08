@@ -10,8 +10,7 @@ import 'package:mockito/mockito.dart';
 import 'package:mocktail_image_network/mocktail_image_network.dart';
 import 'package:provider/provider.dart';
 import 'package:demo/provider/billing_provider.dart';
-
-import 'widget_test.mocks.dart';
+import 'billing_detail_page_test.mocks.dart';
 
 // before run test, run this command: flutter pub run build_runner build --delete-conflicting-outputs
 // steps:

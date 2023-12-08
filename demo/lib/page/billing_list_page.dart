@@ -13,23 +13,23 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../model/billing.dart';
-import '../page/billing_detail_page.dart';
+import 'billing_detail_page.dart';
 import '../provider/billing_provider.dart';
 import '../repository/billing_repository.dart';
 import '../utils/utils.dart';
 
-class BillingListView extends StatefulWidget {
-  const BillingListView({
+class BillingListPage extends StatefulWidget {
+  const BillingListPage({
     super.key,
   });
 
   @override
   State<StatefulWidget> createState() {
-    return _BillingListViewState();
+    return _BillingListPageState();
   }
 }
 
-class _BillingListViewState extends State<BillingListView> {
+class _BillingListPageState extends State<BillingListPage> {
   var imgUrls = [];
   var color = Colors.white;
   var image = Image.network(
