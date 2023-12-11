@@ -434,8 +434,8 @@ class _LineChartState extends State<ChartPage> {
       gridData: FlGridData(
         show: true,
         drawVerticalLine: true,
-        horizontalInterval: 1,
-        verticalInterval: 1,
+        // horizontalInterval: 1,
+        // verticalInterval: 1,
         getDrawingHorizontalLine: (value) {
           return const FlLine(
             color: AppColors.mainGridLineColor,
