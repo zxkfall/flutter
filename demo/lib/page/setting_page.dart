@@ -48,33 +48,28 @@ class _SettingPageState extends State<SettingPage> {
             height: 48,
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
-          Align(
-            alignment: Alignment.center,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                TextButton(
-                    onPressed: () => {
-                          openFilePickerAndRead(context).then((value) {
-                            Utils.showToast(
-                                value != 0 ? '导入成功，共导入$value条数据' : '未导入数据',
-                                fToast);
-                          })
-                        },
-                    child: const Text('选择文件')),
-                TextButton(
-                    onPressed: () => {
-                          GetIt.I<BillingRepository>()
-                              .clearBilling()
-                              .then((value) {
-                            Utils.showToast('清除成功，共清除$value条数据', fToast);
-                            billingProvider.setBillings(<Billing>[]);
-                          })
-                        },
-                    child: const Text('清除数据'))
-              ],
-            ),
-          ),
+          TextButton(
+              onPressed: () => {
+                    openFilePickerAndRead(context).then((value) {
+                      Utils.showToast(
+                          value != 0 ? '导入成功，共导入$value条数据' : '未导入数据', fToast);
+                    })
+                  },
+              child: const Text(
+                '导入数据(支持xlsx格式，兼容枫叶记账)',
+                style: TextStyle(fontSize: 16),
+              )),
+          TextButton(
+              onPressed: () => {
+                    GetIt.I<BillingRepository>().clearBilling().then((value) {
+                      Utils.showToast('清除成功，共清除$value条数据', fToast);
+                      billingProvider.setBillings(<Billing>[]);
+                    })
+                  },
+              child: const Text(
+                '清除数据(！！！将会清除所有数据)',
+                style: TextStyle(fontSize: 16),
+              )),
           TextButton(
               onPressed: () => {
                     exportExcel().then((value) {
@@ -83,14 +78,27 @@ class _SettingPageState extends State<SettingPage> {
                           fToast);
                     })
                   },
-              child: const Text('导出数据')),
+              child: const Text(
+                '导出数据',
+                style: TextStyle(fontSize: 16),
+              )),
           TextButton(
               onPressed: () => {
                     shareExcel().then((value) {
                       Utils.showToast('分享成功，共导出$value条数据', fToast);
                     })
                   },
-              child: const Text('分享数据')),
+              child: const Text(
+                '分享数据',
+                style: TextStyle(fontSize: 16),
+              )),
+          TextButton(
+            onPressed: () => {},
+            child: const Text(
+              '设置首页图片',
+              style: TextStyle(fontSize: 16),
+            ),
+          )
         ]),
         ..._urlTags.map((element) {
           return TextButton(
