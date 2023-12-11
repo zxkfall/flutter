@@ -47,6 +47,7 @@ class _PageViewContainerState extends State<PageViewContainer> {
           toolbarHeight: currentPage == 1 ? 0 : null,
         ),
         body: PageView(
+          physics: const NeverScrollableScrollPhysics(),
           controller: _pageController,
           children: const <Widget>[
             BillingListPage(),
