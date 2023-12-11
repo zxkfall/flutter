@@ -44,7 +44,7 @@ class _PageViewContainerState extends State<PageViewContainer> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
-          toolbarHeight: currentPage == 1 ? 0 : null,
+          toolbarHeight: 0,
         ),
         body: PageView(
           physics: const NeverScrollableScrollPhysics(),
