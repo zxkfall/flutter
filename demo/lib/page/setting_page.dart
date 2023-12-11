@@ -145,10 +145,8 @@ class _SettingPageState extends State<SettingPage> {
             width: double.infinity,
             child: ElevatedButton(
                 onPressed: () => {
-                      exportExcel().then((value) {
-                        Utils.showToast(
-                            '导出成功，共导出${value['count']}条数据${value['path'] == '' ? '!' : '，文件路径:${value['path']}'}',
-                            fToast);
+                      shareExcel().then((value) {
+                        Utils.showToast('分享成功，共导出$value条数据', fToast);
                       })
                     },
                 style: ElevatedButton.styleFrom(
@@ -164,7 +162,7 @@ class _SettingPageState extends State<SettingPage> {
                 child: const Row(
                   children: [
                     Text(
-                      '导出数据',
+                      '分享数据',
                       style: TextStyle(fontSize: 16),
                     ),
                     Spacer(),
