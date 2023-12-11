@@ -1,8 +1,5 @@
 import 'dart:io';
 import 'dart:math';
-
-import 'dart:developer' as developer;
-
 import 'package:decimal/decimal.dart';
 import 'package:demo/page/preview_page.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +8,6 @@ import 'package:intl/intl.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-
 import '../model/billing.dart';
 import 'billing_detail_page.dart';
 import '../provider/billing_provider.dart';
@@ -71,7 +67,6 @@ class _BillingListPageState extends State<BillingListPage> {
 
   Future<void> _loadImage() async {
     await _loadImageUrls();
-    developer.log('$imgUrls');
     image = Image.network(
       imgUrls[Random().nextInt(imgUrls.length)],
       width: double.infinity,
@@ -135,6 +130,7 @@ class _BillingListPageState extends State<BillingListPage> {
                       : Decimal.zero));
           if (billings.isEmpty) {
             return ListView(
+              physics: const ClampingScrollPhysics(),
               children: [
                 buildHeader(totalExpense, totalIncome),
                 const Center(
@@ -144,6 +140,7 @@ class _BillingListPageState extends State<BillingListPage> {
             );
           }
           return ListView.builder(
+            physics: const ClampingScrollPhysics(),
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
             itemCount: billings.length,

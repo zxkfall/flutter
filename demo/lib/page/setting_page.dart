@@ -34,184 +34,180 @@ class _SettingPageState extends State<SettingPage> {
     FToast fToast = FToast();
     fToast.init(context);
     var billingProvider = Provider.of<BillingProvider>(context, listen: false);
-    return ListView(
-      children: [
-        Column(children: <Widget>[
-          Container(
-            height: 48,
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
-          SizedBox(
-            height: 48,
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () => {
-                openFilePickerAndRead(context).then((value) {
-                  Utils.showToast(
-                      value != 0 ? '导入成功，共导入$value条数据' : '未导入数据', fToast);
-                })
-              },
-              style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0),
-                  ),
-                  side: BorderSide(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurfaceVariant
-                          .withOpacity(0.1),
-                      width: 1)),
-              child: const Row(
-                children: [
-                  Text(
-                    '导入数据',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  Spacer(),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    size: 16,
-                  )
-                ],
+    return Column(children: <Widget>[
+      Container(
+        height: 48,
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
+      ),
+      SizedBox(
+        height: 48,
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: () => {
+            openFilePickerAndRead(context).then((value) {
+              Utils.showToast(
+                  value != 0 ? '导入成功，共导入$value条数据' : '未导入数据', fToast);
+            })
+          },
+          style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(0),
               ),
-            ),
+              side: BorderSide(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurfaceVariant
+                      .withOpacity(0.1),
+                  width: 1)),
+          child: const Row(
+            children: [
+              Text(
+                '导入数据',
+                style: TextStyle(fontSize: 16),
+              ),
+              Spacer(),
+              Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+              )
+            ],
           ),
-          SizedBox(
-            height: 48,
-            width: double.infinity,
-            child: ElevatedButton(
-                onPressed: () {
-                  buildConfirmClearDialog(context, fToast, billingProvider);
+        ),
+      ),
+      SizedBox(
+        height: 48,
+        width: double.infinity,
+        child: ElevatedButton(
+            onPressed: () {
+              buildConfirmClearDialog(context, fToast, billingProvider);
+            },
+            style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(0),
+                ),
+                side: BorderSide(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurfaceVariant
+                        .withOpacity(0.1),
+                    width: 1)),
+            child: const Row(
+              children: [
+                Text(
+                  '清除数据(！！！将会清除所有数据)',
+                  style: TextStyle(fontSize: 16),
+                ),
+                Spacer(),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  size: 16,
+                )
+              ],
+            )),
+      ),
+      SizedBox(
+        height: 48,
+        width: double.infinity,
+        child: ElevatedButton(
+            onPressed: () => {
+                  exportExcel().then((value) {
+                    Utils.showToast('导出成功，共导出$value条数据', fToast);
+                  })
                 },
-                style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(0),
-                    ),
-                    side: BorderSide(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurfaceVariant
-                            .withOpacity(0.1),
-                        width: 1)),
-                child: const Row(
-                  children: [
-                    Text(
-                      '清除数据(！！！将会清除所有数据)',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    Spacer(),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      size: 16,
-                    )
-                  ],
-                )),
-          ),
-          SizedBox(
-            height: 48,
-            width: double.infinity,
-            child: ElevatedButton(
-                onPressed: () => {
-                      exportExcel().then((value) {
-                        Utils.showToast('导出成功，共导出$value条数据', fToast);
-                      })
-                    },
-                style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(0),
-                    ),
-                    side: BorderSide(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurfaceVariant
-                            .withOpacity(0.1),
-                        width: 1)),
-                child: const Row(
-                  children: [
-                    Text(
-                      '导出数据',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    Spacer(),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      size: 16,
-                    )
-                  ],
-                )),
-          ),
-          SizedBox(
-            height: 48,
-            width: double.infinity,
-            child: ElevatedButton(
-                onPressed: () => {
-                      shareExcel().then((value) {
-                        Utils.showToast('分享成功，共导出$value条数据', fToast);
-                      })
-                    },
-                style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(0),
-                    ),
-                    side: BorderSide(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurfaceVariant
-                            .withOpacity(0.1),
-                        width: 1)),
-                child: const Row(
-                  children: [
-                    Text(
-                      '分享数据',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    Spacer(),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      size: 16,
-                    )
-                  ],
-                )),
-          ),
-          SizedBox(
-            height: 48,
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () => {
-                Future.delayed(const Duration(milliseconds: 150), () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => const IndexImagesSettingPage(),
-                  ));
-                })
-              },
-              style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0),
-                  ),
-                  side: BorderSide(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurfaceVariant
-                          .withOpacity(0.1),
-                      width: 1)),
-              child: const Row(
-                children: [
-                  Text(
-                    '首页图片设置',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  Spacer(),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    size: 16,
-                  )
-                ],
+            style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(0),
+                ),
+                side: BorderSide(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurfaceVariant
+                        .withOpacity(0.1),
+                    width: 1)),
+            child: const Row(
+              children: [
+                Text(
+                  '导出数据',
+                  style: TextStyle(fontSize: 16),
+                ),
+                Spacer(),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  size: 16,
+                )
+              ],
+            )),
+      ),
+      SizedBox(
+        height: 48,
+        width: double.infinity,
+        child: ElevatedButton(
+            onPressed: () => {
+                  shareExcel().then((value) {
+                    Utils.showToast('分享成功，共导出$value条数据', fToast);
+                  })
+                },
+            style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(0),
+                ),
+                side: BorderSide(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurfaceVariant
+                        .withOpacity(0.1),
+                    width: 1)),
+            child: const Row(
+              children: [
+                Text(
+                  '分享数据',
+                  style: TextStyle(fontSize: 16),
+                ),
+                Spacer(),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  size: 16,
+                )
+              ],
+            )),
+      ),
+      SizedBox(
+        height: 48,
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: () => {
+            Future.delayed(const Duration(milliseconds: 150), () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => const IndexImagesSettingPage(),
+              ));
+            })
+          },
+          style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(0),
               ),
-            ),
-          )
-        ]),
-      ],
-    );
+              side: BorderSide(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurfaceVariant
+                      .withOpacity(0.1),
+                  width: 1)),
+          child: const Row(
+            children: [
+              Text(
+                '首页图片设置',
+                style: TextStyle(fontSize: 16),
+              ),
+              Spacer(),
+              Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+              )
+            ],
+          ),
+        ),
+      )
+    ]);
   }
 
   void buildConfirmClearDialog(

@@ -29,275 +29,282 @@ class _LineChartState extends State<ChartPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<BillingProvider>(
-      builder: (context, billingProvider, child) {
-        var billings = billingProvider.billings;
-
-        var allPeriodKindData = billings
-            .where((element) =>
-                element.type == billingType && isInDateRange(element))
-            .groupBy((element) => element.kind)
-            .map((kind, values) {
-          var total =
-              values.fold(Decimal.zero, (sum, value) => sum + value.amount);
-          return MapEntry(kind, total);
-        }).toList();
-
-        return ListView(
-          children: [
-            Container(
-              height: 48,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                      onPressed: () {
-                        setState(() {
-                          billingType == BillingType.expense
-                              ? billingType = BillingType.income
-                              : billingType = BillingType.expense;
-                        });
-                      },
-                      style: TextButton.styleFrom(
-                        backgroundColor:
-                            Theme.of(context).colorScheme.onSurfaceVariant,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(0),
-                        ),
-                        fixedSize: const Size(96, 16),
-                        padding: const EdgeInsets.all(0),
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                      child: Text(
-                        billingType == BillingType.income
-                            ? 'Income'
-                            : 'Expense',
-                        style: const TextStyle(color: Colors.black),
-                      )),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 64, right: 64),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(top: 4, bottom: 0),
-                    height: 32,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      borderRadius: const BorderRadius.all(Radius.circular(16)),
-                      border: Border.fromBorderSide(
-                        BorderSide(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                          width: 1,
-                        ),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        TextButton(
-                          onPressed: () {
-                            setState(() {
-                              chartPeriod = ChartPeriod.week;
-                            });
-                          },
-                          style: TextButton.styleFrom(
-                            backgroundColor: chartPeriod == ChartPeriod.week
-                                ? Colors.white
-                                : Theme.of(context)
-                                    .colorScheme
-                                    .onSurfaceVariant,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                            fixedSize: const Size(96, 16),
-                            padding: const EdgeInsets.all(0),
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
-                          child: Text(
-                            'Week',
-                            style: TextStyle(
-                                color: chartPeriod == ChartPeriod.week
-                                    ? Theme.of(context)
-                                        .colorScheme
-                                        .onSurfaceVariant
-                                    : Colors.white,
-                                fontSize: 14),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            setState(() {
-                              chartPeriod = ChartPeriod.month;
-                            });
-                          },
-                          style: TextButton.styleFrom(
-                            backgroundColor: chartPeriod == ChartPeriod.month
-                                ? Colors.white
-                                : Theme.of(context)
-                                    .colorScheme
-                                    .onSurfaceVariant,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                            fixedSize: const Size(96, 16),
-                            padding: const EdgeInsets.all(0),
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
-                          child: Text(
-                            'Month',
-                            style: TextStyle(
-                                color: chartPeriod == ChartPeriod.month
-                                    ? Theme.of(context)
-                                        .colorScheme
-                                        .onSurfaceVariant
-                                    : Colors.white,
-                                fontSize: 14),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            setState(() {
-                              chartPeriod = ChartPeriod.year;
-                            });
-                          },
-                          style: TextButton.styleFrom(
-                            backgroundColor: chartPeriod == ChartPeriod.year
-                                ? Colors.white
-                                : Theme.of(context)
-                                    .colorScheme
-                                    .onSurfaceVariant,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                            fixedSize: const Size(96, 16),
-                            padding: const EdgeInsets.all(0),
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
-                          child: Text(
-                            'Year',
-                            style: TextStyle(
-                                color: chartPeriod == ChartPeriod.year
-                                    ? Theme.of(context)
-                                        .colorScheme
-                                        .onSurfaceVariant
-                                    : Colors.white,
-                                fontSize: 14),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton(
-                    onPressed: () {
-                      chartPeriod == ChartPeriod.week
-                          ? currentDate =
-                              currentDate.subtract(const Duration(days: 7))
-                          : chartPeriod == ChartPeriod.month
-                              ? currentDate = DateTime(currentDate.year,
-                                  currentDate.month - 1, currentDate.day)
-                              : currentDate = DateTime(currentDate.year - 1,
-                                  currentDate.month, currentDate.day);
-                      setState(() {});
-                    },
-                    child: const Icon(
-                      Icons.arrow_back_ios_new,
-                      size: 16,
-                    )),
-                TextButton(
-                  onPressed: () async {
-                    var date = await showDatePicker(
-                      context: context,
-                      initialDate: currentDate,
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2100),
-                    );
-                    if (date != null) {
-                      setState(() {
-                        currentDate = date;
-                      });
-                    }
+    return Column(
+      children: [
+        Container(
+          height: 48,
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton(
+                  onPressed: () {
+                    setState(() {
+                      billingType == BillingType.expense
+                          ? billingType = BillingType.income
+                          : billingType = BillingType.expense;
+                    });
                   },
-                  child: Text(
-                    DateFormat.yMMMd().format(currentDate),
-                    style: const TextStyle(fontSize: 14.0),
-                  ),
-                ),
-                TextButton(
-                    onPressed: () {
-                      chartPeriod == ChartPeriod.week
-                          ? currentDate =
-                              currentDate.add(const Duration(days: 7))
-                          : chartPeriod == ChartPeriod.month
-                              ? currentDate = DateTime(currentDate.year,
-                                  currentDate.month + 1, currentDate.day)
-                              : currentDate = DateTime(currentDate.year + 1,
-                                  currentDate.month, currentDate.day);
-                      setState(() {});
-                    },
-                    child: const Icon(
-                      Icons.arrow_forward_ios,
-                      size: 16,
-                    )),
-              ],
-            ),
-            Stack(
-              children: <Widget>[
-                AspectRatio(
-                  aspectRatio: 1.50,
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      right: 18,
-                      left: 12,
-                      top: 32,
-                      bottom: 12,
+                  style: TextButton.styleFrom(
+                    backgroundColor:
+                        Theme.of(context).colorScheme.onSurfaceVariant,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0),
                     ),
-                    child: buildLineChart(billings),
+                    fixedSize: const Size(96, 16),
+                    padding: const EdgeInsets.all(0),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  child: Text(
+                    billingType == BillingType.income ? 'Income' : 'Expense',
+                    style: const TextStyle(color: Colors.black),
+                  )),
+            ],
+          ),
+        ),
+        Expanded(child: Consumer<BillingProvider>(
+          builder: (context, billingProvider, child) {
+            var billings = billingProvider.billings;
+
+            var allPeriodKindData = billings
+                .where((element) =>
+                    element.type == billingType && isInDateRange(element))
+                .groupBy((element) => element.kind)
+                .map((kind, values) {
+              var total =
+                  values.fold(Decimal.zero, (sum, value) => sum + value.amount);
+              return MapEntry(kind, total);
+            }).toList();
+
+            return ListView(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 64, right: 64),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(top: 4, bottom: 0),
+                        height: 32,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(16)),
+                          border: Border.fromBorderSide(
+                            BorderSide(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurfaceVariant,
+                              width: 1,
+                            ),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  chartPeriod = ChartPeriod.week;
+                                });
+                              },
+                              style: TextButton.styleFrom(
+                                backgroundColor: chartPeriod == ChartPeriod.week
+                                    ? Colors.white
+                                    : Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
+                                fixedSize: const Size(96, 16),
+                                padding: const EdgeInsets.all(0),
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              ),
+                              child: Text(
+                                'Week',
+                                style: TextStyle(
+                                    color: chartPeriod == ChartPeriod.week
+                                        ? Theme.of(context)
+                                            .colorScheme
+                                            .onSurfaceVariant
+                                        : Colors.white,
+                                    fontSize: 14),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  chartPeriod = ChartPeriod.month;
+                                });
+                              },
+                              style: TextButton.styleFrom(
+                                backgroundColor:
+                                    chartPeriod == ChartPeriod.month
+                                        ? Colors.white
+                                        : Theme.of(context)
+                                            .colorScheme
+                                            .onSurfaceVariant,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
+                                fixedSize: const Size(96, 16),
+                                padding: const EdgeInsets.all(0),
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              ),
+                              child: Text(
+                                'Month',
+                                style: TextStyle(
+                                    color: chartPeriod == ChartPeriod.month
+                                        ? Theme.of(context)
+                                            .colorScheme
+                                            .onSurfaceVariant
+                                        : Colors.white,
+                                    fontSize: 14),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  chartPeriod = ChartPeriod.year;
+                                });
+                              },
+                              style: TextButton.styleFrom(
+                                backgroundColor: chartPeriod == ChartPeriod.year
+                                    ? Colors.white
+                                    : Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
+                                fixedSize: const Size(96, 16),
+                                padding: const EdgeInsets.all(0),
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              ),
+                              child: Text(
+                                'Year',
+                                style: TextStyle(
+                                    color: chartPeriod == ChartPeriod.year
+                                        ? Theme.of(context)
+                                            .colorScheme
+                                            .onSurfaceVariant
+                                        : Colors.white,
+                                    fontSize: 14),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
                   ),
                 ),
-                Positioned(
-                  top: 6,
-                  left: 12,
-                  child: Text(
-                    chartPeriod.name,
-                    style: TextStyle(
-                        fontSize: 12, color: Colors.black.withOpacity(0.5)),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton(
+                        onPressed: () {
+                          chartPeriod == ChartPeriod.week
+                              ? currentDate =
+                                  currentDate.subtract(const Duration(days: 7))
+                              : chartPeriod == ChartPeriod.month
+                                  ? currentDate = DateTime(currentDate.year,
+                                      currentDate.month - 1, currentDate.day)
+                                  : currentDate = DateTime(currentDate.year - 1,
+                                      currentDate.month, currentDate.day);
+                          setState(() {});
+                        },
+                        child: const Icon(
+                          Icons.arrow_back_ios_new,
+                          size: 16,
+                        )),
+                    TextButton(
+                      onPressed: () async {
+                        var date = await showDatePicker(
+                          context: context,
+                          initialDate: currentDate,
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                        );
+                        if (date != null) {
+                          setState(() {
+                            currentDate = date;
+                          });
+                        }
+                      },
+                      child: Text(
+                        DateFormat.yMMMd().format(currentDate),
+                        style: const TextStyle(fontSize: 14.0),
+                      ),
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          chartPeriod == ChartPeriod.week
+                              ? currentDate =
+                                  currentDate.add(const Duration(days: 7))
+                              : chartPeriod == ChartPeriod.month
+                                  ? currentDate = DateTime(currentDate.year,
+                                      currentDate.month + 1, currentDate.day)
+                                  : currentDate = DateTime(currentDate.year + 1,
+                                      currentDate.month, currentDate.day);
+                          setState(() {});
+                        },
+                        child: const Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                        )),
+                  ],
+                ),
+                Stack(
+                  children: <Widget>[
+                    AspectRatio(
+                      aspectRatio: 1.50,
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          right: 18,
+                          left: 12,
+                          top: 32,
+                          bottom: 12,
+                        ),
+                        child: buildLineChart(billings),
+                      ),
+                    ),
+                    Positioned(
+                      top: 6,
+                      left: 12,
+                      child: Text(
+                        chartPeriod.name,
+                        style: TextStyle(
+                            fontSize: 12, color: Colors.black.withOpacity(0.5)),
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: allPeriodKindData.map((e) {
+                    return Padding(
+                        padding:
+                            const EdgeInsets.only(top: 4, left: 12, right: 12),
+                        child: Card(
+                          color: Color.fromRGBO(Random().nextInt(255),
+                              Random().nextInt(255), Random().nextInt(255), 1),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: ListTile(
+                            title: Text(e.first.name),
+                            trailing: Text(e.second.toString()),
+                            leading: Icon(BillingIconMapper.getIcon(
+                                billingType, e.first)),
+                          ),
+                        ));
+                  }).toList(),
                 ),
               ],
-            ),
-            Column(
-              children: allPeriodKindData.map((e) {
-                return Padding(
-                    padding: const EdgeInsets.only(top: 4, left: 12, right: 12),
-                    child: Card(
-                      color: Color.fromRGBO(Random().nextInt(255),
-                          Random().nextInt(255), Random().nextInt(255), 1),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: ListTile(
-                        title: Text(e.first.name),
-                        trailing: Text(e.second.toString()),
-                        leading: Icon(
-                            BillingIconMapper.getIcon(billingType, e.first)),
-                      ),
-                    ));
-              }).toList(),
-            ),
-          ],
-        );
-      },
+            );
+          },
+        ))
+      ],
     );
   }
 
