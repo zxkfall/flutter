@@ -41,88 +41,207 @@ class _SettingPageState extends State<SettingPage> {
             height: 48,
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
-          TextButton(
+          SizedBox(
+            height: 48,
+            width: double.infinity,
+            child: ElevatedButton(
               onPressed: () => {
-                    openFilePickerAndRead(context).then((value) {
-                      Utils.showToast(
-                          value != 0 ? '导入成功，共导入$value条数据' : '未导入数据', fToast);
-                    })
-                  },
-              child: const Text(
-                '导入数据(支持xlsx格式，兼容枫叶记账)',
-                style: TextStyle(fontSize: 16),
-              )),
-          TextButton(
-              onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: const Text('清除数据'),
-                        content: const Text('确定要清除所有数据吗？'),
-                        actions: [
-                          TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('取消')),
-                          TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                                GetIt.I<BillingRepository>()
-                                    .clearBilling()
-                                    .then((value) {
-                                  Utils.showToast('清除成功，共清除$value条数据', fToast);
-                                  billingProvider.setBillings(<Billing>[]);
-                                });
-                              },
-                              child: const Text('确定')),
-                        ],
-                      );
-                    });
+                openFilePickerAndRead(context).then((value) {
+                  Utils.showToast(
+                      value != 0 ? '导入成功，共导入$value条数据' : '未导入数据', fToast);
+                })
               },
-              child: const Text(
-                '清除数据(！！！将会清除所有数据)',
-                style: TextStyle(fontSize: 16),
-              )),
-          TextButton(
+              style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0),
+                  ),
+                  side: BorderSide(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurfaceVariant
+                          .withOpacity(0.1),
+                      width: 1)),
+              child: const Row(
+                children: [
+                  Text(
+                    '导入数据',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  Spacer(),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    size: 16,
+                  )
+                ],
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 48,
+            width: double.infinity,
+            child: ElevatedButton(
+                onPressed: () {
+                  buildConfirmClearDialog(context, fToast, billingProvider);
+                },
+                style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0),
+                    ),
+                    side: BorderSide(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurfaceVariant
+                            .withOpacity(0.1),
+                        width: 1)),
+                child: const Row(
+                  children: [
+                    Text(
+                      '清除数据(！！！将会清除所有数据)',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 16,
+                    )
+                  ],
+                )),
+          ),
+          SizedBox(
+            height: 48,
+            width: double.infinity,
+            child: ElevatedButton(
+                onPressed: () => {
+                      exportExcel().then((value) {
+                        Utils.showToast('导出成功，共导出$value条数据', fToast);
+                      })
+                    },
+                style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0),
+                    ),
+                    side: BorderSide(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurfaceVariant
+                            .withOpacity(0.1),
+                        width: 1)),
+                child: const Row(
+                  children: [
+                    Text(
+                      '导出数据',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 16,
+                    )
+                  ],
+                )),
+          ),
+          SizedBox(
+            height: 48,
+            width: double.infinity,
+            child: ElevatedButton(
+                onPressed: () => {
+                      exportExcel().then((value) {
+                        Utils.showToast(
+                            '导出成功，共导出${value['count']}条数据${value['path'] == '' ? '!' : '，文件路径:${value['path']}'}',
+                            fToast);
+                      })
+                    },
+                style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0),
+                    ),
+                    side: BorderSide(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurfaceVariant
+                            .withOpacity(0.1),
+                        width: 1)),
+                child: const Row(
+                  children: [
+                    Text(
+                      '导出数据',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 16,
+                    )
+                  ],
+                )),
+          ),
+          SizedBox(
+            height: 48,
+            width: double.infinity,
+            child: ElevatedButton(
               onPressed: () => {
-                    exportExcel().then((value) {
-                      Utils.showToast(
-                          '导出成功，共导出${value['count']}条数据${value['path'] == '' ? '!' : '，文件路径:${value['path']}'}',
-                          fToast);
-                    })
-                  },
-              child: const Text(
-                '导出数据',
-                style: TextStyle(fontSize: 16),
-              )),
-          TextButton(
-              onPressed: () => {
-                    shareExcel().then((value) {
-                      Utils.showToast('分享成功，共导出$value条数据', fToast);
-                    })
-                  },
-              child: const Text(
-                '分享数据',
-                style: TextStyle(fontSize: 16),
-              )),
-          TextButton(
-            onPressed: () => {
-              Future.delayed(const Duration(milliseconds: 150), () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => const IndexImagesSettingPage(),
-                ));
-              })
-            },
-            child: const Text(
-              '设置首页图片',
-              style: TextStyle(fontSize: 16),
+                Future.delayed(const Duration(milliseconds: 150), () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => const IndexImagesSettingPage(),
+                  ));
+                })
+              },
+              style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0),
+                  ),
+                  side: BorderSide(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurfaceVariant
+                          .withOpacity(0.1),
+                      width: 1)),
+              child: const Row(
+                children: [
+                  Text(
+                    '首页图片设置',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  Spacer(),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    size: 16,
+                  )
+                ],
+              ),
             ),
           )
         ]),
       ],
     );
+  }
+
+  void buildConfirmClearDialog(
+      BuildContext context, FToast fToast, BillingProvider billingProvider) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('清除数据'),
+            content: const Text('确定要清除所有数据吗？'),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('取消')),
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    GetIt.I<BillingRepository>().clearBilling().then((value) {
+                      Utils.showToast('清除成功，共清除$value条数据', fToast);
+                      billingProvider.setBillings(<Billing>[]);
+                    });
+                  },
+                  child: const Text('确定')),
+            ],
+          );
+        });
   }
 
   Future<Map<String, String>> exportExcel() async {
