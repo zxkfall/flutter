@@ -520,10 +520,18 @@ class _LineChartState extends State<ChartPage> {
           gradient: LinearGradient(
             colors: gradientColors,
           ),
-          barWidth: 5,
+          barWidth: 2,
           isStrokeCapRound: true,
-          dotData: const FlDotData(
+          dotData: FlDotData(
             show: true,
+            getDotPainter: (spot, percent, barData, index) {
+              return FlDotCirclePainter(
+                radius: 3,
+                color: AppColors.contentColorCyan,
+                strokeWidth: 1,
+                strokeColor: Colors.white,
+              );
+            },
           ),
           belowBarData: BarAreaData(
             show: true,
