@@ -53,12 +53,34 @@ class _SettingPageState extends State<SettingPage> {
                 style: TextStyle(fontSize: 16),
               )),
           TextButton(
-              onPressed: () => {
-                    GetIt.I<BillingRepository>().clearBilling().then((value) {
-                      Utils.showToast('清除成功，共清除$value条数据', fToast);
-                      billingProvider.setBillings(<Billing>[]);
-                    })
-                  },
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text('清除数据'),
+                        content: const Text('确定要清除所有数据吗？'),
+                        actions: [
+                          TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('取消')),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                GetIt.I<BillingRepository>()
+                                    .clearBilling()
+                                    .then((value) {
+                                  Utils.showToast('清除成功，共清除$value条数据', fToast);
+                                  billingProvider.setBillings(<Billing>[]);
+                                });
+                              },
+                              child: const Text('确定')),
+                        ],
+                      );
+                    });
+              },
               child: const Text(
                 '清除数据(！！！将会清除所有数据)',
                 style: TextStyle(fontSize: 16),
