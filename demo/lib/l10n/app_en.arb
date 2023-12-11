@@ -1,0 +1,11 @@
+{
+  "mapleBilling": "Maple Billing",
+  "@mapleBilling": {
+    "description": "The title of application"
+  },
+  "addBilling": "Add Billing",
+  "home": "Home",
+  "chart": "Chart",
+  "search": "Search",
+  "setting": "Setting"
+}

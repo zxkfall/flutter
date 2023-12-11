@@ -126,6 +126,13 @@ flutter pub run flutter_launcher_icons
 
 don't use it, just look which file changed and change it manually
 
+## how to use flutter_localizations
+https://flutter.dev/docs/development/accessibility-and-localization/internationalization
+run
+```bash
+flutter pub get
+```
+when you changed `intl_messages.arb` file
 
 Tasks:
 1. [x] bottom navigation bar can click with icon and text

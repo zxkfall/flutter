@@ -12,6 +12,7 @@ import '../repository/billing_repository.dart';
 import '../provider/billing_provider.dart';
 import '../page/chart_page.dart';
 import '../page/search_page.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PageViewContainer extends StatefulWidget {
   const PageViewContainer({super.key});
@@ -65,7 +66,7 @@ class _PageViewContainerState extends State<PageViewContainer> {
                 onPressed: () {
                   _goToBillingDetailPage(context);
                 },
-                tooltip: 'Add Billing',
+                tooltip: AppLocalizations.of(context)!.addBilling,
                 shape: const CircleBorder(),
                 backgroundColor: Theme.of(context).colorScheme.surface,
                 child: const Icon(Icons.add),
@@ -107,7 +108,7 @@ class _PageViewContainerState extends State<PageViewContainer> {
                               ),
                             ),
                             Text(
-                              'Home',
+                              AppLocalizations.of(context)!.home,
                               style: TextStyle(
                                   fontSize: 12, color: _getCurrentColor(0)),
                               textAlign: TextAlign.center,
@@ -140,7 +141,7 @@ class _PageViewContainerState extends State<PageViewContainer> {
                                 ),
                               ),
                               Text(
-                                'Chart',
+                                AppLocalizations.of(context)!.chart,
                                 style: TextStyle(
                                     fontSize: 12, color: _getCurrentColor(1)),
                                 textAlign: TextAlign.center,
@@ -177,7 +178,7 @@ class _PageViewContainerState extends State<PageViewContainer> {
                                     color: _getCurrentColor(2),
                                   )),
                               Text(
-                                'Search',
+                                AppLocalizations.of(context)!.search,
                                 style: TextStyle(
                                     fontSize: 12, color: _getCurrentColor(2)),
                                 textAlign: TextAlign.center,
@@ -209,7 +210,7 @@ class _PageViewContainerState extends State<PageViewContainer> {
                               ),
                             ),
                             Text(
-                              'Setting',
+                              AppLocalizations.of(context)!.setting,
                               style: TextStyle(
                                   fontSize: 12, color: _getCurrentColor(3)),
                               textAlign: TextAlign.center,
