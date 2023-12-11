@@ -111,135 +111,153 @@ class _BillingListPageState extends State<BillingListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<BillingProvider>(
-      builder: (context, billingProvider, child) {
-        final billings = billingProvider.billings;
-        var totalExpense = billings.fold(
-            Decimal.zero,
-            (previousValue, element) =>
-                previousValue +
-                (element.type == BillingType.expense
-                    ? element.amount
-                    : Decimal.zero));
-        var totalIncome = billings.fold(
-            Decimal.zero,
-            (previousValue, element) =>
-                previousValue +
-                (element.type == BillingType.income
-                    ? element.amount
-                    : Decimal.zero));
-        if (billings.isEmpty) {
-          return ListView(
+    return ListView(children: [
+      Container(
+        height: 48,
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
+      ),
+      Consumer<BillingProvider>(
+        builder: (context, billingProvider, child) {
+          final billings = billingProvider.billings;
+          var totalExpense = billings.fold(
+              Decimal.zero,
+              (previousValue, element) =>
+                  previousValue +
+                  (element.type == BillingType.expense
+                      ? element.amount
+                      : Decimal.zero));
+          var totalIncome = billings.fold(
+              Decimal.zero,
+              (previousValue, element) =>
+                  previousValue +
+                  (element.type == BillingType.income
+                      ? element.amount
+                      : Decimal.zero));
+          if (billings.isEmpty) {
+            return ListView(
+              children: [
+                buildHeader(totalExpense, totalIncome),
+                const Center(
+                  child: Text('No billing yet'),
+                ),
+              ],
+            );
+          }
+          return Column(
             children: [
-              buildHeader(totalExpense, totalIncome),
-              const Center(
-                child: Text('No billing yet'),
-              ),
-            ],
-          );
-        }
-        return ListView.builder(
-          itemCount: billings.length,
-          itemBuilder: (BuildContext context, int index) {
-            final currentBilling = billings[index];
-            final previousBilling = index > 0 ? billings[index - 1] : null;
-            final showDateHeader = previousBilling == null ||
-                !Utils.isSameDay(currentBilling.date, previousBilling.date);
+              ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: billings.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final currentBilling = billings[index];
+                  final previousBilling =
+                      index > 0 ? billings[index - 1] : null;
+                  final showDateHeader = previousBilling == null ||
+                      !Utils.isSameDay(
+                          currentBilling.date, previousBilling.date);
 
-            final dailyTotalMap =
-                Utils.calculateDailyTotal(currentBilling.date, billings);
+                  final dailyTotalMap =
+                      Utils.calculateDailyTotal(currentBilling.date, billings);
 
-            var hasIncome = dailyTotalMap['income'] != Decimal.zero;
-            var hasExpense = dailyTotalMap['expense'] != Decimal.zero;
+                  var hasIncome = dailyTotalMap['income'] != Decimal.zero;
+                  var hasExpense = dailyTotalMap['expense'] != Decimal.zero;
 
-            var incomeAmount =
-                !hasIncome ? '' : '+\$${dailyTotalMap['income']}';
-            var spaceAndComma = hasIncome && hasExpense ? ', ' : '';
-            var expenseAmount =
-                !hasExpense ? '' : '-\$${dailyTotalMap['expense']}';
-            var formattedAmount = currentBilling.amount.toStringAsFixed(2);
-            var amountPrefix =
-                currentBilling.type == BillingType.income ? '+' : '-';
+                  var incomeAmount =
+                      !hasIncome ? '' : '+\$${dailyTotalMap['income']}';
+                  var spaceAndComma = hasIncome && hasExpense ? ', ' : '';
+                  var expenseAmount =
+                      !hasExpense ? '' : '-\$${dailyTotalMap['expense']}';
+                  var formattedAmount =
+                      currentBilling.amount.toStringAsFixed(2);
+                  var amountPrefix =
+                      currentBilling.type == BillingType.income ? '+' : '-';
 
-            return Column(
-              children: <Widget>[
-                if (showDateHeader)
-                  Column(
-                    children: [
-                      if (index == 0) buildHeader(totalExpense, totalIncome),
-                      ListTile(
-                        visualDensity: const VisualDensity(
-                          vertical: VisualDensity.minimumDensity,
+                  return Column(
+                    children: <Widget>[
+                      if (showDateHeader)
+                        Column(
+                          children: [
+                            if (index == 0)
+                              buildHeader(totalExpense, totalIncome),
+                            ListTile(
+                              visualDensity: const VisualDensity(
+                                vertical: VisualDensity.minimumDensity,
+                              ),
+                              dense: true,
+                              title: Text(
+                                DateFormat.yMMMd().format(currentBilling.date),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              trailing: Text(
+                                'Total: $incomeAmount$spaceAndComma$expenseAmount',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        dense: true,
-                        title: Text(
-                          DateFormat.yMMMd().format(currentBilling.date),
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: Dismissible(
+                          key: Key(currentBilling.id.toString()),
+                          onDismissed: (direction) {
+                            _removeBilling(context, index);
+                          },
+                          background: Container(
+                            color: Colors.red,
+                            child:
+                                const Icon(Icons.delete, color: Colors.white),
                           ),
-                        ),
-                        trailing: Text(
-                          'Total: $incomeAmount$spaceAndComma$expenseAmount',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
+                          child: Card(
+                            margin: EdgeInsets.only(
+                              top: showDateHeader ? 0 : 6,
+                            ),
+                            color: currentBilling.type == BillingType.expense
+                                ? Colors.red.shade50
+                                : Colors.green.shade50,
+                            child: InkWell(
+                              onTap: () {
+                                Future.delayed(
+                                    const Duration(milliseconds: 150), () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (_) => BillingDetailPage(
+                                          billing: currentBilling),
+                                    ),
+                                  );
+                                });
+                              },
+                              highlightColor: Colors.transparent,
+                              child: ListTile(
+                                visualDensity: VisualDensity.compact,
+                                dense: true,
+                                title: Text(currentBilling.kind.name),
+                                subtitle: Text(currentBilling.description),
+                                leading: Icon(
+                                  BillingIconMapper.getIcon(
+                                      currentBilling.type, currentBilling.kind),
+                                ),
+                                trailing: Text(
+                                  '$amountPrefix\$$formattedAmount',
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),
                     ],
-                  ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Dismissible(
-                    key: Key(currentBilling.id.toString()),
-                    onDismissed: (direction) {
-                      _removeBilling(context, index);
-                    },
-                    background: Container(
-                      color: Colors.red,
-                      child: const Icon(Icons.delete, color: Colors.white),
-                    ),
-                    child: Card(
-                      margin: EdgeInsets.only(
-                        top: showDateHeader ? 0 : 6,
-                      ),
-                      color: currentBilling.type == BillingType.expense
-                          ? Colors.red.shade50
-                          : Colors.green.shade50,
-                      child: InkWell(
-                        onTap: () {
-                          Future.delayed(const Duration(milliseconds: 150), () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) =>
-                                    BillingDetailPage(billing: currentBilling),
-                              ),
-                            );
-                          });
-                        },
-                        highlightColor: Colors.transparent,
-                        child: ListTile(
-                          visualDensity: VisualDensity.compact,
-                          dense: true,
-                          title: Text(currentBilling.kind.name),
-                          subtitle: Text(currentBilling.description),
-                          leading: Icon(
-                            BillingIconMapper.getIcon(
-                                currentBilling.type, currentBilling.kind),
-                          ),
-                          trailing: Text(
-                            '$amountPrefix\$$formattedAmount',
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
+                  );
+                },
+              )
+            ],
+          );
+        },
+      )
+    ]);
   }
 
   GestureDetector buildHeader(Decimal totalExpense, Decimal totalIncome) {

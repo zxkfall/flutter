@@ -44,6 +44,10 @@ class _SettingPageState extends State<SettingPage> {
     return ListView(
       children: [
         Column(children: <Widget>[
+          Container(
+            height: 48,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
           Align(
             alignment: Alignment.center,
             child: Row(
@@ -110,17 +114,15 @@ class _SettingPageState extends State<SettingPage> {
             labelText: 'Enter Text',
             border: const OutlineInputBorder(),
             suffixIcon: IconButton(
-              icon: Icon(_isKeyboardVisible
-                  ? Icons.keyboard_hide
-                  : Icons.keyboard),
+              icon: Icon(
+                  _isKeyboardVisible ? Icons.keyboard_hide : Icons.keyboard),
               onPressed: () {
                 setState(() {
                   _isKeyboardVisible = !_isKeyboardVisible;
                   if (_isKeyboardVisible) {
                     FocusManager.instance.primaryFocus?.unfocus();
                   } else {
-                    FocusManager.instance.primaryFocus
-                        ?.requestFocus(focusNode);
+                    FocusManager.instance.primaryFocus?.requestFocus(focusNode);
                   }
                 });
               },
@@ -153,7 +155,8 @@ class _SettingPageState extends State<SettingPage> {
       final file = File('${directory.path}/saved_text.txt');
       if (file.existsSync()) {
         setState(() {
-          _urlTags = file.readAsStringSync()
+          _urlTags = file
+              .readAsStringSync()
               .trim()
               .split(';')
               .where((element) => element != '')
