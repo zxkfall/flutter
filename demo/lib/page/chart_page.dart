@@ -80,102 +80,119 @@ class _LineChartState extends State<ChartPage> {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 64, right: 64),
-              child: Container(
-                margin: const EdgeInsets.only(top: 4, bottom: 0),
-                height: 32,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  borderRadius: const BorderRadius.all(Radius.circular(16)),
-                  border: Border.fromBorderSide(
-                    BorderSide(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 4, bottom: 0),
+                    height: 32,
+                    decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      width: 1,
-                    ),
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          chartPeriod = ChartPeriod.week;
-                        });
-                      },
-                      style: TextButton.styleFrom(
-                        backgroundColor: chartPeriod == ChartPeriod.week
-                            ? Colors.white
-                            : Theme.of(context).colorScheme.onSurfaceVariant,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14),
+                      borderRadius: const BorderRadius.all(Radius.circular(16)),
+                      border: Border.fromBorderSide(
+                        BorderSide(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          width: 1,
                         ),
-                        fixedSize: const Size(96, 16),
-                        padding: const EdgeInsets.all(0),
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                      child: Text(
-                        'Week',
-                        style: TextStyle(
-                            color: chartPeriod == ChartPeriod.week
-                                ? Theme.of(context).colorScheme.onSurfaceVariant
-                                : Colors.white,
-                            fontSize: 14),
                       ),
                     ),
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          chartPeriod = ChartPeriod.month;
-                        });
-                      },
-                      style: TextButton.styleFrom(
-                        backgroundColor: chartPeriod == ChartPeriod.month
-                            ? Colors.white
-                            : Theme.of(context).colorScheme.onSurfaceVariant,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            setState(() {
+                              chartPeriod = ChartPeriod.week;
+                            });
+                          },
+                          style: TextButton.styleFrom(
+                            backgroundColor: chartPeriod == ChartPeriod.week
+                                ? Colors.white
+                                : Theme.of(context)
+                                    .colorScheme
+                                    .onSurfaceVariant,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                            fixedSize: const Size(96, 16),
+                            padding: const EdgeInsets.all(0),
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          child: Text(
+                            'Week',
+                            style: TextStyle(
+                                color: chartPeriod == ChartPeriod.week
+                                    ? Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant
+                                    : Colors.white,
+                                fontSize: 14),
+                          ),
                         ),
-                        fixedSize: const Size(96, 16),
-                        padding: const EdgeInsets.all(0),
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                      child: Text(
-                        'Month',
-                        style: TextStyle(
-                            color: chartPeriod == ChartPeriod.month
-                                ? Theme.of(context).colorScheme.onSurfaceVariant
-                                : Colors.white,
-                            fontSize: 14),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          chartPeriod = ChartPeriod.year;
-                        });
-                      },
-                      style: TextButton.styleFrom(
-                        backgroundColor: chartPeriod == ChartPeriod.year
-                            ? Colors.white
-                            : Theme.of(context).colorScheme.onSurfaceVariant,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14),
+                        TextButton(
+                          onPressed: () {
+                            setState(() {
+                              chartPeriod = ChartPeriod.month;
+                            });
+                          },
+                          style: TextButton.styleFrom(
+                            backgroundColor: chartPeriod == ChartPeriod.month
+                                ? Colors.white
+                                : Theme.of(context)
+                                    .colorScheme
+                                    .onSurfaceVariant,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                            fixedSize: const Size(96, 16),
+                            padding: const EdgeInsets.all(0),
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          child: Text(
+                            'Month',
+                            style: TextStyle(
+                                color: chartPeriod == ChartPeriod.month
+                                    ? Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant
+                                    : Colors.white,
+                                fontSize: 14),
+                          ),
                         ),
-                        fixedSize: const Size(96, 16),
-                        padding: const EdgeInsets.all(0),
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                      child: Text(
-                        'Year',
-                        style: TextStyle(
-                            color: chartPeriod == ChartPeriod.year
-                                ? Theme.of(context).colorScheme.onSurfaceVariant
-                                : Colors.white,
-                            fontSize: 14),
-                      ),
+                        TextButton(
+                          onPressed: () {
+                            setState(() {
+                              chartPeriod = ChartPeriod.year;
+                            });
+                          },
+                          style: TextButton.styleFrom(
+                            backgroundColor: chartPeriod == ChartPeriod.year
+                                ? Colors.white
+                                : Theme.of(context)
+                                    .colorScheme
+                                    .onSurfaceVariant,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                            fixedSize: const Size(96, 16),
+                            padding: const EdgeInsets.all(0),
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          child: Text(
+                            'Year',
+                            style: TextStyle(
+                                color: chartPeriod == ChartPeriod.year
+                                    ? Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant
+                                    : Colors.white,
+                                fontSize: 14),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  )
+                ],
               ),
             ),
             Row(
