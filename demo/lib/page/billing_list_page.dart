@@ -111,12 +111,12 @@ class _BillingListPageState extends State<BillingListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(children: [
+    return Column(children: [
       Container(
         height: 48,
         color: Theme.of(context).colorScheme.onSurfaceVariant,
       ),
-      Consumer<BillingProvider>(
+      Expanded(child: Consumer<BillingProvider>(
         builder: (context, billingProvider, child) {
           final billings = billingProvider.billings;
           var totalExpense = billings.fold(
@@ -143,120 +143,111 @@ class _BillingListPageState extends State<BillingListPage> {
               ],
             );
           }
-          return Column(
-            children: [
-              ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: billings.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final currentBilling = billings[index];
-                  final previousBilling =
-                      index > 0 ? billings[index - 1] : null;
-                  final showDateHeader = previousBilling == null ||
-                      !Utils.isSameDay(
-                          currentBilling.date, previousBilling.date);
+          return ListView.builder(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            itemCount: billings.length,
+            itemBuilder: (BuildContext context, int index) {
+              final currentBilling = billings[index];
+              final previousBilling = index > 0 ? billings[index - 1] : null;
+              final showDateHeader = previousBilling == null ||
+                  !Utils.isSameDay(currentBilling.date, previousBilling.date);
 
-                  final dailyTotalMap =
-                      Utils.calculateDailyTotal(currentBilling.date, billings);
+              final dailyTotalMap =
+                  Utils.calculateDailyTotal(currentBilling.date, billings);
 
-                  var hasIncome = dailyTotalMap['income'] != Decimal.zero;
-                  var hasExpense = dailyTotalMap['expense'] != Decimal.zero;
+              var hasIncome = dailyTotalMap['income'] != Decimal.zero;
+              var hasExpense = dailyTotalMap['expense'] != Decimal.zero;
 
-                  var incomeAmount =
-                      !hasIncome ? '' : '+\$${dailyTotalMap['income']}';
-                  var spaceAndComma = hasIncome && hasExpense ? ', ' : '';
-                  var expenseAmount =
-                      !hasExpense ? '' : '-\$${dailyTotalMap['expense']}';
-                  var formattedAmount =
-                      currentBilling.amount.toStringAsFixed(2);
-                  var amountPrefix =
-                      currentBilling.type == BillingType.income ? '+' : '-';
+              var incomeAmount =
+                  !hasIncome ? '' : '+\$${dailyTotalMap['income']}';
+              var spaceAndComma = hasIncome && hasExpense ? ', ' : '';
+              var expenseAmount =
+                  !hasExpense ? '' : '-\$${dailyTotalMap['expense']}';
+              var formattedAmount = currentBilling.amount.toStringAsFixed(2);
+              var amountPrefix =
+                  currentBilling.type == BillingType.income ? '+' : '-';
 
-                  return Column(
-                    children: <Widget>[
-                      if (showDateHeader)
-                        Column(
-                          children: [
-                            if (index == 0)
-                              buildHeader(totalExpense, totalIncome),
-                            ListTile(
-                              visualDensity: const VisualDensity(
-                                vertical: VisualDensity.minimumDensity,
-                              ),
-                              dense: true,
-                              title: Text(
-                                DateFormat.yMMMd().format(currentBilling.date),
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              trailing: Text(
-                                'Total: $incomeAmount$spaceAndComma$expenseAmount',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: Dismissible(
-                          key: Key(currentBilling.id.toString()),
-                          onDismissed: (direction) {
-                            _removeBilling(context, index);
-                          },
-                          background: Container(
-                            color: Colors.red,
-                            child:
-                                const Icon(Icons.delete, color: Colors.white),
+              return Column(
+                children: <Widget>[
+                  if (showDateHeader)
+                    Column(
+                      children: [
+                        if (index == 0) buildHeader(totalExpense, totalIncome),
+                        ListTile(
+                          visualDensity: const VisualDensity(
+                            vertical: VisualDensity.minimumDensity,
                           ),
-                          child: Card(
-                            margin: EdgeInsets.only(
-                              top: showDateHeader ? 0 : 6,
+                          dense: true,
+                          title: Text(
+                            DateFormat.yMMMd().format(currentBilling.date),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
                             ),
-                            color: currentBilling.type == BillingType.expense
-                                ? Colors.red.shade50
-                                : Colors.green.shade50,
-                            child: InkWell(
-                              onTap: () {
-                                Future.delayed(
-                                    const Duration(milliseconds: 150), () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (_) => BillingDetailPage(
-                                          billing: currentBilling),
-                                    ),
-                                  );
-                                });
-                              },
-                              highlightColor: Colors.transparent,
-                              child: ListTile(
-                                visualDensity: VisualDensity.compact,
-                                dense: true,
-                                title: Text(currentBilling.kind.name),
-                                subtitle: Text(currentBilling.description),
-                                leading: Icon(
-                                  BillingIconMapper.getIcon(
-                                      currentBilling.type, currentBilling.kind),
+                          ),
+                          trailing: Text(
+                            'Total: $incomeAmount$spaceAndComma$expenseAmount',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Dismissible(
+                      key: Key(currentBilling.id.toString()),
+                      onDismissed: (direction) {
+                        _removeBilling(context, index);
+                      },
+                      background: Container(
+                        color: Colors.red,
+                        child: const Icon(Icons.delete, color: Colors.white),
+                      ),
+                      child: Card(
+                        margin: EdgeInsets.only(
+                          top: showDateHeader ? 0 : 6,
+                        ),
+                        color: currentBilling.type == BillingType.expense
+                            ? Colors.red.shade50
+                            : Colors.green.shade50,
+                        child: InkWell(
+                          onTap: () {
+                            Future.delayed(const Duration(milliseconds: 150),
+                                () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => BillingDetailPage(
+                                      billing: currentBilling),
                                 ),
-                                trailing: Text(
-                                  '$amountPrefix\$$formattedAmount',
-                                ),
-                              ),
+                              );
+                            });
+                          },
+                          highlightColor: Colors.transparent,
+                          child: ListTile(
+                            visualDensity: VisualDensity.compact,
+                            dense: true,
+                            title: Text(currentBilling.kind.name),
+                            subtitle: Text(currentBilling.description),
+                            leading: Icon(
+                              BillingIconMapper.getIcon(
+                                  currentBilling.type, currentBilling.kind),
+                            ),
+                            trailing: Text(
+                              '$amountPrefix\$$formattedAmount',
                             ),
                           ),
                         ),
                       ),
-                    ],
-                  );
-                },
-              )
-            ],
+                    ),
+                  ),
+                ],
+              );
+            },
           );
         },
-      )
+      ))
     ]);
   }
 
