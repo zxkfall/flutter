@@ -51,7 +51,9 @@ class _KindSelectionViewState extends State<KindSelectionView> {
         return InkWell(
           onTap: () {
             widget.onKindSelected(kind);
-            setState(() {});
+            setState(() {
+              selectedKinds[widget.type] = kind;
+            });
           },
           child: Container(
             padding: const EdgeInsets.all(8.0),
