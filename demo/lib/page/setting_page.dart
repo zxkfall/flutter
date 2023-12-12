@@ -1,7 +1,7 @@
 import 'dart:io';
-import 'dart:math';
 import 'dart:developer' as developer;
 
+import 'package:demo/page/change_theme_page.dart';
 import 'package:demo/page/index_images_setting_page.dart';
 import 'package:demo/view/top_bar_placeholder.dart';
 import 'package:file_picker/file_picker.dart';
@@ -17,9 +17,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../constants/custom_theme.dart';
 import '../model/billing.dart';
-import '../provider/theme_provider.dart';
 import '../repository/billing_repository.dart';
 import '../provider/billing_provider.dart';
 import '../utils/utils.dart';
@@ -80,13 +78,8 @@ class _SettingPageState extends State<SettingPage> {
               },
           context,
           appLocalizations.indexImagesSetting),
-      buildSettingOption(
-          () => {
-                Provider.of<ThemeProvider>(context, listen: false).setTheme(CustomTheme.themeColors[
-                    CustomTheme.themeColors.keys.toList()[Random().nextInt(CustomTheme.themeColors.entries.length)]]!)
-              },
-          context,
-          appLocalizations.changeTheme),
+      buildSettingOption(() => {Navigator.of(context).push(MaterialPageRoute(builder: (_) => ChangeThemePage()))},
+          context, appLocalizations.changeTheme),
     ]);
   }
 
