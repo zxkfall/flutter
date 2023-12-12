@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:developer' as developer;
 
 import 'package:demo/page/index_images_setting_page.dart';
+import 'package:demo/view/top_bar_placeholder.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -37,10 +38,7 @@ class _SettingPageState extends State<SettingPage> {
     var billingProvider = Provider.of<BillingProvider>(context, listen: false);
     var appLocalizations = AppLocalizations.of(context)!;
     return Column(children: <Widget>[
-      Container(
-        height: 48,
-        color: Theme.of(context).colorScheme.onSurfaceVariant,
-      ),
+      const TopBarPlaceholder(),
       buildSettingOption(
           () => {
                 importExcel(context).then((value) {

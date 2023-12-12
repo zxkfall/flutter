@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../model/billing.dart';
+import '../view/top_bar_placeholder.dart';
 import 'billing_detail_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -31,10 +32,7 @@ class _SearchPageState extends State<SearchPage> {
         body: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              height: 48,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
+            const TopBarPlaceholder(),
             Expanded(
               child: Container(
                 padding: const EdgeInsets.all(10),

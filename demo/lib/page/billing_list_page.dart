@@ -9,6 +9,7 @@ import 'package:palette_generator/palette_generator.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import '../model/billing.dart';
+import '../view/top_bar_placeholder.dart';
 import 'billing_detail_page.dart';
 import '../provider/billing_provider.dart';
 import '../repository/billing_repository.dart';
@@ -90,10 +91,7 @@ class _BillingListPageState extends State<BillingListPage> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      Container(
-        height: 48,
-        color: Theme.of(context).colorScheme.onSurfaceVariant,
-      ),
+      const TopBarPlaceholder(),
       Expanded(child: Consumer<BillingProvider>(
         builder: (context, billingProvider, child) {
           final billings = billingProvider.billings;
