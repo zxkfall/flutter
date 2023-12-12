@@ -30,7 +30,9 @@ class Utils {
     };
   }
 
-  static showToast(String msg, FToast fToast) {
+  static showToast(String msg, BuildContext context) {
+    var fToast = FToast();
+    fToast.init(context);
     Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
       decoration: BoxDecoration(

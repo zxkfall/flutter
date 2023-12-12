@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:excel/excel.dart';
 import 'package:decimal/decimal.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart';
@@ -35,8 +34,6 @@ class SettingPage extends StatefulWidget {
 class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
-    FToast fToast = FToast();
-    fToast.init(context);
     var billingProvider = Provider.of<BillingProvider>(context, listen: false);
     return Column(children: <Widget>[
       Container(
@@ -51,13 +48,13 @@ class _SettingPageState extends State<SettingPage> {
                           ? AppLocalizations.of(context)!
                               .importSuccessTotalImportWhatRecords(value)
                           : AppLocalizations.of(context)!.noDataImported,
-                      fToast);
+                      context);
                 })
               },
           context,
           AppLocalizations.of(context)!.importDataCompatibleOldApp),
       buildSettingOption(
-          () => {buildConfirmClearDialog(context, fToast, billingProvider)},
+          () => {buildConfirmClearDialog(context, billingProvider)},
           context,
           AppLocalizations.of(context)!.clearDataWillClearAllRecords),
       buildSettingOption(
@@ -67,7 +64,7 @@ class _SettingPageState extends State<SettingPage> {
                       AppLocalizations.of(context)!
                           .exportSuccessfulTotalWhatRecords(
                               int.parse(value['count']!)),
-                      fToast);
+                      context);
                 })
               },
           context,
@@ -78,7 +75,7 @@ class _SettingPageState extends State<SettingPage> {
                   Utils.showToast(
                       AppLocalizations.of(context)!
                           .sharingSuccessfulTotalWhatExported(value),
-                      fToast);
+                      context);
                 })
               },
           context,
@@ -140,7 +137,7 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   void buildConfirmClearDialog(
-      BuildContext context, FToast fToast, BillingProvider billingProvider) {
+      BuildContext context, BillingProvider billingProvider) {
     showDialog(
         context: context,
         builder: (context) {
@@ -161,7 +158,7 @@ class _SettingPageState extends State<SettingPage> {
                       Utils.showToast(
                           AppLocalizations.of(context)!
                               .clearSuccessfulTotalWhatRecords(value),
-                          fToast);
+                          context);
                       billingProvider.setBillings(<Billing>[]);
                     });
                   },

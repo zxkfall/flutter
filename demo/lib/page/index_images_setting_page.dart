@@ -38,7 +38,7 @@ class _IndexImagesSettingPageState extends State<IndexImagesSettingPage> {
             return TextButton(
               onPressed: () {
                 Clipboard.setData(ClipboardData(text: element));
-                Utils.showToast('复制成功', fToast);
+                Utils.showToast('复制成功', context);
               },
               onLongPress: () {
                 _urlTags.remove(element);

@@ -65,7 +65,7 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
 
       if (Decimal.parse(_amountController.text) == Decimal.zero) {
         Utils.showToast(
-            AppLocalizations.of(context)!.amountCantNotBeEmpty, fToast);
+            AppLocalizations.of(context)!.amountCantNotBeEmpty, context);
         return;
       }
       final billingProvider =
