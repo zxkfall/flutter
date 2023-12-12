@@ -73,5 +73,6 @@
         }
         }
     },
-  "confirm": "Confirm"
+  "confirm": "Confirm",
+  "changeTheme": "Change theme"
 }

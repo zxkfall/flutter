@@ -38,5 +38,6 @@
   "areYouSureYouWantToClearAllRecords": "确定要清除所有记录吗？",
   "cancel": "取消",
   "clearSuccessfulTotalWhatRecords": "清除成功，共清除{count}条数据",
-  "confirm": "确定"
+  "confirm": "确定",
+  "changeTheme": "更换主题"
 }

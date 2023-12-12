@@ -1,3 +1,5 @@
+import 'package:demo/provider/theme_provider.dart';
+
 import 'provider/billing_provider.dart';
 import 'package:demo/repository/billing_repository.dart';
 import 'package:flutter/material.dart';
@@ -23,20 +25,27 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Maple Billing',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlueAccent),
-          useMaterial3: true,
-        ),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: const PageViewContainer(),
-        routes: <String, WidgetBuilder>{
-          '/home': (BuildContext context) => const PageViewContainer(),
-          '/billing-detail': (BuildContext context) => const BillingDetailPage(
-                billing: null,
-              ),
-        });
+    return MultiProvider(
+      providers: [ChangeNotifierProvider.value(value: ThemeProvider())],
+      child: Consumer<ThemeProvider>(builder: (context, themeProvider, child) {
+        return MaterialApp(
+            title: 'Maple Billing',
+            theme: ThemeData(
+              colorScheme:
+                  ColorScheme.fromSeed(seedColor: themeProvider.primaryColor),
+              useMaterial3: true,
+            ),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const PageViewContainer(),
+            routes: <String, WidgetBuilder>{
+              '/home': (BuildContext context) => const PageViewContainer(),
+              '/billing-detail': (BuildContext context) =>
+                  const BillingDetailPage(
+                    billing: null,
+                  ),
+            });
+      }),
+    );
   }
 }

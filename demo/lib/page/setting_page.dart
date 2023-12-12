@@ -1,5 +1,6 @@
-import 'dart:developer';
 import 'dart:io';
+import 'dart:math';
+import 'dart:developer' as developer;
 
 import 'package:demo/page/index_images_setting_page.dart';
 import 'package:file_picker/file_picker.dart';
@@ -16,7 +17,9 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../constants/custom_theme.dart';
 import '../model/billing.dart';
+import '../provider/theme_provider.dart';
 import '../repository/billing_repository.dart';
 import '../provider/billing_provider.dart';
 import '../utils/utils.dart';
@@ -218,7 +221,41 @@ class _SettingPageState extends State<SettingPage> {
             ],
           ),
         ),
-      )
+      ),
+      SizedBox(
+        height: 48,
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: () => {
+            Provider.of<ThemeProvider>(context, listen: false).setTheme(
+                CustomTheme.themeColors[CustomTheme.themeColors.keys.toList()[
+                    Random().nextInt(CustomTheme.themeColors.entries.length)]]!)
+          },
+          style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(0),
+              ),
+              side: BorderSide(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurfaceVariant
+                      .withOpacity(0.1),
+                  width: 1)),
+          child: Row(
+            children: [
+              Text(
+                AppLocalizations.of(context)!.changeTheme,
+                style: const TextStyle(fontSize: 16),
+              ),
+              const Spacer(),
+              const Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+              )
+            ],
+          ),
+        ),
+      ),
     ]);
   }
 
@@ -283,7 +320,7 @@ class _SettingPageState extends State<SettingPage> {
       var directory = await getApplicationCacheDirectory();
       path = directory.path;
     }
-    log('save: $path');
+    developer.log('save: $path');
     var file = File(join(
         '$path/billingsInfo-${DateFormat('yyyy-MM-dd-HH-mm-ss').format(DateTime.now())}.xlsx'))
       ..createSync(recursive: true)
@@ -292,10 +329,10 @@ class _SettingPageState extends State<SettingPage> {
       final result =
           await Share.shareXFiles([XFile(file.path)], text: 'Excel Data');
       if (result.status == ShareResultStatus.success) {
-        log('Thank you for sharing the Excel!');
+        developer.log('Thank you for sharing the Excel!');
       }
     }
-    log(file.path);
+    developer.log(file.path);
     var res = <String, String>{
       'path': Platform.isIOS ? '' : file.path,
       'count': billings.length.toString()
@@ -325,7 +362,7 @@ class _SettingPageState extends State<SettingPage> {
     }
 
     var tempDirectory = await getApplicationCacheDirectory();
-    log('temp path: ${tempDirectory.path}');
+    developer.log('temp path: ${tempDirectory.path}');
     var file = File(join(
         '${tempDirectory.path}/billingsInfo-${DateFormat('yyyy-MM-dd-HH-mm-ss').format(DateTime.now())}.xlsx'))
       ..createSync(recursive: true)
@@ -335,7 +372,7 @@ class _SettingPageState extends State<SettingPage> {
         await Share.shareXFiles([XFile(file.path)], text: 'Excel Data');
 
     if (result.status == ShareResultStatus.success) {
-      log('Thank you for sharing the Excel!');
+      developer.log('Thank you for sharing the Excel!');
     }
     return billings.length;
   }
