@@ -17,22 +17,18 @@ class ChartPage extends StatefulWidget {
 }
 
 class _LineChartState extends State<ChartPage> {
-  List<Color> gradientColors = [
-    AppColors.contentColorCyan,
-    AppColors.contentColorBlue,
-  ];
-
   var billingType = BillingType.expense;
   var currentDate = DateTime.now();
   var chartPeriod = ChartPeriod.week;
 
   @override
   Widget build(BuildContext context) {
+    var colorSchema = Theme.of(context).colorScheme;
     return Column(
       children: [
         Container(
           height: 48,
-          color: Theme.of(context).colorScheme.onSurfaceVariant,
+          color: colorSchema.onSurfaceVariant,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -45,7 +41,7 @@ class _LineChartState extends State<ChartPage> {
                     });
                   },
                   style: TextButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
+                    backgroundColor: colorSchema.onSurfaceVariant,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(0),
                     ),
@@ -85,11 +81,11 @@ class _LineChartState extends State<ChartPage> {
                         margin: const EdgeInsets.only(top: 4, bottom: 0),
                         height: 32,
                         decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          color: colorSchema.onSurfaceVariant,
                           borderRadius: const BorderRadius.all(Radius.circular(16)),
                           border: Border.fromBorderSide(
                             BorderSide(
-                              color: Theme.of(context).colorScheme.onSurfaceVariant,
+                              color: colorSchema.onSurfaceVariant,
                               width: 1,
                             ),
                           ),
@@ -104,9 +100,8 @@ class _LineChartState extends State<ChartPage> {
                                 });
                               },
                               style: TextButton.styleFrom(
-                                backgroundColor: chartPeriod == ChartPeriod.week
-                                    ? Colors.white
-                                    : Theme.of(context).colorScheme.onSurfaceVariant,
+                                backgroundColor:
+                                    chartPeriod == ChartPeriod.week ? Colors.white : colorSchema.onSurfaceVariant,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(14),
                                 ),
@@ -117,9 +112,8 @@ class _LineChartState extends State<ChartPage> {
                               child: Text(
                                 AppLocalizations.of(context)!.week,
                                 style: TextStyle(
-                                    color: chartPeriod == ChartPeriod.week
-                                        ? Theme.of(context).colorScheme.onSurfaceVariant
-                                        : Colors.white,
+                                    color:
+                                        chartPeriod == ChartPeriod.week ? colorSchema.onSurfaceVariant : Colors.white,
                                     fontSize: 14),
                               ),
                             ),
@@ -130,9 +124,8 @@ class _LineChartState extends State<ChartPage> {
                                 });
                               },
                               style: TextButton.styleFrom(
-                                backgroundColor: chartPeriod == ChartPeriod.month
-                                    ? Colors.white
-                                    : Theme.of(context).colorScheme.onSurfaceVariant,
+                                backgroundColor:
+                                    chartPeriod == ChartPeriod.month ? Colors.white : colorSchema.onSurfaceVariant,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(14),
                                 ),
@@ -143,9 +136,8 @@ class _LineChartState extends State<ChartPage> {
                               child: Text(
                                 AppLocalizations.of(context)!.month,
                                 style: TextStyle(
-                                    color: chartPeriod == ChartPeriod.month
-                                        ? Theme.of(context).colorScheme.onSurfaceVariant
-                                        : Colors.white,
+                                    color:
+                                        chartPeriod == ChartPeriod.month ? colorSchema.onSurfaceVariant : Colors.white,
                                     fontSize: 14),
                               ),
                             ),
@@ -156,9 +148,8 @@ class _LineChartState extends State<ChartPage> {
                                 });
                               },
                               style: TextButton.styleFrom(
-                                backgroundColor: chartPeriod == ChartPeriod.year
-                                    ? Colors.white
-                                    : Theme.of(context).colorScheme.onSurfaceVariant,
+                                backgroundColor:
+                                    chartPeriod == ChartPeriod.year ? Colors.white : colorSchema.onSurfaceVariant,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(14),
                                 ),
@@ -169,9 +160,8 @@ class _LineChartState extends State<ChartPage> {
                               child: Text(
                                 AppLocalizations.of(context)!.year,
                                 style: TextStyle(
-                                    color: chartPeriod == ChartPeriod.year
-                                        ? Theme.of(context).colorScheme.onSurfaceVariant
-                                        : Colors.white,
+                                    color:
+                                        chartPeriod == ChartPeriod.year ? colorSchema.onSurfaceVariant : Colors.white,
                                     fontSize: 14),
                               ),
                             ),
@@ -381,14 +371,14 @@ class _LineChartState extends State<ChartPage> {
         show: true,
         drawVerticalLine: true,
         getDrawingHorizontalLine: (value) {
-          return const FlLine(
-            color: AppColors.mainGridLineColor,
+          return FlLine(
+            color: Theme.of(context).colorScheme.onTertiary,
             strokeWidth: 1,
           );
         },
         getDrawingVerticalLine: (value) {
-          return const FlLine(
-            color: AppColors.mainGridLineColor,
+          return FlLine(
+            color: Theme.of(context).colorScheme.onTertiary,
             strokeWidth: 1,
           );
         },
@@ -448,7 +438,7 @@ class _LineChartState extends State<ChartPage> {
       ),
       borderData: FlBorderData(
         show: true,
-        border: Border.all(color: const Color(0xff37434d)),
+        border: Border.all(color: Theme.of(context).colorScheme.onSurfaceVariant),
       ),
       minX: minX,
       maxX: maxX,
@@ -460,7 +450,7 @@ class _LineChartState extends State<ChartPage> {
           spots: spots,
           isCurved: false,
           gradient: LinearGradient(
-            colors: gradientColors,
+            colors: gradientColors(context),
           ),
           barWidth: 2,
           isStrokeCapRound: true,
@@ -469,7 +459,7 @@ class _LineChartState extends State<ChartPage> {
             getDotPainter: (spot, percent, barData, index) {
               return FlDotCirclePainter(
                 radius: 3,
-                color: AppColors.contentColorCyan,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
                 strokeWidth: 1,
                 strokeColor: Colors.white,
               );
@@ -478,37 +468,19 @@ class _LineChartState extends State<ChartPage> {
           belowBarData: BarAreaData(
             show: true,
             gradient: LinearGradient(
-              colors: gradientColors.map((color) => color.withOpacity(0.3)).toList(),
+              colors: gradientColors(context).map((color) => color.withOpacity(0.3)).toList(),
             ),
           ),
         ),
       ],
     );
   }
+
+  List<Color> gradientColors(BuildContext context) {
+    return billingType == BillingType.expense
+        ? [Theme.of(context).colorScheme.onSurfaceVariant, Theme.of(context).colorScheme.onSurface]
+        : [Theme.of(context).colorScheme.tertiaryContainer, Theme.of(context).colorScheme.tertiary];
+  }
 }
 
 enum ChartPeriod { week, month, year }
-
-class AppColors {
-  static const Color primary = contentColorCyan;
-  static const Color menuBackground = Color(0xFF090912);
-  static const Color itemsBackground = Color(0xFF1B2339);
-  static const Color pageBackground = Color(0xFF282E45);
-  static const Color mainTextColor1 = Colors.white;
-  static const Color mainTextColor2 = Colors.white70;
-  static const Color mainTextColor3 = Colors.white38;
-  static const Color mainGridLineColor = Colors.white10;
-  static const Color borderColor = Colors.white54;
-  static const Color gridLinesColor = Color(0x11FFFFFF);
-
-  static const Color contentColorBlack = Colors.black;
-  static const Color contentColorWhite = Colors.white;
-  static const Color contentColorBlue = Color(0xFF2196F3);
-  static const Color contentColorYellow = Color(0xFFFFC300);
-  static const Color contentColorOrange = Color(0xFFFF683B);
-  static const Color contentColorGreen = Color(0xFF3BFF49);
-  static const Color contentColorPurple = Color(0xFF6E1BFF);
-  static const Color contentColorPink = Color(0xFFFF3AF2);
-  static const Color contentColorRed = Color(0xFFE80054);
-  static const Color contentColorCyan = Color(0xFF50E4FF);
-}
