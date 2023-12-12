@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 import 'package:demo/page/billing_detail_page.dart';
 import 'package:demo/page/setting_page.dart';
@@ -231,7 +230,6 @@ class _PageViewContainerState extends State<PageViewContainer> {
   void dispose() {
     super.dispose();
     _pageController.dispose();
-    log('disposed');
   }
 
   Color _getCurrentColor(page) =>
