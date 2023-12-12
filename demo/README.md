@@ -150,3 +150,4 @@ Tasks:
 13. [] add export version management
 14. [] add swipe to add record
 15. [] change chart page date show format
+16. [] add change language support
