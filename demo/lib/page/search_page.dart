@@ -28,6 +28,7 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Consumer<BillingProvider>(builder: (context, provider, child) {
       descriptionController.text = provider.searchDescription;
+      var appLocalizations = AppLocalizations.of(context)!;
       return Scaffold(
         body: Column(
           mainAxisSize: MainAxisSize.min,
@@ -47,7 +48,7 @@ class _SearchPageState extends State<SearchPage> {
                               decoration: InputDecoration(
                                 contentPadding: const EdgeInsets.only(left: 14, top: 12, bottom: 12, right: 14),
                                 border: const OutlineInputBorder(),
-                                labelText: AppLocalizations.of(context)!.description,
+                                labelText: appLocalizations.description,
                                 isCollapsed: false,
                               ),
                               controller: descriptionController,
@@ -80,21 +81,21 @@ class _SearchPageState extends State<SearchPage> {
                       children: [
                         Row(
                           children: [
-                            Text('${AppLocalizations.of(context)!.type}: '),
+                            Text('${appLocalizations.type}: '),
                             DropdownButton(
                               value: searchType,
                               items: [
                                 DropdownMenuItem(
                                   value: 'All',
-                                  child: Text(AppLocalizations.of(context)!.all),
+                                  child: Text(appLocalizations.all),
                                 ),
                                 DropdownMenuItem(
                                   value: 'Expense',
-                                  child: Text(AppLocalizations.of(context)!.expense),
+                                  child: Text(appLocalizations.expense),
                                 ),
                                 DropdownMenuItem(
                                   value: 'Income',
-                                  child: Text(AppLocalizations.of(context)!.income),
+                                  child: Text(appLocalizations.income),
                                 ),
                               ],
                               onChanged: (value) {
@@ -122,10 +123,10 @@ class _SearchPageState extends State<SearchPage> {
                         const Spacer(),
                         Row(
                           children: [
-                            Text('${AppLocalizations.of(context)!.kind}: '),
+                            Text('${appLocalizations.kind}: '),
                             DropdownButton<String>(
                               items: [
-                                DropdownMenuItem(value: 'All', child: Text(AppLocalizations.of(context)!.all)),
+                                DropdownMenuItem(value: 'All', child: Text(appLocalizations.all)),
                                 if (searchType == 'Expense')
                                   ...(getExpenseValues()
                                       .map((e) => DropdownMenuItem(value: e.name, child: Text(e.name)))
@@ -161,7 +162,7 @@ class _SearchPageState extends State<SearchPage> {
                     ),
                     Row(
                       children: [
-                        Text('${AppLocalizations.of(context)!.date}: '),
+                        Text('${appLocalizations.date}: '),
                         TextButton(
                             onPressed: () {
                               showDateRangePicker(
@@ -191,7 +192,7 @@ class _SearchPageState extends State<SearchPage> {
                             }
                           },
                         ),
-                        Text(AppLocalizations.of(context)!.allTheTime),
+                        Text(appLocalizations.allTheTime),
                       ],
                     ),
                     Expanded(
