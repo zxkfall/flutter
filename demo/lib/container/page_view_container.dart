@@ -155,7 +155,7 @@ class _PageViewContainerState extends State<PageViewContainer> {
                 Row(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(right: 36),
+                      padding: const EdgeInsets.only(right: 48),
                       child: InkWell(
                         onTap: () {
                           _pageController.animateToPage(2,
