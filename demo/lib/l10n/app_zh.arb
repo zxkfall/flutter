@@ -12,5 +12,17 @@
   "description": "描述",
   "expense": "支出",
   "income": "收入",
-  "save": "保存"
+  "save": "保存",
+  "noBillingYet": "空空如也",
+  "total": "汇总",
+  "totalExpense": "总支出",
+  "totalIncome": "总收入",
+  "week": "周",
+  "month": "月",
+  "year": "年",
+  "type": "类型",
+  "all": "全部",
+  "kind": "种类",
+  "date": "日期",
+  "allTheTime": "全部时间"
 }

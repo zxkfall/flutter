@@ -13,6 +13,7 @@ import 'billing_detail_page.dart';
 import '../provider/billing_provider.dart';
 import '../repository/billing_repository.dart';
 import '../utils/utils.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BillingListPage extends StatefulWidget {
   const BillingListPage({
@@ -133,8 +134,8 @@ class _BillingListPageState extends State<BillingListPage> {
               physics: const ClampingScrollPhysics(),
               children: [
                 buildHeader(totalExpense, totalIncome),
-                const Center(
-                  child: Text('No billing yet'),
+                Center(
+                  child: Text(AppLocalizations.of(context)!.noBillingYet),
                 ),
               ],
             );
@@ -183,7 +184,7 @@ class _BillingListPageState extends State<BillingListPage> {
                             ),
                           ),
                           trailing: Text(
-                            'Total: $incomeAmount$spaceAndComma$expenseAmount',
+                            '${AppLocalizations.of(context)!.total}: $incomeAmount$spaceAndComma$expenseAmount',
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
@@ -286,7 +287,7 @@ class _BillingListPageState extends State<BillingListPage> {
               child: Container(
                 padding: const EdgeInsets.all(8),
                 child: Text(
-                  'total expense: $totalExpense, total income: $totalIncome',
+                  '${AppLocalizations.of(context)!.totalExpense}: $totalExpense\n${AppLocalizations.of(context)!.totalIncome}: $totalIncome',
                   style: TextStyle(fontSize: 16, color: color),
                 ),
               )),

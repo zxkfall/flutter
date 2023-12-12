@@ -15,5 +15,17 @@
   "description": "Description",
   "expense": "Expense",
   "income": "Income",
-  "save": "Save"
+  "save": "Save",
+  "noBillingYet": "No billing yet",
+  "total": "Total",
+  "totalExpense": "Total Expense",
+  "totalIncome": "Total Income",
+  "week": "Week",
+  "month": "Month",
+  "year": "Year",
+  "type": "Type",
+  "all": "All",
+  "kind": "Kind",
+  "date": "Date",
+  "allTheTime": "All the time"
 }

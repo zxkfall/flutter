@@ -1,14 +1,13 @@
 import 'dart:math';
-
 import 'package:dartx/dartx.dart';
 import 'package:decimal/decimal.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
 import '../model/billing.dart';
 import '../provider/billing_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ChartPage extends StatefulWidget {
   const ChartPage({super.key});
@@ -56,7 +55,7 @@ class _LineChartState extends State<ChartPage> {
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
                   child: Text(
-                    billingType == BillingType.income ? 'Income' : 'Expense',
+                    billingType == BillingType.income ? AppLocalizations.of(context)!.income : AppLocalizations.of(context)!.expense,
                     style: const TextStyle(color: Colors.black),
                   )),
             ],
@@ -122,7 +121,7 @@ class _LineChartState extends State<ChartPage> {
                                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               ),
                               child: Text(
-                                'Week',
+                                AppLocalizations.of(context)!.week,
                                 style: TextStyle(
                                     color: chartPeriod == ChartPeriod.week
                                         ? Theme.of(context)
@@ -153,7 +152,7 @@ class _LineChartState extends State<ChartPage> {
                                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               ),
                               child: Text(
-                                'Month',
+                                AppLocalizations.of(context)!.month,
                                 style: TextStyle(
                                     color: chartPeriod == ChartPeriod.month
                                         ? Theme.of(context)
@@ -183,7 +182,7 @@ class _LineChartState extends State<ChartPage> {
                                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               ),
                               child: Text(
-                                'Year',
+                                AppLocalizations.of(context)!.year,
                                 style: TextStyle(
                                     color: chartPeriod == ChartPeriod.year
                                         ? Theme.of(context)
@@ -441,8 +440,6 @@ class _LineChartState extends State<ChartPage> {
       gridData: FlGridData(
         show: true,
         drawVerticalLine: true,
-        // horizontalInterval: 1,
-        // verticalInterval: 1,
         getDrawingHorizontalLine: (value) {
           return const FlLine(
             color: AppColors.mainGridLineColor,

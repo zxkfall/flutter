@@ -2,9 +2,9 @@ import 'package:demo/provider/billing_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
 import '../model/billing.dart';
 import 'billing_detail_page.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -46,11 +46,12 @@ class _SearchPageState extends State<SearchPage> {
                         children: [
                           Expanded(
                             child: TextField(
-                              decoration: const InputDecoration(
-                                contentPadding: EdgeInsets.only(
+                              decoration: InputDecoration(
+                                contentPadding: const EdgeInsets.only(
                                     left: 14, top: 12, bottom: 12, right: 14),
-                                border: OutlineInputBorder(),
-                                labelText: 'Description',
+                                border: const OutlineInputBorder(),
+                                labelText:
+                                    AppLocalizations.of(context)!.description,
                                 isCollapsed: false,
                               ),
                               controller: descriptionController,
@@ -84,21 +85,24 @@ class _SearchPageState extends State<SearchPage> {
                       children: [
                         Row(
                           children: [
-                            const Text('Type: '),
+                            Text('${AppLocalizations.of(context)!.type}: '),
                             DropdownButton(
                               value: searchType,
-                              items: const [
+                              items: [
                                 DropdownMenuItem(
                                   value: 'All',
-                                  child: Text('All'),
+                                  child:
+                                      Text(AppLocalizations.of(context)!.all),
                                 ),
                                 DropdownMenuItem(
                                   value: 'Expense',
-                                  child: Text('Expense'),
+                                  child: Text(
+                                      AppLocalizations.of(context)!.expense),
                                 ),
                                 DropdownMenuItem(
                                   value: 'Income',
-                                  child: Text('Income'),
+                                  child: Text(
+                                      AppLocalizations.of(context)!.income),
                                 ),
                               ],
                               onChanged: (value) {
@@ -126,11 +130,13 @@ class _SearchPageState extends State<SearchPage> {
                         const Spacer(),
                         Row(
                           children: [
-                            const Text('Kind: '),
+                            Text('${AppLocalizations.of(context)!.kind}: '),
                             DropdownButton<String>(
                               items: [
-                                const DropdownMenuItem(
-                                    value: 'All', child: Text('All')),
+                                DropdownMenuItem(
+                                    value: 'All',
+                                    child: Text(
+                                        AppLocalizations.of(context)!.all)),
                                 if (searchType == 'Expense')
                                   ...(getExpenseValues()
                                       .map((e) => DropdownMenuItem(
@@ -174,7 +180,7 @@ class _SearchPageState extends State<SearchPage> {
                     ),
                     Row(
                       children: [
-                        const Text('Date: '),
+                        Text('${AppLocalizations.of(context)!.date}: '),
                         TextButton(
                             onPressed: () {
                               showDateRangePicker(
@@ -206,7 +212,7 @@ class _SearchPageState extends State<SearchPage> {
                             }
                           },
                         ),
-                        const Text('All the time'),
+                        Text(AppLocalizations.of(context)!.allTheTime),
                       ],
                     ),
                     Expanded(
