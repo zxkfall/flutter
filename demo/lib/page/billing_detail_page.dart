@@ -116,7 +116,7 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
           if (widget.billing != null)
             IconButton(
               onPressed: _delete,
-              icon: const Icon(Icons.delete),
+              icon: const Icon(Icons.delete, color: Colors.red),
             ),
         ],
       ),
