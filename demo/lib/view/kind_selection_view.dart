@@ -46,20 +46,18 @@ class _KindSelectionViewState extends State<KindSelectionView> {
       spacing: 8.0, // 子元素之间的水平间距
       runSpacing: 8.0, // 每行之间的垂直间距
       children: widget.allKinds.map((kind) {
+        var selectedColor = Theme.of(context).colorScheme.inversePrimary;
+        var notSelectedColor = Theme.of(context).colorScheme.onSurfaceVariant;
         return InkWell(
           onTap: () {
             widget.onKindSelected(kind);
-            setState(() {
-              selectedKinds[widget.type] = kind; // 更新选中的kind
-            });
+            setState(() {});
           },
           child: Container(
             padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(
               border: Border.all(
-                color: kind == selectedKinds[widget.type]
-                    ? Colors.blue // 选中时的边框颜色
-                    : Colors.grey, // 未选中时的边框颜色
+                color: kind == selectedKinds[widget.type] ? selectedColor : notSelectedColor.withOpacity(0.6),
               ),
               borderRadius: BorderRadius.circular(8.0),
             ),
@@ -67,18 +65,14 @@ class _KindSelectionViewState extends State<KindSelectionView> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(
-                  BillingIconMapper.getIcon(widget.type, kind), // 根据kind获取图标
-                  color: kind == selectedKinds[widget.type]
-                      ? Colors.blue // 选中时的图标颜色
-                      : Colors.black, // 未选中时的图标颜色
+                  BillingIconMapper.getIcon(widget.type, kind),
+                  color: kind == selectedKinds[widget.type] ? selectedColor : notSelectedColor,
                 ),
                 const SizedBox(width: 4.0),
                 Text(
                   kind.name,
                   style: TextStyle(
-                    color: kind == selectedKinds[widget.type]
-                        ? Colors.blue // 选中时的文字颜色
-                        : Colors.black, // 未选中时的文字颜色
+                    color: kind == selectedKinds[widget.type] ? selectedColor : notSelectedColor,
                   ),
                 ),
               ],
