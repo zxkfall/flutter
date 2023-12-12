@@ -168,13 +168,8 @@ List<BillingKind> getIncomeValues() {
 BillingKind stringToBillingKind(BillingType type, String value) {
   return type == BillingType.expense
       ? getExpenseValues().firstWhere(
-          (element) =>
-              element.name.toLowerCase() ==
-              value.replaceAll(' ', '').toLowerCase(),
+          (element) => element.name.toLowerCase() == value.replaceAll(' ', '').toLowerCase(),
           orElse: () => BillingKind.other)
-      : getIncomeValues().firstWhere(
-          (element) =>
-              element.name.toLowerCase() ==
-              value.replaceAll(' ', '').toLowerCase(),
+      : getIncomeValues().firstWhere((element) => element.name.toLowerCase() == value.replaceAll(' ', '').toLowerCase(),
           orElse: () => BillingKind.other);
 }

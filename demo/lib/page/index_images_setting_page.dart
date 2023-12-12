@@ -56,16 +56,14 @@ class _IndexImagesSettingPageState extends State<IndexImagesSettingPage> {
               labelText: 'Enter Text',
               border: const OutlineInputBorder(),
               suffixIcon: IconButton(
-                icon: Icon(
-                    _isKeyboardVisible ? Icons.keyboard_hide : Icons.keyboard),
+                icon: Icon(_isKeyboardVisible ? Icons.keyboard_hide : Icons.keyboard),
                 onPressed: () {
                   setState(() {
                     _isKeyboardVisible = !_isKeyboardVisible;
                     if (_isKeyboardVisible) {
                       FocusManager.instance.primaryFocus?.unfocus();
                     } else {
-                      FocusManager.instance.primaryFocus
-                          ?.requestFocus(focusNode);
+                      FocusManager.instance.primaryFocus?.requestFocus(focusNode);
                     }
                   });
                 },
@@ -99,12 +97,7 @@ class _IndexImagesSettingPageState extends State<IndexImagesSettingPage> {
       final file = File('${directory.path}/saved_text.txt');
       if (file.existsSync()) {
         setState(() {
-          _urlTags = file
-              .readAsStringSync()
-              .trim()
-              .split(';')
-              .where((element) => element != '')
-              .toList();
+          _urlTags = file.readAsStringSync().trim().split(';').where((element) => element != '').toList();
         });
       }
     } catch (e) {

@@ -45,8 +45,7 @@ class _LineChartState extends State<ChartPage> {
                     });
                   },
                   style: TextButton.styleFrom(
-                    backgroundColor:
-                        Theme.of(context).colorScheme.onSurfaceVariant,
+                    backgroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(0),
                     ),
@@ -58,10 +57,7 @@ class _LineChartState extends State<ChartPage> {
                     billingType == BillingType.income
                         ? AppLocalizations.of(context)!.income
                         : AppLocalizations.of(context)!.expense,
-                    style: TextStyle(
-                        color: billingType == BillingType.income
-                            ? Colors.green
-                            : Colors.red),
+                    style: TextStyle(color: billingType == BillingType.income ? Colors.green : Colors.red),
                   )),
             ],
           ),
@@ -71,12 +67,10 @@ class _LineChartState extends State<ChartPage> {
             var billings = billingProvider.billings;
 
             var allPeriodKindData = billings
-                .where((element) =>
-                    element.type == billingType && isInDateRange(element))
+                .where((element) => element.type == billingType && isInDateRange(element))
                 .groupBy((element) => element.kind)
                 .map((kind, values) {
-              var total =
-                  values.fold(Decimal.zero, (sum, value) => sum + value.amount);
+              var total = values.fold(Decimal.zero, (sum, value) => sum + value.amount);
               return MapEntry(kind, total);
             }).toList();
 
@@ -92,13 +86,10 @@ class _LineChartState extends State<ChartPage> {
                         height: 32,
                         decoration: BoxDecoration(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(16)),
+                          borderRadius: const BorderRadius.all(Radius.circular(16)),
                           border: Border.fromBorderSide(
                             BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurfaceVariant,
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
                               width: 1,
                             ),
                           ),
@@ -115,9 +106,7 @@ class _LineChartState extends State<ChartPage> {
                               style: TextButton.styleFrom(
                                 backgroundColor: chartPeriod == ChartPeriod.week
                                     ? Colors.white
-                                    : Theme.of(context)
-                                        .colorScheme
-                                        .onSurfaceVariant,
+                                    : Theme.of(context).colorScheme.onSurfaceVariant,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(14),
                                 ),
@@ -129,9 +118,7 @@ class _LineChartState extends State<ChartPage> {
                                 AppLocalizations.of(context)!.week,
                                 style: TextStyle(
                                     color: chartPeriod == ChartPeriod.week
-                                        ? Theme.of(context)
-                                            .colorScheme
-                                            .onSurfaceVariant
+                                        ? Theme.of(context).colorScheme.onSurfaceVariant
                                         : Colors.white,
                                     fontSize: 14),
                               ),
@@ -143,12 +130,9 @@ class _LineChartState extends State<ChartPage> {
                                 });
                               },
                               style: TextButton.styleFrom(
-                                backgroundColor:
-                                    chartPeriod == ChartPeriod.month
-                                        ? Colors.white
-                                        : Theme.of(context)
-                                            .colorScheme
-                                            .onSurfaceVariant,
+                                backgroundColor: chartPeriod == ChartPeriod.month
+                                    ? Colors.white
+                                    : Theme.of(context).colorScheme.onSurfaceVariant,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(14),
                                 ),
@@ -160,9 +144,7 @@ class _LineChartState extends State<ChartPage> {
                                 AppLocalizations.of(context)!.month,
                                 style: TextStyle(
                                     color: chartPeriod == ChartPeriod.month
-                                        ? Theme.of(context)
-                                            .colorScheme
-                                            .onSurfaceVariant
+                                        ? Theme.of(context).colorScheme.onSurfaceVariant
                                         : Colors.white,
                                     fontSize: 14),
                               ),
@@ -176,9 +158,7 @@ class _LineChartState extends State<ChartPage> {
                               style: TextButton.styleFrom(
                                 backgroundColor: chartPeriod == ChartPeriod.year
                                     ? Colors.white
-                                    : Theme.of(context)
-                                        .colorScheme
-                                        .onSurfaceVariant,
+                                    : Theme.of(context).colorScheme.onSurfaceVariant,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(14),
                                 ),
@@ -190,9 +170,7 @@ class _LineChartState extends State<ChartPage> {
                                 AppLocalizations.of(context)!.year,
                                 style: TextStyle(
                                     color: chartPeriod == ChartPeriod.year
-                                        ? Theme.of(context)
-                                            .colorScheme
-                                            .onSurfaceVariant
+                                        ? Theme.of(context).colorScheme.onSurfaceVariant
                                         : Colors.white,
                                     fontSize: 14),
                               ),
@@ -209,13 +187,10 @@ class _LineChartState extends State<ChartPage> {
                     TextButton(
                         onPressed: () {
                           chartPeriod == ChartPeriod.week
-                              ? currentDate =
-                                  currentDate.subtract(const Duration(days: 7))
+                              ? currentDate = currentDate.subtract(const Duration(days: 7))
                               : chartPeriod == ChartPeriod.month
-                                  ? currentDate = DateTime(currentDate.year,
-                                      currentDate.month - 1, currentDate.day)
-                                  : currentDate = DateTime(currentDate.year - 1,
-                                      currentDate.month, currentDate.day);
+                                  ? currentDate = DateTime(currentDate.year, currentDate.month - 1, currentDate.day)
+                                  : currentDate = DateTime(currentDate.year - 1, currentDate.month, currentDate.day);
                           setState(() {});
                         },
                         child: const Icon(
@@ -244,13 +219,10 @@ class _LineChartState extends State<ChartPage> {
                     TextButton(
                         onPressed: () {
                           chartPeriod == ChartPeriod.week
-                              ? currentDate =
-                                  currentDate.add(const Duration(days: 7))
+                              ? currentDate = currentDate.add(const Duration(days: 7))
                               : chartPeriod == ChartPeriod.month
-                                  ? currentDate = DateTime(currentDate.year,
-                                      currentDate.month + 1, currentDate.day)
-                                  : currentDate = DateTime(currentDate.year + 1,
-                                      currentDate.month, currentDate.day);
+                                  ? currentDate = DateTime(currentDate.year, currentDate.month + 1, currentDate.day)
+                                  : currentDate = DateTime(currentDate.year + 1, currentDate.month, currentDate.day);
                           setState(() {});
                         },
                         child: const Icon(
@@ -278,19 +250,16 @@ class _LineChartState extends State<ChartPage> {
                 Column(
                   children: allPeriodKindData.map((e) {
                     return Padding(
-                        padding:
-                            const EdgeInsets.only(top: 4, left: 12, right: 12),
+                        padding: const EdgeInsets.only(top: 4, left: 12, right: 12),
                         child: Card(
-                          color: Color.fromRGBO(Random().nextInt(255),
-                              Random().nextInt(255), Random().nextInt(255), 1),
+                          color: Color.fromRGBO(Random().nextInt(255), Random().nextInt(255), Random().nextInt(255), 1),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: ListTile(
                             title: Text(e.first.name),
                             trailing: Text(e.second.toString()),
-                            leading: Icon(BillingIconMapper.getIcon(
-                                billingType, e.first)),
+                            leading: Icon(BillingIconMapper.getIcon(billingType, e.first)),
                           ),
                         ));
                   }).toList(),
@@ -305,15 +274,11 @@ class _LineChartState extends State<ChartPage> {
 
   bool isInDateRange(Billing billing) {
     if (chartPeriod == ChartPeriod.week) {
-      return billing.date.isAfter(
-              currentDate.subtract(Duration(days: currentDate.weekday - 1))) &&
-          billing.date.isBefore(currentDate.add(
-              Duration(days: DateTime.daysPerWeek - currentDate.weekday + 1)));
+      return billing.date.isAfter(currentDate.subtract(Duration(days: currentDate.weekday - 1))) &&
+          billing.date.isBefore(currentDate.add(Duration(days: DateTime.daysPerWeek - currentDate.weekday + 1)));
     } else if (chartPeriod == ChartPeriod.month) {
-      return billing.date
-              .isAfter(DateTime(currentDate.year, currentDate.month, 1)) &&
-          billing.date
-              .isBefore(DateTime(currentDate.year, currentDate.month + 1, 1));
+      return billing.date.isAfter(DateTime(currentDate.year, currentDate.month, 1)) &&
+          billing.date.isBefore(DateTime(currentDate.year, currentDate.month + 1, 1));
     } else if (chartPeriod == ChartPeriod.year) {
       return billing.date.isAfter(DateTime(currentDate.year, 1, 1)) &&
           billing.date.isBefore(DateTime(currentDate.year + 1, 1, 1));
@@ -327,34 +292,20 @@ class _LineChartState extends State<ChartPage> {
           billings,
           billingType,
           currentDate.subtract(Duration(days: currentDate.weekday - 1)),
-          currentDate.add(
-              Duration(days: DateTime.daysPerWeek - currentDate.weekday + 1)),
+          currentDate.add(Duration(days: DateTime.daysPerWeek - currentDate.weekday + 1)),
           chartPeriod);
       return LineChart(generateLineChartData(weekSpots, false));
     } else if (chartPeriod == ChartPeriod.month) {
-      var monthSpots = generateSpots(
-          billings,
-          billingType,
-          DateTime(currentDate.year, currentDate.month, 1),
-          DateTime(currentDate.year, currentDate.month + 1, 1),
-          chartPeriod);
+      var monthSpots = generateSpots(billings, billingType, DateTime(currentDate.year, currentDate.month, 1),
+          DateTime(currentDate.year, currentDate.month + 1, 1), chartPeriod);
       return LineChart(generateLineChartData(monthSpots, true));
     } else if (chartPeriod == ChartPeriod.year) {
       var yearSpots = generateSpots(
-          billings,
-          billingType,
-          DateTime(currentDate.year, 1, 1),
-          DateTime(currentDate.year + 1, 1, 1),
-          chartPeriod);
+          billings, billingType, DateTime(currentDate.year, 1, 1), DateTime(currentDate.year + 1, 1, 1), chartPeriod);
       return LineChart(generateLineChartData(yearSpots, false));
     }
-    var weekSpots = generateSpots(
-        billings,
-        billingType,
-        currentDate.subtract(Duration(days: currentDate.weekday - 1)),
-        currentDate.add(
-            Duration(days: DateTime.daysPerWeek - currentDate.weekday + 1)),
-        chartPeriod);
+    var weekSpots = generateSpots(billings, billingType, currentDate.subtract(Duration(days: currentDate.weekday - 1)),
+        currentDate.add(Duration(days: DateTime.daysPerWeek - currentDate.weekday + 1)), chartPeriod);
     return LineChart(generateLineChartData(weekSpots, false));
   }
 
@@ -379,14 +330,11 @@ class _LineChartState extends State<ChartPage> {
   ) {
     var spotsPre = billings
         .where((element) =>
-            element.type == billingType &&
-            element.date.isAfter(startDate) &&
-            element.date.isBefore(endDate))
+            element.type == billingType && element.date.isAfter(startDate) && element.date.isBefore(endDate))
         .sortedBy((element) => element.date)
         .groupBy((element) => getDayByPeriod(chartPeriod, element.date))
         .map((day, values) {
-          var total =
-              values.fold(Decimal.zero, (sum, value) => sum + value.amount);
+          var total = values.fold(Decimal.zero, (sum, value) => sum + value.amount);
           return MapEntry(day.toString(), total);
         })
         .entries
@@ -411,19 +359,15 @@ class _LineChartState extends State<ChartPage> {
     }
   }
 
-  FlSpot getSpotForDay(
-      List<FlSpot> spotsPre, int day, ChartPeriod chartPeriod) {
-    var spot = spotsPre.firstWhere((element) => element.x.toInt() == (day + 1),
-        orElse: () => FlSpot(day + 1.0, 0));
+  FlSpot getSpotForDay(List<FlSpot> spotsPre, int day, ChartPeriod chartPeriod) {
+    var spot = spotsPre.firstWhere((element) => element.x.toInt() == (day + 1), orElse: () => FlSpot(day + 1.0, 0));
     return spot;
   }
 
   LineChartData generateLineChartData(List<FlSpot> spots, bool isMonthData) {
-    var maxY =
-        spots.maxBy((element) => element.y.toDouble())!.y.toDouble().toInt() ==
-                0
-            ? 10.0
-            : spots.maxBy((element) => element.y.toDouble())!.y.toDouble();
+    var maxY = spots.maxBy((element) => element.y.toDouble())!.y.toDouble().toInt() == 0
+        ? 10.0
+        : spots.maxBy((element) => element.y.toDouble())!.y.toDouble();
     var minY = 0.0;
     var maxX = spots.maxBy((element) => element.x.toDouble())!.x.toDouble();
     var minX = spots.minBy((element) => element.x.toDouble())!.x.toDouble();
@@ -509,9 +453,7 @@ class _LineChartState extends State<ChartPage> {
       minX: minX,
       maxX: maxX,
       minY: minY,
-      maxY: (((maxY - (maxY ~/ tagCount) * tagCount) / (maxY ~/ tagCount))
-                  .ceil() +
-              tagCount) *
+      maxY: (((maxY - (maxY ~/ tagCount) * tagCount) / (maxY ~/ tagCount)).ceil() + tagCount) *
           (maxY ~/ tagCount).toDouble(),
       lineBarsData: [
         LineChartBarData(
@@ -536,9 +478,7 @@ class _LineChartState extends State<ChartPage> {
           belowBarData: BarAreaData(
             show: true,
             gradient: LinearGradient(
-              colors: gradientColors
-                  .map((color) => color.withOpacity(0.3))
-                  .toList(),
+              colors: gradientColors.map((color) => color.withOpacity(0.3)).toList(),
             ),
           ),
         ),

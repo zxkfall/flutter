@@ -11,7 +11,6 @@ import 'package:synchronized/synchronized.dart'; // 导入 synchronized 包
 import '../model/billing.dart';
 
 abstract class BillingRepository {
-
   Future<int> insertBilling(Billing billing);
 
   Future<void> batchInsertBilling(List<Billing> billings);
@@ -39,9 +38,9 @@ class SqlBillingRepository implements BillingRepository {
     if (_db == null) {
       await _lock.synchronized(() async {
         var dbPath = '';
-        if(Platform.isAndroid){
+        if (Platform.isAndroid) {
           dbPath = await getDatabasesPath();
-        }else{
+        } else {
           var directory = await getApplicationSupportDirectory();
           dbPath = directory.path;
         }
@@ -113,7 +112,6 @@ class SqlBillingRepository implements BillingRepository {
     await batch.commit();
   }
 
-
   @override
   Future<Billing> updateBilling(Billing billing) async {
     (await _session).update(
@@ -147,7 +145,7 @@ class SqlBillingRepository implements BillingRepository {
       amount: Decimal.parse(maps[0]['amount'].toString()),
       date: DateTime.parse(maps[0]['date']),
       description: maps[0]['description'],
-      kind:  maps[0]['kind'] >= 0 && maps[0]['kind'] < BillingKind.values.length
+      kind: maps[0]['kind'] >= 0 && maps[0]['kind'] < BillingKind.values.length
           ? BillingKind.values[maps[0]['kind']]
           : BillingKind.other,
     );
@@ -172,10 +170,8 @@ class SqlBillingRepository implements BillingRepository {
   }
 
   @override
-  Future<int> clearBilling() async{
-    final rows = (await _session).delete(
-      'Billing'
-    );
+  Future<int> clearBilling() async {
+    final rows = (await _session).delete('Billing');
     return rows;
   }
 }

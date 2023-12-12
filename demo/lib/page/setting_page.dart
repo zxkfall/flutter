@@ -46,25 +46,20 @@ class _SettingPageState extends State<SettingPage> {
                 importExcel(context).then((value) {
                   Utils.showToast(
                       value != 0
-                          ? appLocalizations
-                              .importSuccessTotalImportWhatRecords(value)
+                          ? appLocalizations.importSuccessTotalImportWhatRecords(value)
                           : appLocalizations.noDataImported,
                       context);
                 })
               },
           context,
           appLocalizations.importDataCompatibleOldApp),
-      buildSettingOption(
-          () => {buildConfirmClearDialog(context, billingProvider)},
-          context,
+      buildSettingOption(() => {buildConfirmClearDialog(context, billingProvider)}, context,
           appLocalizations.clearDataWillClearAllRecords),
       buildSettingOption(
           () => {
                 exportExcel().then((value) {
                   Utils.showToast(
-                      appLocalizations.exportSuccessfulTotalWhatRecords(
-                          int.parse(value['count']!)),
-                      context);
+                      appLocalizations.exportSuccessfulTotalWhatRecords(int.parse(value['count']!)), context);
                 })
               },
           context,
@@ -72,10 +67,7 @@ class _SettingPageState extends State<SettingPage> {
       buildSettingOption(
           () => {
                 shareExcel().then((value) {
-                  Utils.showToast(
-                      appLocalizations
-                          .sharingSuccessfulTotalWhatExported(value),
-                      context);
+                  Utils.showToast(appLocalizations.sharingSuccessfulTotalWhatExported(value), context);
                 })
               },
           context,
@@ -92,18 +84,15 @@ class _SettingPageState extends State<SettingPage> {
           appLocalizations.indexImagesSetting),
       buildSettingOption(
           () => {
-                Provider.of<ThemeProvider>(context, listen: false).setTheme(
-                    CustomTheme.themeColors[
-                        CustomTheme.themeColors.keys.toList()[Random()
-                            .nextInt(CustomTheme.themeColors.entries.length)]]!)
+                Provider.of<ThemeProvider>(context, listen: false).setTheme(CustomTheme.themeColors[
+                    CustomTheme.themeColors.keys.toList()[Random().nextInt(CustomTheme.themeColors.entries.length)]]!)
               },
           context,
           appLocalizations.changeTheme),
     ]);
   }
 
-  SizedBox buildSettingOption(Set<void> Function() changeThemePressEvent,
-      BuildContext context, String innerText) {
+  SizedBox buildSettingOption(Set<void> Function() changeThemePressEvent, BuildContext context, String innerText) {
     return SizedBox(
       height: 48,
       width: double.infinity,
@@ -113,12 +102,7 @@ class _SettingPageState extends State<SettingPage> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(0),
             ),
-            side: BorderSide(
-                color: Theme.of(context)
-                    .colorScheme
-                    .onSurfaceVariant
-                    .withOpacity(0.1),
-                width: 1)),
+            side: BorderSide(color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.1), width: 1)),
         child: Row(
           children: [
             Text(
@@ -136,8 +120,7 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  void buildConfirmClearDialog(
-      BuildContext context, BillingProvider billingProvider) {
+  void buildConfirmClearDialog(BuildContext context, BillingProvider billingProvider) {
     var appLocalizations = AppLocalizations.of(context)!;
     showDialog(
         context: context,
@@ -155,10 +138,7 @@ class _SettingPageState extends State<SettingPage> {
                   onPressed: () {
                     Navigator.of(context).pop();
                     GetIt.I<BillingRepository>().clearBilling().then((value) {
-                      Utils.showToast(
-                          appLocalizations
-                              .clearSuccessfulTotalWhatRecords(value),
-                          context);
+                      Utils.showToast(appLocalizations.clearSuccessfulTotalWhatRecords(value), context);
                       billingProvider.setBillings(<Billing>[]);
                     });
                   },
@@ -198,22 +178,17 @@ class _SettingPageState extends State<SettingPage> {
       path = directory.path;
     }
     developer.log('save: $path');
-    var file = File(join(
-        '$path/billingsInfo-${DateFormat('yyyy-MM-dd-HH-mm-ss').format(DateTime.now())}.xlsx'))
+    var file = File(join('$path/billingsInfo-${DateFormat('yyyy-MM-dd-HH-mm-ss').format(DateTime.now())}.xlsx'))
       ..createSync(recursive: true)
       ..writeAsBytesSync(fileBytes!);
     if (Platform.isIOS) {
-      final result =
-          await Share.shareXFiles([XFile(file.path)], text: 'Excel Data');
+      final result = await Share.shareXFiles([XFile(file.path)], text: 'Excel Data');
       if (result.status == ShareResultStatus.success) {
         developer.log('Thank you for sharing the Excel!');
       }
     }
     developer.log(file.path);
-    var res = <String, String>{
-      'path': Platform.isIOS ? '' : file.path,
-      'count': billings.length.toString()
-    };
+    var res = <String, String>{'path': Platform.isIOS ? '' : file.path, 'count': billings.length.toString()};
     return res;
   }
 
@@ -240,13 +215,12 @@ class _SettingPageState extends State<SettingPage> {
 
     var tempDirectory = await getApplicationCacheDirectory();
     developer.log('temp path: ${tempDirectory.path}');
-    var file = File(join(
-        '${tempDirectory.path}/billingsInfo-${DateFormat('yyyy-MM-dd-HH-mm-ss').format(DateTime.now())}.xlsx'))
+    var file = File(
+        join('${tempDirectory.path}/billingsInfo-${DateFormat('yyyy-MM-dd-HH-mm-ss').format(DateTime.now())}.xlsx'))
       ..createSync(recursive: true)
       ..writeAsBytesSync(fileBytes!);
 
-    final result =
-        await Share.shareXFiles([XFile(file.path)], text: 'Excel Data');
+    final result = await Share.shareXFiles([XFile(file.path)], text: 'Excel Data');
 
     if (result.status == ShareResultStatus.success) {
       developer.log('Thank you for sharing the Excel!');
@@ -275,9 +249,7 @@ class _SettingPageState extends State<SettingPage> {
           if (element[0]!.value.toString() == 'Date') {
             continue;
           }
-          var billingType = element[2]!.value.toString() == 'COST'
-              ? BillingType.expense
-              : BillingType.income;
+          var billingType = element[2]!.value.toString() == 'COST' ? BillingType.expense : BillingType.income;
           var billing = Billing(
               id: 0,
               date: DateTime.parse(element[0]!.value.toString()),
@@ -295,11 +267,9 @@ class _SettingPageState extends State<SettingPage> {
                                   ? 'waterAndElectricity'
                                   : element[3]!.value.toString() == 'Clothes'
                                       ? 'apparel'
-                                      : element[3]!.value.toString() ==
-                                              'Tobacco & wine'
+                                      : element[3]!.value.toString() == 'Tobacco & wine'
                                           ? 'tobaccoAndWine'
-                                          : element[3]!.value.toString() ==
-                                                  'Sports'
+                                          : element[3]!.value.toString() == 'Sports'
                                               ? 'sport'
                                               : element[3]!.value.toString()),
               description: '${element[3]!.value} ${element[4]!.value}');

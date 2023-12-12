@@ -31,8 +31,7 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
             title: 'Maple Billing',
             theme: ThemeData(
-              colorScheme:
-                  ColorScheme.fromSeed(seedColor: themeProvider.primaryColor),
+              colorScheme: ColorScheme.fromSeed(seedColor: themeProvider.primaryColor),
               useMaterial3: true,
             ),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -40,8 +39,7 @@ class MyApp extends StatelessWidget {
             home: const PageViewContainer(),
             routes: <String, WidgetBuilder>{
               '/home': (BuildContext context) => const PageViewContainer(),
-              '/billing-detail': (BuildContext context) =>
-                  const BillingDetailPage(
+              '/billing-detail': (BuildContext context) => const BillingDetailPage(
                     billing: null,
                   ),
             });

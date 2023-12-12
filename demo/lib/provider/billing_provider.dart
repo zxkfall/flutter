@@ -91,8 +91,7 @@ class BillingProvider with ChangeNotifier {
     } else if (_startDate != null && _endDate == null) {
       return billing.date.isAfter(_startDate!);
     } else {
-      return billing.date.isAfter(_startDate!) &&
-          billing.date.isBefore(_endDate!);
+      return billing.date.isAfter(_startDate!) && billing.date.isBefore(_endDate!);
     }
   }
 

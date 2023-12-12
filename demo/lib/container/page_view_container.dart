@@ -71,9 +71,7 @@ class _PageViewContainerState extends State<PageViewContainer> {
                 child: const Icon(Icons.add),
               ),
         bottomNavigationBar: SizedBox(
-          height: Platform.isIOS
-              ? kBottomNavigationBarHeight * 3 / 2
-              : kBottomNavigationBarHeight * 6 / 5,
+          height: Platform.isIOS ? kBottomNavigationBarHeight * 3 / 2 : kBottomNavigationBarHeight * 6 / 5,
           child: BottomAppBar(
             padding: const EdgeInsets.only(left: 30, right: 30),
             color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -88,8 +86,7 @@ class _PageViewContainerState extends State<PageViewContainer> {
                     InkWell(
                       onTap: () {
                         _pageController.animateToPage(0,
-                            duration: const Duration(milliseconds: 100),
-                            curve: Curves.easeInOut);
+                            duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
                       },
                       highlightColor: Colors.transparent,
                       splashColor: Colors.transparent,
@@ -108,8 +105,7 @@ class _PageViewContainerState extends State<PageViewContainer> {
                             ),
                             Text(
                               AppLocalizations.of(context)!.home,
-                              style: TextStyle(
-                                  fontSize: 12, color: _getCurrentColor(0)),
+                              style: TextStyle(fontSize: 12, color: _getCurrentColor(0)),
                               textAlign: TextAlign.center,
                             )
                           ],
@@ -121,8 +117,7 @@ class _PageViewContainerState extends State<PageViewContainer> {
                       child: InkWell(
                         onTap: () {
                           _pageController.animateToPage(1,
-                              duration: const Duration(milliseconds: 100),
-                              curve: Curves.easeInOut);
+                              duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
                         },
                         highlightColor: Colors.transparent,
                         splashColor: Colors.transparent,
@@ -141,8 +136,7 @@ class _PageViewContainerState extends State<PageViewContainer> {
                               ),
                               Text(
                                 AppLocalizations.of(context)!.chart,
-                                style: TextStyle(
-                                    fontSize: 12, color: _getCurrentColor(1)),
+                                style: TextStyle(fontSize: 12, color: _getCurrentColor(1)),
                                 textAlign: TextAlign.center,
                               )
                             ],
@@ -159,8 +153,7 @@ class _PageViewContainerState extends State<PageViewContainer> {
                       child: InkWell(
                         onTap: () {
                           _pageController.animateToPage(2,
-                              duration: const Duration(milliseconds: 100),
-                              curve: Curves.easeInOut);
+                              duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
                         },
                         highlightColor: Colors.transparent,
                         splashColor: Colors.transparent,
@@ -178,8 +171,7 @@ class _PageViewContainerState extends State<PageViewContainer> {
                                   )),
                               Text(
                                 AppLocalizations.of(context)!.search,
-                                style: TextStyle(
-                                    fontSize: 12, color: _getCurrentColor(2)),
+                                style: TextStyle(fontSize: 12, color: _getCurrentColor(2)),
                                 textAlign: TextAlign.center,
                               )
                             ],
@@ -190,8 +182,7 @@ class _PageViewContainerState extends State<PageViewContainer> {
                     InkWell(
                       onTap: () {
                         _pageController.animateToPage(3,
-                            duration: const Duration(milliseconds: 100),
-                            curve: Curves.easeInOut);
+                            duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
                       },
                       highlightColor: Colors.transparent,
                       splashColor: Colors.transparent,
@@ -210,8 +201,7 @@ class _PageViewContainerState extends State<PageViewContainer> {
                             ),
                             Text(
                               AppLocalizations.of(context)!.setting,
-                              style: TextStyle(
-                                  fontSize: 12, color: _getCurrentColor(3)),
+                              style: TextStyle(fontSize: 12, color: _getCurrentColor(3)),
                               textAlign: TextAlign.center,
                             )
                           ],
@@ -232,12 +222,10 @@ class _PageViewContainerState extends State<PageViewContainer> {
     _pageController.dispose();
   }
 
-  Color _getCurrentColor(page) =>
-      currentPage == page ? Colors.pink : Colors.white;
+  Color _getCurrentColor(page) => currentPage == page ? Colors.pink : Colors.white;
 
   void _goToBillingDetailPage(BuildContext context) {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (_) => const BillingDetailPage()));
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => const BillingDetailPage()));
   }
 
   Future<List<Billing>> _loadBillingData() async {

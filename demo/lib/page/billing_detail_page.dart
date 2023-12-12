@@ -10,7 +10,7 @@ import '../model/billing.dart';
 import '../provider/billing_provider.dart';
 import '../repository/billing_repository.dart';
 import '../container/page_view_container.dart';
-import '../view/kind_selection_wrap_view.dart';
+import '../view/kind_selection_view.dart';
 import '../utils/utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -64,12 +64,10 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
       );
 
       if (Decimal.parse(_amountController.text) == Decimal.zero) {
-        Utils.showToast(
-            AppLocalizations.of(context)!.amountCantNotBeEmpty, context);
+        Utils.showToast(AppLocalizations.of(context)!.amountCantNotBeEmpty, context);
         return;
       }
-      final billingProvider =
-          Provider.of<BillingProvider>(context, listen: false);
+      final billingProvider = Provider.of<BillingProvider>(context, listen: false);
 
       // 获取当前页面的Navigator
       final currentNavigator = Navigator.of(context);
@@ -86,21 +84,18 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
 
       // 使用当前页面的Navigator来进行导航
       currentNavigator.pop();
-      currentNavigator.pushReplacement(
-          MaterialPageRoute(builder: (_) => const PageViewContainer()));
+      currentNavigator.pushReplacement(MaterialPageRoute(builder: (_) => const PageViewContainer()));
     }
   }
 
   Future<void> _delete() async {
     if (widget.billing != null) {
-      final billingProvider =
-          Provider.of<BillingProvider>(context, listen: false);
+      final billingProvider = Provider.of<BillingProvider>(context, listen: false);
       final currentNavigator = Navigator.of(context);
       await GetIt.I<BillingRepository>().deleteBilling(widget.billing!.id);
       billingProvider.removeBilling(widget.billing!.id);
       currentNavigator.pop();
-      currentNavigator.pushReplacement(
-          MaterialPageRoute(builder: (_) => const PageViewContainer()));
+      currentNavigator.pushReplacement(MaterialPageRoute(builder: (_) => const PageViewContainer()));
     }
   }
 
@@ -125,10 +120,8 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            KindSelectionWrapView(
-              allKinds: _type == BillingType.expense
-                  ? getExpenseValues()
-                  : getIncomeValues(),
+            KindSelectionView(
+              allKinds: _type == BillingType.expense ? getExpenseValues() : getIncomeValues(),
               selectedKind: _selectedKind,
               onKindSelected: (selectedKind) {
                 setState(() {
@@ -145,8 +138,7 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
               inputFormatters: [
                 FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}$')),
               ],
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return AppLocalizations.of(context)!.pleaseEnterAmount;
@@ -192,8 +184,7 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
                       _type = newValue!;
                     });
                   },
-                  items: BillingType.values
-                      .map<DropdownMenuItem<BillingType>>((BillingType value) {
+                  items: BillingType.values.map<DropdownMenuItem<BillingType>>((BillingType value) {
                     return DropdownMenuItem<BillingType>(
                       value: value,
                       child: Text(value == BillingType.expense

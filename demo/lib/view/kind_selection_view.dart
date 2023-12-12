@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../model/billing.dart';
 
-class KindSelectionWrapView extends StatefulWidget {
+class KindSelectionView extends StatefulWidget {
   final List<BillingKind> allKinds; // 所有可选的kind
   final BillingKind selectedKind; // 当前选择的kind
   final Function(BillingKind) onKindSelected; // 回调函数，当kind被选择时调用
   final BillingType type; // 收入或支出
 
-  const KindSelectionWrapView({
+  const KindSelectionView({
     super.key,
     required this.allKinds,
     required this.selectedKind,
@@ -17,11 +17,10 @@ class KindSelectionWrapView extends StatefulWidget {
   });
 
   @override
-  State<KindSelectionWrapView> createState() =>
-      _KindSelectionWrapViewState();
+  State<KindSelectionView> createState() => _KindSelectionViewState();
 }
 
-class _KindSelectionWrapViewState extends State<KindSelectionWrapView> {
+class _KindSelectionViewState extends State<KindSelectionView> {
   Map<BillingType, BillingKind> selectedKinds = {};
 
   @override
@@ -31,14 +30,12 @@ class _KindSelectionWrapViewState extends State<KindSelectionWrapView> {
   }
 
   @override
-  void didUpdateWidget(covariant KindSelectionWrapView oldWidget) {
+  void didUpdateWidget(covariant KindSelectionView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (!widget.allKinds.contains(selectedKinds[widget.type])) {
       // 如果当前选中的kind不在新的列表中，则选择默认值
       setState(() {
-        selectedKinds[widget.type] = widget.type == BillingType.expense
-            ? getExpenseValues()[0]
-            : getIncomeValues()[0];
+        selectedKinds[widget.type] = widget.type == BillingType.expense ? getExpenseValues()[0] : getIncomeValues()[0];
       });
     }
   }

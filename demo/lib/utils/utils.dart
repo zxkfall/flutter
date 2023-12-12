@@ -5,13 +5,10 @@ import '../model/billing.dart';
 
 class Utils {
   static bool isSameDay(DateTime date1, DateTime date2) {
-    return date1.year == date2.year &&
-        date1.month == date2.month &&
-        date1.day == date2.day;
+    return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
   }
 
-  static Map<String, Decimal> calculateDailyTotal(
-      DateTime targetDate, List<Billing> billings) {
+  static Map<String, Decimal> calculateDailyTotal(DateTime targetDate, List<Billing> billings) {
     Decimal dailyTotalIncome = Decimal.zero;
     Decimal dailyTotalExpense = Decimal.zero;
 

@@ -47,11 +47,9 @@ class _SearchPageState extends State<SearchPage> {
                           Expanded(
                             child: TextField(
                               decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.only(
-                                    left: 14, top: 12, bottom: 12, right: 14),
+                                contentPadding: const EdgeInsets.only(left: 14, top: 12, bottom: 12, right: 14),
                                 border: const OutlineInputBorder(),
-                                labelText:
-                                    AppLocalizations.of(context)!.description,
+                                labelText: AppLocalizations.of(context)!.description,
                                 isCollapsed: false,
                               ),
                               controller: descriptionController,
@@ -69,8 +67,7 @@ class _SearchPageState extends State<SearchPage> {
                                 setState(() {
                                   searchType = 'All';
                                   searchKind = null;
-                                  startDate = DateTime.now()
-                                      .add(const Duration(days: -365));
+                                  startDate = DateTime.now().add(const Duration(days: -365));
                                   endDate = DateTime.now();
                                   allTime = false;
                                 });
@@ -91,18 +88,15 @@ class _SearchPageState extends State<SearchPage> {
                               items: [
                                 DropdownMenuItem(
                                   value: 'All',
-                                  child:
-                                      Text(AppLocalizations.of(context)!.all),
+                                  child: Text(AppLocalizations.of(context)!.all),
                                 ),
                                 DropdownMenuItem(
                                   value: 'Expense',
-                                  child: Text(
-                                      AppLocalizations.of(context)!.expense),
+                                  child: Text(AppLocalizations.of(context)!.expense),
                                 ),
                                 DropdownMenuItem(
                                   value: 'Income',
-                                  child: Text(
-                                      AppLocalizations.of(context)!.income),
+                                  child: Text(AppLocalizations.of(context)!.income),
                                 ),
                               ],
                               onChanged: (value) {
@@ -133,30 +127,21 @@ class _SearchPageState extends State<SearchPage> {
                             Text('${AppLocalizations.of(context)!.kind}: '),
                             DropdownButton<String>(
                               items: [
-                                DropdownMenuItem(
-                                    value: 'All',
-                                    child: Text(
-                                        AppLocalizations.of(context)!.all)),
+                                DropdownMenuItem(value: 'All', child: Text(AppLocalizations.of(context)!.all)),
                                 if (searchType == 'Expense')
                                   ...(getExpenseValues()
-                                      .map((e) => DropdownMenuItem(
-                                          value: e.name, child: Text(e.name)))
+                                      .map((e) => DropdownMenuItem(value: e.name, child: Text(e.name)))
                                       .toList())
                                 else if (searchType == 'Income')
                                   ...(getIncomeValues()
-                                      .map((e) => DropdownMenuItem(
-                                          value: e.name, child: Text(e.name)))
+                                      .map((e) => DropdownMenuItem(value: e.name, child: Text(e.name)))
                                       .toList())
                               ],
                               value: searchKind == null
                                   ? 'All'
-                                  : searchType == 'Expense' &&
-                                          getExpenseValues()
-                                              .contains(searchKind)
+                                  : searchType == 'Expense' && getExpenseValues().contains(searchKind)
                                       ? searchKind!.name
-                                      : searchType == 'Income' &&
-                                              getIncomeValues()
-                                                  .contains(searchKind)
+                                      : searchType == 'Income' && getIncomeValues().contains(searchKind)
                                           ? searchKind!.name
                                           : 'All',
                               onChanged: (value) {
@@ -164,12 +149,10 @@ class _SearchPageState extends State<SearchPage> {
                                   searchKind = null;
                                   provider.searchByKind(null);
                                 } else if (searchType == 'Expense') {
-                                  searchKind = getExpenseValues().firstWhere(
-                                      (element) => element.name == value);
+                                  searchKind = getExpenseValues().firstWhere((element) => element.name == value);
                                   provider.searchByKind(searchKind);
                                 } else if (searchType == 'Income') {
-                                  searchKind = getIncomeValues().firstWhere(
-                                      (element) => element.name == value);
+                                  searchKind = getIncomeValues().firstWhere((element) => element.name == value);
                                   provider.searchByKind(searchKind);
                                 }
                               },
@@ -187,14 +170,12 @@ class _SearchPageState extends State<SearchPage> {
                                 context: context,
                                 firstDate: DateTime(2010),
                                 lastDate: DateTime(2050),
-                                initialDateRange: DateTimeRange(
-                                    start: startDate, end: endDate),
+                                initialDateRange: DateTimeRange(start: startDate, end: endDate),
                               ).then((value) {
                                 setState(() {
                                   startDate = value!.start;
                                   endDate = value.end;
-                                  provider.searchByDateRange(
-                                      startDate, endDate);
+                                  provider.searchByDateRange(startDate, endDate);
                                 });
                               });
                             },
@@ -223,12 +204,10 @@ class _SearchPageState extends State<SearchPage> {
                           return Card(
                             child: InkWell(
                               onTap: () {
-                                Future.delayed(
-                                    const Duration(milliseconds: 150), () {
+                                Future.delayed(const Duration(milliseconds: 150), () {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
-                                      builder: (_) =>
-                                          BillingDetailPage(billing: billing),
+                                      builder: (_) => BillingDetailPage(billing: billing),
                                     ),
                                   );
                                 });
@@ -238,15 +217,12 @@ class _SearchPageState extends State<SearchPage> {
                                 title: Text(billing.kind.name),
                                 subtitle: Text(billing.description),
                                 leading: Icon(
-                                  BillingIconMapper.getIcon(
-                                      billing.type, billing.kind),
+                                  BillingIconMapper.getIcon(billing.type, billing.kind),
                                 ),
                                 trailing: Text(
                                   billing.amount.toString(),
                                   style: TextStyle(
-                                    color: billing.type == BillingType.expense
-                                        ? Colors.red
-                                        : Colors.green,
+                                    color: billing.type == BillingType.expense ? Colors.red : Colors.green,
                                   ),
                                 ),
                               ),

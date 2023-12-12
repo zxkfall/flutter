@@ -51,28 +51,28 @@
   },
   "exportData": "Export data",
   "sharingSuccessfulTotalWhatExported": "Sharing was successful, a total of {count} pieces of data were exported.",
-    "@sharingSuccessfulTotalWhatExported": {
-        "placeholders": {
-        "count": {
-            "type": "int",
-            "example": "0"
-        }
-        }
-    },
+  "@sharingSuccessfulTotalWhatExported": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "0"
+      }
+    }
+  },
   "sharingData": "Sharing data",
   "indexImagesSetting": "Index images setting",
   "clearData": "Clear data",
   "areYouSureYouWantToClearAllRecords": "Are you sure you want to clear all records?",
   "cancel": "Cancel",
   "clearSuccessfulTotalWhatRecords": "Clear successful, a total of {count} pieces of data were cleared.",
-    "@clearSuccessfulTotalWhatRecords": {
-        "placeholders": {
-        "count": {
-            "type": "int",
-            "example": "0"
-        }
-        }
-    },
+  "@clearSuccessfulTotalWhatRecords": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "0"
+      }
+    }
+  },
   "confirm": "Confirm",
   "changeTheme": "Change theme"
 }
