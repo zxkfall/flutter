@@ -20,29 +20,54 @@ class _ChangeThemePageState extends State<ChangeThemePage> {
           title: Text(AppLocalizations.of(context)!.changeTheme),
           backgroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
         ),
-        body: GridView.count(crossAxisCount: CustomTheme.themeColors.keys.length ~/ 5, children: [
-          ...CustomTheme.themeColors.keys.map((key) {
-            var themeProvider = Provider.of<ThemeProvider>(context, listen: false);
-            var isCurrentColor = themeProvider.primaryColor == CustomTheme.themeColors[key];
-            return InkWell(
-              onTap: () {
-                themeProvider.setTheme(CustomTheme.themeColors[key]!);
-                setState(() {});
-              },
-              child: Container(
-                color: CustomTheme.themeColors[key]!.withOpacity(isCurrentColor ? 0.5 : 1),
-                child: Center(
-                  child: Text(
-                    isCurrentColor ? key : '',
-                    style: TextStyle(
-                      color: CustomTheme.themeColors[key]!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
-                      fontSize: 12,
-                    ),
+        body: Column(
+          children: [
+            Container(
+              width: double.infinity,
+              color: Theme.of(context).colorScheme.onInverseSurface,
+              child: Row(
+                children: [
+                  const Icon(Icons.color_lens, size: 36),
+                  Text(
+                    AppLocalizations.of(context)!.themeColor,
+                    style: const TextStyle(fontSize: 16),
                   ),
-                ),
+                  const Spacer(),
+                  const Icon(Icons.keyboard_arrow_down),
+                ],
               ),
-            );
-          }),
-        ]));
+            ),
+            Expanded(
+                child: GridView.count(
+                    crossAxisCount: CustomTheme.themeColors.keys.length ~/ 5,
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8,
+                    children: [
+                  ...CustomTheme.themeColors.keys.map((key) {
+                    var themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+                    var isCurrentColor = themeProvider.primaryColor == CustomTheme.themeColors[key];
+                    return InkWell(
+                      onTap: () {
+                        themeProvider.setTheme(CustomTheme.themeColors[key]!);
+                        setState(() {});
+                      },
+                      child: Container(
+                        color: CustomTheme.themeColors[key]!.withOpacity(isCurrentColor ? 0.5 : 1),
+                        child: Center(
+                          child: Text(
+                            isCurrentColor ? key : '',
+                            style: TextStyle(
+                              color:
+                                  CustomTheme.themeColors[key]!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+                ]))
+          ],
+        ));
   }
 }
