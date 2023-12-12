@@ -55,8 +55,13 @@ class _LineChartState extends State<ChartPage> {
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
                   child: Text(
-                    billingType == BillingType.income ? AppLocalizations.of(context)!.income : AppLocalizations.of(context)!.expense,
-                    style: const TextStyle(color: Colors.black),
+                    billingType == BillingType.income
+                        ? AppLocalizations.of(context)!.income
+                        : AppLocalizations.of(context)!.expense,
+                    style: TextStyle(
+                        color: billingType == BillingType.income
+                            ? Colors.green
+                            : Colors.red),
                   )),
             ],
           ),
@@ -266,15 +271,6 @@ class _LineChartState extends State<ChartPage> {
                           bottom: 12,
                         ),
                         child: buildLineChart(billings),
-                      ),
-                    ),
-                    Positioned(
-                      top: 6,
-                      left: 12,
-                      child: Text(
-                        chartPeriod.name,
-                        style: TextStyle(
-                            fontSize: 12, color: Colors.black.withOpacity(0.5)),
                       ),
                     ),
                   ],
