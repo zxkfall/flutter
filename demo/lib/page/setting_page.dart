@@ -35,6 +35,7 @@ class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
     var billingProvider = Provider.of<BillingProvider>(context, listen: false);
+    var appLocalizations = AppLocalizations.of(context)!;
     return Column(children: <Widget>[
       Container(
         height: 48,
@@ -42,44 +43,43 @@ class _SettingPageState extends State<SettingPage> {
       ),
       buildSettingOption(
           () => {
-                openFilePickerAndRead(context).then((value) {
+                importExcel(context).then((value) {
                   Utils.showToast(
                       value != 0
-                          ? AppLocalizations.of(context)!
+                          ? appLocalizations
                               .importSuccessTotalImportWhatRecords(value)
-                          : AppLocalizations.of(context)!.noDataImported,
+                          : appLocalizations.noDataImported,
                       context);
                 })
               },
           context,
-          AppLocalizations.of(context)!.importDataCompatibleOldApp),
+          appLocalizations.importDataCompatibleOldApp),
       buildSettingOption(
           () => {buildConfirmClearDialog(context, billingProvider)},
           context,
-          AppLocalizations.of(context)!.clearDataWillClearAllRecords),
+          appLocalizations.clearDataWillClearAllRecords),
       buildSettingOption(
           () => {
                 exportExcel().then((value) {
                   Utils.showToast(
-                      AppLocalizations.of(context)!
-                          .exportSuccessfulTotalWhatRecords(
-                              int.parse(value['count']!)),
+                      appLocalizations.exportSuccessfulTotalWhatRecords(
+                          int.parse(value['count']!)),
                       context);
                 })
               },
           context,
-          AppLocalizations.of(context)!.exportData),
+          appLocalizations.exportData),
       buildSettingOption(
           () => {
                 shareExcel().then((value) {
                   Utils.showToast(
-                      AppLocalizations.of(context)!
+                      appLocalizations
                           .sharingSuccessfulTotalWhatExported(value),
                       context);
                 })
               },
           context,
-          AppLocalizations.of(context)!.sharingData),
+          appLocalizations.sharingData),
       buildSettingOption(
           () => {
                 Future.delayed(const Duration(milliseconds: 150), () {
@@ -89,7 +89,7 @@ class _SettingPageState extends State<SettingPage> {
                 })
               },
           context,
-          AppLocalizations.of(context)!.indexImagesSetting),
+          appLocalizations.indexImagesSetting),
       buildSettingOption(
           () => {
                 Provider.of<ThemeProvider>(context, listen: false).setTheme(
@@ -98,7 +98,7 @@ class _SettingPageState extends State<SettingPage> {
                             .nextInt(CustomTheme.themeColors.entries.length)]]!)
               },
           context,
-          AppLocalizations.of(context)!.changeTheme),
+          appLocalizations.changeTheme),
     ]);
   }
 
@@ -138,31 +138,31 @@ class _SettingPageState extends State<SettingPage> {
 
   void buildConfirmClearDialog(
       BuildContext context, BillingProvider billingProvider) {
+    var appLocalizations = AppLocalizations.of(context)!;
     showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text(AppLocalizations.of(context)!.clearData),
-            content: Text(AppLocalizations.of(context)!
-                .areYouSureYouWantToClearAllRecords),
+            title: Text(appLocalizations.clearData),
+            content: Text(appLocalizations.areYouSureYouWantToClearAllRecords),
             actions: [
               TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text(AppLocalizations.of(context)!.cancel)),
+                  child: Text(appLocalizations.cancel)),
               TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                     GetIt.I<BillingRepository>().clearBilling().then((value) {
                       Utils.showToast(
-                          AppLocalizations.of(context)!
+                          appLocalizations
                               .clearSuccessfulTotalWhatRecords(value),
                           context);
                       billingProvider.setBillings(<Billing>[]);
                     });
                   },
-                  child: Text(AppLocalizations.of(context)!.confirm)),
+                  child: Text(appLocalizations.confirm)),
             ],
           );
         });
@@ -254,7 +254,7 @@ class _SettingPageState extends State<SettingPage> {
     return billings.length;
   }
 
-  Future<int> openFilePickerAndRead(BuildContext context) async {
+  Future<int> importExcel(BuildContext context) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom, // 文件类型
         allowedExtensions: ['xlsx'],
