@@ -24,5 +24,19 @@
   "all": "全部",
   "kind": "种类",
   "date": "日期",
-  "allTheTime": "全部时间"
+  "allTheTime": "全部时间",
+  "importSuccessTotalImportWhatRecords": "导入成功，共导入{count}条数据",
+  "noDataImported": "没有导入任何数据",
+  "importDataCompatibleOldApp": "导入数据，兼容旧枫叶记账",
+  "clearDataWillClearAllRecords": "清除数据，将清除所有记录!!!",
+  "exportSuccessfulTotalWhatRecords": "导出成功，共导出{count}条数据",
+  "exportData": "导出数据",
+  "sharingSuccessfulTotalWhatExported": "分享成功，共分享{count}条数据",
+  "sharingData": "分享数据",
+  "indexImagesSetting": "首页图片设置",
+  "clearData": "清除数据",
+  "areYouSureYouWantToClearAllRecords": "确定要清除所有记录吗？",
+  "cancel": "取消",
+  "clearSuccessfulTotalWhatRecords": "清除成功，共清除{count}条数据",
+  "confirm": "确定"
 }

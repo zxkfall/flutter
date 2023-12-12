@@ -27,5 +27,51 @@
   "all": "All",
   "kind": "Kind",
   "date": "Date",
-  "allTheTime": "All the time"
+  "allTheTime": "All the time",
+  "importSuccessTotalImportWhatRecords": "The import was successful, a total of {count} pieces of data were imported.",
+  "@importSuccessTotalImportWhatRecords": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "0"
+      }
+    }
+  },
+  "noDataImported": "No data imported",
+  "importDataCompatibleOldApp": "Import data(Support old MapleBilling)",
+  "clearDataWillClearAllRecords": "Clear data(Will clear all records!!!)",
+  "exportSuccessfulTotalWhatRecords": "Export successful, a total of {count} pieces of data were exported.",
+  "@exportSuccessfulTotalWhatRecords": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "0"
+      }
+    }
+  },
+  "exportData": "Export data",
+  "sharingSuccessfulTotalWhatExported": "Sharing was successful, a total of {count} pieces of data were exported.",
+    "@sharingSuccessfulTotalWhatExported": {
+        "placeholders": {
+        "count": {
+            "type": "int",
+            "example": "0"
+        }
+        }
+    },
+  "sharingData": "Sharing data",
+  "indexImagesSetting": "Index images setting",
+  "clearData": "Clear data",
+  "areYouSureYouWantToClearAllRecords": "Are you sure you want to clear all records?",
+  "cancel": "Cancel",
+  "clearSuccessfulTotalWhatRecords": "Clear successful, a total of {count} pieces of data were cleared.",
+    "@clearSuccessfulTotalWhatRecords": {
+        "placeholders": {
+        "count": {
+            "type": "int",
+            "example": "0"
+        }
+        }
+    },
+  "confirm": "Confirm"
 }

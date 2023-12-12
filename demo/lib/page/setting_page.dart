@@ -20,6 +20,7 @@ import '../model/billing.dart';
 import '../repository/billing_repository.dart';
 import '../provider/billing_provider.dart';
 import '../utils/utils.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -46,7 +47,11 @@ class _SettingPageState extends State<SettingPage> {
           onPressed: () => {
             openFilePickerAndRead(context).then((value) {
               Utils.showToast(
-                  value != 0 ? '导入成功，共导入$value条数据' : '未导入数据', fToast);
+                  value != 0
+                      ? AppLocalizations.of(context)!
+                          .importSuccessTotalImportWhatRecords(value)
+                      : AppLocalizations.of(context)!.noDataImported,
+                  fToast);
             })
           },
           style: ElevatedButton.styleFrom(
@@ -59,14 +64,14 @@ class _SettingPageState extends State<SettingPage> {
                       .onSurfaceVariant
                       .withOpacity(0.1),
                   width: 1)),
-          child: const Row(
+          child: Row(
             children: [
               Text(
-                '导入数据',
-                style: TextStyle(fontSize: 16),
+                AppLocalizations.of(context)!.importDataCompatibleOldApp,
+                style: const TextStyle(fontSize: 16),
               ),
-              Spacer(),
-              Icon(
+              const Spacer(),
+              const Icon(
                 Icons.arrow_forward_ios,
                 size: 16,
               )
@@ -91,14 +96,14 @@ class _SettingPageState extends State<SettingPage> {
                         .onSurfaceVariant
                         .withOpacity(0.1),
                     width: 1)),
-            child: const Row(
+            child: Row(
               children: [
                 Text(
-                  '清除数据(！！！将会清除所有数据)',
-                  style: TextStyle(fontSize: 16),
+                  AppLocalizations.of(context)!.clearDataWillClearAllRecords,
+                  style: const TextStyle(fontSize: 16),
                 ),
-                Spacer(),
-                Icon(
+                const Spacer(),
+                const Icon(
                   Icons.arrow_forward_ios,
                   size: 16,
                 )
@@ -111,7 +116,11 @@ class _SettingPageState extends State<SettingPage> {
         child: ElevatedButton(
             onPressed: () => {
                   exportExcel().then((value) {
-                    Utils.showToast('导出成功，共导出$value条数据', fToast);
+                    Utils.showToast(
+                        AppLocalizations.of(context)!
+                            .exportSuccessfulTotalWhatRecords(
+                                int.parse(value['count']!)),
+                        fToast);
                   })
                 },
             style: ElevatedButton.styleFrom(
@@ -124,14 +133,14 @@ class _SettingPageState extends State<SettingPage> {
                         .onSurfaceVariant
                         .withOpacity(0.1),
                     width: 1)),
-            child: const Row(
+            child: Row(
               children: [
                 Text(
-                  '导出数据',
-                  style: TextStyle(fontSize: 16),
+                  AppLocalizations.of(context)!.exportData,
+                  style: const TextStyle(fontSize: 16),
                 ),
-                Spacer(),
-                Icon(
+                const Spacer(),
+                const Icon(
                   Icons.arrow_forward_ios,
                   size: 16,
                 )
@@ -144,7 +153,10 @@ class _SettingPageState extends State<SettingPage> {
         child: ElevatedButton(
             onPressed: () => {
                   shareExcel().then((value) {
-                    Utils.showToast('分享成功，共导出$value条数据', fToast);
+                    Utils.showToast(
+                        AppLocalizations.of(context)!
+                            .sharingSuccessfulTotalWhatExported(value),
+                        fToast);
                   })
                 },
             style: ElevatedButton.styleFrom(
@@ -157,14 +169,14 @@ class _SettingPageState extends State<SettingPage> {
                         .onSurfaceVariant
                         .withOpacity(0.1),
                     width: 1)),
-            child: const Row(
+            child: Row(
               children: [
                 Text(
-                  '分享数据',
-                  style: TextStyle(fontSize: 16),
+                  AppLocalizations.of(context)!.sharingData,
+                  style: const TextStyle(fontSize: 16),
                 ),
-                Spacer(),
-                Icon(
+                const Spacer(),
+                const Icon(
                   Icons.arrow_forward_ios,
                   size: 16,
                 )
@@ -192,14 +204,14 @@ class _SettingPageState extends State<SettingPage> {
                       .onSurfaceVariant
                       .withOpacity(0.1),
                   width: 1)),
-          child: const Row(
+          child: Row(
             children: [
               Text(
-                '首页图片设置',
-                style: TextStyle(fontSize: 16),
+                AppLocalizations.of(context)!.indexImagesSetting,
+                style: const TextStyle(fontSize: 16),
               ),
-              Spacer(),
-              Icon(
+              const Spacer(),
+              const Icon(
                 Icons.arrow_forward_ios,
                 size: 16,
               )
@@ -216,23 +228,27 @@ class _SettingPageState extends State<SettingPage> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Text('清除数据'),
-            content: const Text('确定要清除所有数据吗？'),
+            title: Text(AppLocalizations.of(context)!.clearData),
+            content: Text(AppLocalizations.of(context)!
+                .areYouSureYouWantToClearAllRecords),
             actions: [
               TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text('取消')),
+                  child: Text(AppLocalizations.of(context)!.cancel)),
               TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                     GetIt.I<BillingRepository>().clearBilling().then((value) {
-                      Utils.showToast('清除成功，共清除$value条数据', fToast);
+                      Utils.showToast(
+                          AppLocalizations.of(context)!
+                              .clearSuccessfulTotalWhatRecords(value),
+                          fToast);
                       billingProvider.setBillings(<Billing>[]);
                     });
                   },
-                  child: const Text('确定')),
+                  child: Text(AppLocalizations.of(context)!.confirm)),
             ],
           );
         });
