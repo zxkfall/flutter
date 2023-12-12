@@ -43,220 +43,100 @@ class _SettingPageState extends State<SettingPage> {
         height: 48,
         color: Theme.of(context).colorScheme.onSurfaceVariant,
       ),
-      SizedBox(
-        height: 48,
-        width: double.infinity,
-        child: ElevatedButton(
-          onPressed: () => {
-            openFilePickerAndRead(context).then((value) {
-              Utils.showToast(
-                  value != 0
-                      ? AppLocalizations.of(context)!
-                          .importSuccessTotalImportWhatRecords(value)
-                      : AppLocalizations.of(context)!.noDataImported,
-                  fToast);
-            })
-          },
-          style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(0),
-              ),
-              side: BorderSide(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurfaceVariant
-                      .withOpacity(0.1),
-                  width: 1)),
-          child: Row(
-            children: [
-              Text(
-                AppLocalizations.of(context)!.importDataCompatibleOldApp,
-                style: const TextStyle(fontSize: 16),
-              ),
-              const Spacer(),
-              const Icon(
-                Icons.arrow_forward_ios,
-                size: 16,
-              )
-            ],
-          ),
-        ),
-      ),
-      SizedBox(
-        height: 48,
-        width: double.infinity,
-        child: ElevatedButton(
-            onPressed: () {
-              buildConfirmClearDialog(context, fToast, billingProvider);
-            },
-            style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0),
-                ),
-                side: BorderSide(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurfaceVariant
-                        .withOpacity(0.1),
-                    width: 1)),
-            child: Row(
-              children: [
-                Text(
-                  AppLocalizations.of(context)!.clearDataWillClearAllRecords,
-                  style: const TextStyle(fontSize: 16),
-                ),
-                const Spacer(),
-                const Icon(
-                  Icons.arrow_forward_ios,
-                  size: 16,
-                )
-              ],
-            )),
-      ),
-      SizedBox(
-        height: 48,
-        width: double.infinity,
-        child: ElevatedButton(
-            onPressed: () => {
-                  exportExcel().then((value) {
-                    Utils.showToast(
-                        AppLocalizations.of(context)!
-                            .exportSuccessfulTotalWhatRecords(
-                                int.parse(value['count']!)),
-                        fToast);
-                  })
-                },
-            style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0),
-                ),
-                side: BorderSide(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurfaceVariant
-                        .withOpacity(0.1),
-                    width: 1)),
-            child: Row(
-              children: [
-                Text(
-                  AppLocalizations.of(context)!.exportData,
-                  style: const TextStyle(fontSize: 16),
-                ),
-                const Spacer(),
-                const Icon(
-                  Icons.arrow_forward_ios,
-                  size: 16,
-                )
-              ],
-            )),
-      ),
-      SizedBox(
-        height: 48,
-        width: double.infinity,
-        child: ElevatedButton(
-            onPressed: () => {
-                  shareExcel().then((value) {
-                    Utils.showToast(
-                        AppLocalizations.of(context)!
-                            .sharingSuccessfulTotalWhatExported(value),
-                        fToast);
-                  })
-                },
-            style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0),
-                ),
-                side: BorderSide(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurfaceVariant
-                        .withOpacity(0.1),
-                    width: 1)),
-            child: Row(
-              children: [
-                Text(
-                  AppLocalizations.of(context)!.sharingData,
-                  style: const TextStyle(fontSize: 16),
-                ),
-                const Spacer(),
-                const Icon(
-                  Icons.arrow_forward_ios,
-                  size: 16,
-                )
-              ],
-            )),
-      ),
-      SizedBox(
-        height: 48,
-        width: double.infinity,
-        child: ElevatedButton(
-          onPressed: () => {
-            Future.delayed(const Duration(milliseconds: 150), () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => const IndexImagesSettingPage(),
-              ));
-            })
-          },
-          style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(0),
-              ),
-              side: BorderSide(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurfaceVariant
-                      .withOpacity(0.1),
-                  width: 1)),
-          child: Row(
-            children: [
-              Text(
-                AppLocalizations.of(context)!.indexImagesSetting,
-                style: const TextStyle(fontSize: 16),
-              ),
-              const Spacer(),
-              const Icon(
-                Icons.arrow_forward_ios,
-                size: 16,
-              )
-            ],
-          ),
-        ),
-      ),
-      SizedBox(
-        height: 48,
-        width: double.infinity,
-        child: ElevatedButton(
-          onPressed: () => {
-            Provider.of<ThemeProvider>(context, listen: false).setTheme(
-                CustomTheme.themeColors[CustomTheme.themeColors.keys.toList()[
-                    Random().nextInt(CustomTheme.themeColors.entries.length)]]!)
-          },
-          style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(0),
-              ),
-              side: BorderSide(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurfaceVariant
-                      .withOpacity(0.1),
-                  width: 1)),
-          child: Row(
-            children: [
-              Text(
-                AppLocalizations.of(context)!.changeTheme,
-                style: const TextStyle(fontSize: 16),
-              ),
-              const Spacer(),
-              const Icon(
-                Icons.arrow_forward_ios,
-                size: 16,
-              )
-            ],
-          ),
-        ),
-      ),
+      buildSettingOption(
+          () => {
+                openFilePickerAndRead(context).then((value) {
+                  Utils.showToast(
+                      value != 0
+                          ? AppLocalizations.of(context)!
+                              .importSuccessTotalImportWhatRecords(value)
+                          : AppLocalizations.of(context)!.noDataImported,
+                      fToast);
+                })
+              },
+          context,
+          AppLocalizations.of(context)!.importDataCompatibleOldApp),
+      buildSettingOption(
+          () => {buildConfirmClearDialog(context, fToast, billingProvider)},
+          context,
+          AppLocalizations.of(context)!.clearDataWillClearAllRecords),
+      buildSettingOption(
+          () => {
+                exportExcel().then((value) {
+                  Utils.showToast(
+                      AppLocalizations.of(context)!
+                          .exportSuccessfulTotalWhatRecords(
+                              int.parse(value['count']!)),
+                      fToast);
+                })
+              },
+          context,
+          AppLocalizations.of(context)!.exportData),
+      buildSettingOption(
+          () => {
+                shareExcel().then((value) {
+                  Utils.showToast(
+                      AppLocalizations.of(context)!
+                          .sharingSuccessfulTotalWhatExported(value),
+                      fToast);
+                })
+              },
+          context,
+          AppLocalizations.of(context)!.sharingData),
+      buildSettingOption(
+          () => {
+                Future.delayed(const Duration(milliseconds: 150), () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => const IndexImagesSettingPage(),
+                  ));
+                })
+              },
+          context,
+          AppLocalizations.of(context)!.indexImagesSetting),
+      buildSettingOption(
+          () => {
+                Provider.of<ThemeProvider>(context, listen: false).setTheme(
+                    CustomTheme.themeColors[
+                        CustomTheme.themeColors.keys.toList()[Random()
+                            .nextInt(CustomTheme.themeColors.entries.length)]]!)
+              },
+          context,
+          AppLocalizations.of(context)!.changeTheme),
     ]);
+  }
+
+  SizedBox buildSettingOption(Set<void> Function() changeThemePressEvent,
+      BuildContext context, String innerText) {
+    return SizedBox(
+      height: 48,
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: changeThemePressEvent,
+        style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(0),
+            ),
+            side: BorderSide(
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurfaceVariant
+                    .withOpacity(0.1),
+                width: 1)),
+        child: Row(
+          children: [
+            Text(
+              innerText,
+              style: const TextStyle(fontSize: 16),
+            ),
+            const Spacer(),
+            const Icon(
+              Icons.arrow_forward_ios,
+              size: 16,
+            )
+          ],
+        ),
+      ),
+    );
   }
 
   void buildConfirmClearDialog(
