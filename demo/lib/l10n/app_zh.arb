@@ -4,5 +4,13 @@
   "home": "主页",
   "chart": "统计",
   "search": "搜索",
-  "setting": "设置"
+  "setting": "设置",
+  "amountCantNotBeEmpty": "金额不能为空",
+  "editBilling": "修改",
+  "amount": "金额",
+  "pleaseEnterAmount": "请输入金额",
+  "description": "描述",
+  "expense": "支出",
+  "income": "收入",
+  "save": "保存"
 }

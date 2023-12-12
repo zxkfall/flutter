@@ -12,6 +12,7 @@ import '../repository/billing_repository.dart';
 import '../container/page_view_container.dart';
 import '../view/kind_selection_wrap_view.dart';
 import '../utils/utils.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BillingDetailPage extends StatefulWidget {
   const BillingDetailPage({super.key, this.billing});
@@ -63,10 +64,12 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
       );
 
       if (Decimal.parse(_amountController.text) == Decimal.zero) {
-        Utils.showToast('Amount can not be 0', fToast);
+        Utils.showToast(
+            AppLocalizations.of(context)!.amountCantNotBeEmpty, fToast);
         return;
       }
-      final billingProvider = Provider.of<BillingProvider>(context, listen: false);
+      final billingProvider =
+          Provider.of<BillingProvider>(context, listen: false);
 
       // 获取当前页面的Navigator
       final currentNavigator = Navigator.of(context);
@@ -83,20 +86,21 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
 
       // 使用当前页面的Navigator来进行导航
       currentNavigator.pop();
-      currentNavigator
-          .pushReplacement(MaterialPageRoute(builder: (_) => const PageViewContainer()));
+      currentNavigator.pushReplacement(
+          MaterialPageRoute(builder: (_) => const PageViewContainer()));
     }
   }
 
   Future<void> _delete() async {
     if (widget.billing != null) {
-      final billingProvider = Provider.of<BillingProvider>(context, listen: false);
+      final billingProvider =
+          Provider.of<BillingProvider>(context, listen: false);
       final currentNavigator = Navigator.of(context);
       await GetIt.I<BillingRepository>().deleteBilling(widget.billing!.id);
       billingProvider.removeBilling(widget.billing!.id);
       currentNavigator.pop();
-      currentNavigator
-          .pushReplacement(MaterialPageRoute(builder: (_) => const PageViewContainer()));
+      currentNavigator.pushReplacement(
+          MaterialPageRoute(builder: (_) => const PageViewContainer()));
     }
   }
 
@@ -105,7 +109,9 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
-        title: Text(widget.billing == null ? 'Add Billing' : 'Edit Billing'),
+        title: Text(widget.billing == null
+            ? AppLocalizations.of(context)!.addBilling
+            : AppLocalizations.of(context)!.editBilling),
         actions: [
           if (widget.billing != null)
             IconButton(
@@ -133,8 +139,8 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
             ),
             TextFormField(
               controller: _amountController,
-              decoration: const InputDecoration(
-                labelText: 'Amount',
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.amount,
               ),
               inputFormatters: [
                 FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}$')),
@@ -143,15 +149,15 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
                   const TextInputType.numberWithOptions(decimal: true),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter amount';
+                  return AppLocalizations.of(context)!.pleaseEnterAmount;
                 }
                 return null;
               },
             ),
             TextFormField(
               controller: _descriptionController,
-              decoration: const InputDecoration(
-                labelText: 'Description',
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.description,
               ),
               validator: (value) {
                 return null;
@@ -190,8 +196,9 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
                       .map<DropdownMenuItem<BillingType>>((BillingType value) {
                     return DropdownMenuItem<BillingType>(
                       value: value,
-                      child: Text(
-                          value == BillingType.expense ? 'Expense' : 'Income'),
+                      child: Text(value == BillingType.expense
+                          ? AppLocalizations.of(context)!.expense
+                          : AppLocalizations.of(context)!.income),
                     );
                   }).toList(),
                 ),
@@ -199,7 +206,7 @@ class _BillingDetailPageState extends State<BillingDetailPage> {
             ),
             ElevatedButton(
               onPressed: _save,
-              child: const Text('Save'),
+              child: Text(AppLocalizations.of(context)!.save),
             ),
           ],
         ),

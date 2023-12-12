@@ -7,5 +7,13 @@
   "home": "Home",
   "chart": "Chart",
   "search": "Search",
-  "setting": "Setting"
+  "setting": "Setting",
+  "amountCantNotBeEmpty": "Amount can't not be empty",
+  "editBilling": "Edit Billing",
+  "amount": "Amount",
+  "pleaseEnterAmount": "Please enter amount",
+  "description": "Description",
+  "expense": "Expense",
+  "income": "Income",
+  "save": "Save"
 }
