@@ -1,5 +1,6 @@
 import 'package:decimal/decimal.dart';
 import 'package:demo/model/billing.dart';
+import 'package:demo/provider/theme_provider.dart';
 import 'package:demo/repository/billing_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -30,8 +31,7 @@ void main() {
     GetIt.I.registerSingleton<BillingRepository>(mockRepository);
   });
 
-  testWidgets('Test that all the billing data in the sqllite',
-      (WidgetTester tester) async {
+  testWidgets('Test that all the billing data in the sqllite', (WidgetTester tester) async {
     when(mockRepository.billings()).thenAnswer((_) async {
       return [
         Billing(
@@ -75,6 +75,9 @@ void main() {
               ChangeNotifierProvider<BillingProvider>(
                 create: (_) => BillingProvider(), // 这里你需要提供BillingProvider的实例
               ),
+              ChangeNotifierProvider<ThemeProvider>(
+                create: (_) => ThemeProvider(),
+              ),
             ],
             child: const MyApp(),
           ),
@@ -100,8 +103,7 @@ void main() {
     expect(find.text('digital'), findsNWidgets(1));
   });
 
-  testWidgets('Should navigate to add billing page when click add button',
-      (WidgetTester tester) async {
+  testWidgets('Should navigate to add billing page when click add button', (WidgetTester tester) async {
     when(mockRepository.billings()).thenAnswer((_) async {
       return [];
     });
@@ -111,6 +113,9 @@ void main() {
             providers: [
               ChangeNotifierProvider<BillingProvider>(
                 create: (_) => BillingProvider(), // 这里你需要提供BillingProvider的实例
+              ),
+              ChangeNotifierProvider<ThemeProvider>(
+                create: (_) => ThemeProvider(),
               ),
             ],
             child: const MyApp(),
@@ -123,8 +128,7 @@ void main() {
     expect(find.text('Add Billing'), findsOneWidget);
   });
 
-  testWidgets('Should navigate to edit billing page when click billing item',
-      (WidgetTester tester) async {
+  testWidgets('Should navigate to edit billing page when click billing item', (WidgetTester tester) async {
     when(mockRepository.billings()).thenAnswer((_) async {
       return [
         Billing(
@@ -143,6 +147,9 @@ void main() {
             providers: [
               ChangeNotifierProvider<BillingProvider>(
                 create: (_) => BillingProvider(), // 这里你需要提供BillingProvider的实例
+              ),
+              ChangeNotifierProvider<ThemeProvider>(
+                create: (_) => ThemeProvider(),
               ),
             ],
             child: const MyApp(),

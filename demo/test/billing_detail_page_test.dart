@@ -12,6 +12,7 @@ import 'package:mocktail_image_network/mocktail_image_network.dart';
 import 'package:provider/provider.dart';
 import 'billing_detail_page_test.mocks.dart';
 import 'localizations_inj.dart';
+import 'utils.dart';
 
 @GenerateNiceMocks([MockSpec<BillingProvider>(), MockSpec<BillingRepository>()])
 void main() {
@@ -304,9 +305,4 @@ void main() {
           param.kind == BillingKind.sport;
     })))).called(1);
   });
-}
-
-Color getIsSelectedColor(WidgetTester widgetTester, bool isSelected) {
-  var context = widgetTester.element(find.byType(MaterialApp));
-  return isSelected ? Theme.of(context).colorScheme.inversePrimary : Theme.of(context).colorScheme.onSurfaceVariant;
 }

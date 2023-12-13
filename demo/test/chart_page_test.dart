@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 
+import 'localizations_inj.dart';
+
 void main() {
   testWidgets('should show empty chart page', (widgetTester) async {
     await widgetTester.pumpWidget(
@@ -13,7 +15,7 @@ void main() {
             create: (_) => BillingProvider(),
           ),
         ],
-        child: const MaterialApp(
+        child: const LocalizationsInj(
           home: Scaffold(
             body: Directionality(
               textDirection: TextDirection.rtl,

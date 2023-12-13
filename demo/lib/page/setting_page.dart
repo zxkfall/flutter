@@ -78,7 +78,7 @@ class _SettingPageState extends State<SettingPage> {
               },
           context,
           appLocalizations.indexImagesSetting),
-      buildSettingOption(() => {Navigator.of(context).push(MaterialPageRoute(builder: (_) => ChangeThemePage()))},
+      buildSettingOption(() => {Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ChangeThemePage()))},
           context, appLocalizations.changeTheme),
     ]);
   }

@@ -4,6 +4,7 @@ import 'package:demo/provider/billing_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
+import 'utils.dart';
 
 void main() {
   testWidgets('Should change style when kind is chose', (widgetTester) async {
@@ -16,7 +17,7 @@ void main() {
       MultiProvider(
         providers: [
           ChangeNotifierProvider<BillingProvider>(
-            create: (_) => BillingProvider(), // 这里你需要提供BillingProvider的实例
+            create: (_) => BillingProvider(),
           ),
         ],
         child: Material(
@@ -34,16 +35,16 @@ void main() {
 
     final foodFinder = find.text('food');
     final foodWidget = foodFinder.evaluate().first.widget as Text;
-    expect(foodWidget.style!.color, Colors.blue);
+    expect(foodWidget.style!.color, getIsSelectedColor(widgetTester, true));
     final fruitFinder = find.text('fruit');
     final fruitWidget = fruitFinder.evaluate().first.widget as Text;
-    expect(fruitWidget.style!.color, Colors.black);
+    expect(fruitWidget.style!.color, getIsSelectedColor(widgetTester, false));
 
     await widgetTester.tap(fruitFinder);
     await widgetTester.pump();
     final foodWidget2 = foodFinder.evaluate().first.widget as Text;
-    expect(foodWidget2.style!.color, Colors.black);
+    expect(foodWidget2.style!.color, getIsSelectedColor(widgetTester, false));
     final fruitWidget2 = fruitFinder.evaluate().first.widget as Text;
-    expect(fruitWidget2.style!.color, Colors.blue);
+    expect(fruitWidget2.style!.color, getIsSelectedColor(widgetTester, true));
   });
 }
