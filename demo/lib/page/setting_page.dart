@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'dart:developer' as developer;
 
-import 'package:demo/page/change_theme_page.dart';
-import 'package:demo/page/index_images_setting_page.dart';
+import 'package:demo/page/sub_setting_page/change_theme_page.dart';
+import 'package:demo/page/sub_setting_page/index_images_setting_page.dart';
 import 'package:demo/view/top_bar_placeholder.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';

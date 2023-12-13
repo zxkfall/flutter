@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../utils/utils.dart';
+import '../../utils/utils.dart';
 
 class IndexImagesSettingPage extends StatefulWidget {
   const IndexImagesSettingPage({super.key});

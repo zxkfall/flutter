@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../constants/custom_theme.dart';
-import '../provider/theme_provider.dart';
+import '../../constants/custom_theme.dart';
+import '../../provider/theme_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ChangeThemePage extends StatefulWidget {
