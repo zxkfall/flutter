@@ -136,18 +136,19 @@ when you changed `intl_messages.arb` file
 
 Tasks:
 1. [x] bottom navigation bar can click with icon and text
-2. [] change theme
+2. [x] change theme
 3. [x] add global translation
-4. [] add global theme
+4. [x] add global theme
 5. [x] add test
 6. [] use icon to replace kind icon
 7. [] add feedback email
 8. [x] avoid IOS app icon has black background
 9. [x] add query page
 10. [] add adding page description recommend tip
-11. [] add multiple currencies support
+11. [x] add multiple currencies support
 12. [] add import version management
 13. [] add export version management
 14. [] add swipe to add record
 15. [] change chart page date show format
 16. [] add change language support
+17. [] add light/dark theme support
