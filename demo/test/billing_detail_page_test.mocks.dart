@@ -51,6 +51,20 @@ class MockBillingProvider extends _i1.Mock implements _i3.BillingProvider {
       ) as List<_i2.Billing>);
 
   @override
+  String get searchDescription => (super.noSuchMethod(
+        Invocation.getter(#searchDescription),
+        returnValue: '',
+        returnValueForMissingStub: '',
+      ) as String);
+
+  @override
+  bool get isAllDate => (super.noSuchMethod(
+        Invocation.getter(#isAllDate),
+        returnValue: false,
+        returnValueForMissingStub: false,
+      ) as bool);
+
+  @override
   bool get hasListeners => (super.noSuchMethod(
         Invocation.getter(#hasListeners),
         returnValue: false,
@@ -124,6 +138,7 @@ class MockBillingProvider extends _i1.Mock implements _i3.BillingProvider {
   void searchByDateRange(
     DateTime? start,
     DateTime? end,
+    bool? isAllDate,
   ) =>
       super.noSuchMethod(
         Invocation.method(
@@ -131,6 +146,7 @@ class MockBillingProvider extends _i1.Mock implements _i3.BillingProvider {
           [
             start,
             end,
+            isAllDate,
           ],
         ),
         returnValueForMissingStub: null,
