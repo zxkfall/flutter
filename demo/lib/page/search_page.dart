@@ -28,6 +28,16 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Consumer<BillingProvider>(builder: (context, provider, child) {
       descriptionController.text = provider.searchDescription;
+      searchType = provider.searchType == null
+          ? 'All'
+          : provider.searchType == BillingType.expense
+              ? 'Expense'
+              : 'Income';
+      searchKind = provider.searchKind;
+      startDate = provider.startDate ?? DateTime.now().add(const Duration(days: -365));
+      endDate = provider.endDate ?? DateTime.now();
+      allTime = provider.isAllDate;
+
       var appLocalizations = AppLocalizations.of(context)!;
       return Scaffold(
         body: Column(
@@ -167,14 +177,14 @@ class _SearchPageState extends State<SearchPage> {
                             onPressed: () {
                               showDateRangePicker(
                                 context: context,
-                                firstDate: DateTime(2010),
-                                lastDate: DateTime(2050),
+                                firstDate: DateTime(1999),
+                                lastDate: DateTime(2199),
                                 initialDateRange: DateTimeRange(start: startDate, end: endDate),
                               ).then((value) {
                                 setState(() {
                                   startDate = value!.start;
                                   endDate = value.end;
-                                  provider.searchByDateRange(startDate, endDate);
+                                  provider.searchByDateRange(startDate, endDate, false);
                                 });
                               });
                             },
@@ -185,10 +195,10 @@ class _SearchPageState extends State<SearchPage> {
                           onChanged: (value) {
                             if (value == true) {
                               allTime = true;
-                              provider.searchByDateRange(null, null);
+                              provider.searchByDateRange(startDate, endDate, true);
                             } else {
                               allTime = false;
-                              provider.searchByDateRange(startDate, endDate);
+                              provider.searchByDateRange(startDate, endDate, false);
                             }
                           },
                         ),

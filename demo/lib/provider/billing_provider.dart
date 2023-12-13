@@ -40,13 +40,25 @@ class BillingProvider with ChangeNotifier {
 
   BillingKind? _searchKind;
 
-  DateTime? _startDate = DateTime(2010);
+  DateTime? _startDate;
 
-  DateTime? _endDate = DateTime(2050);
+  DateTime? _endDate;
+
+  bool _isAllDate = false;
 
   List<Billing> get searchResult => _searchResult;
 
   String get searchDescription => _searchDescription;
+
+  BillingType? get searchType => _searchType;
+
+  BillingKind? get searchKind => _searchKind;
+
+  DateTime? get startDate => _startDate;
+
+  DateTime? get endDate => _endDate;
+
+  bool get isAllDate => _isAllDate;
 
   void searchByDescription(String text) {
     _searchDescription = text;
@@ -66,9 +78,10 @@ class BillingProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void searchByDateRange(DateTime? start, DateTime? end) {
+  void searchByDateRange(DateTime? start, DateTime? end, bool isAllDate) {
     _startDate = start;
     _endDate = end;
+    _isAllDate = isAllDate;
     _search();
     notifyListeners();
   }
@@ -84,7 +97,7 @@ class BillingProvider with ChangeNotifier {
   }
 
   bool _filterByDate(Billing billing) {
-    if (_startDate == null && _endDate == null) {
+    if (_startDate == null && _endDate == null || _isAllDate) {
       return true;
     } else if (_startDate == null && _endDate != null) {
       return billing.date.isBefore(_endDate!);
@@ -102,6 +115,7 @@ class BillingProvider with ChangeNotifier {
     _searchKind = null;
     _startDate = null;
     _endDate = null;
+    _isAllDate = false;
     notifyListeners();
   }
 }
