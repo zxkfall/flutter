@@ -45,10 +45,10 @@ class _ChangeThemePageState extends State<ChangeThemePage> {
                     children: [
                   ...CustomTheme.themeColors.keys.map((key) {
                     var themeProvider = Provider.of<ThemeProvider>(context, listen: false);
-                    var isCurrentColor = themeProvider.primaryColor == CustomTheme.themeColors[key];
+                    var isCurrentColor = themeProvider.themeColor == CustomTheme.themeColors[key];
                     return InkWell(
                       onTap: () {
-                        themeProvider.setTheme(CustomTheme.themeColors[key]!);
+                        themeProvider.setThemeColor(CustomTheme.themeColors[key]!);
                         setState(() {});
                       },
                       child: Container(

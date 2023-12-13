@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CustomTheme {
-  static Map<String, Color> themeColors = {
+  static const Map<String, Color> themeColors = {
     'red': Colors.red,
     'blue': Colors.blue,
     'green': Colors.green,
@@ -30,4 +30,6 @@ class CustomTheme {
     'lightBlueAccent': Colors.lightBlueAccent,
     'lightGreenAccent': Colors.lightGreenAccent,
   };
+
+  static const String currentThemeColorKey = 'currentThemeColor';
 }
