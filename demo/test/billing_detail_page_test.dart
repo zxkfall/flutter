@@ -10,8 +10,8 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mocktail_image_network/mocktail_image_network.dart';
 import 'package:provider/provider.dart';
-
 import 'billing_detail_page_test.mocks.dart';
+import 'localizations_inj.dart';
 
 @GenerateNiceMocks([MockSpec<BillingProvider>(), MockSpec<BillingRepository>()])
 void main() {
@@ -27,55 +27,42 @@ void main() {
             create: (_) => BillingProvider(),
           ),
         ],
-        child: const MaterialApp(
-            home: Directionality(
-                textDirection: TextDirection.ltr, child: BillingDetailPage())),
+        child:
+            const LocalizationsInj(home: Directionality(textDirection: TextDirection.ltr, child: BillingDetailPage())),
       ),
     );
     await widgetTester.pump();
+    var selectedColor = getIsSelectedColor(widgetTester, true);
+    var notSelectedColor = getIsSelectedColor(widgetTester, false);
 
     expect(find.text('Add Billing'), findsOneWidget);
 
     final allExpenseKinds = getExpenseValues();
     for (var kind in allExpenseKinds.skip(1)) {
       expect(
-          find.byWidgetPredicate((widget) =>
-              widget is Text &&
-              widget.data == kind.name &&
-              widget.style!.color == Colors.black),
+          find.byWidgetPredicate(
+              (widget) => widget is Text && widget.data == kind.name && widget.style!.color == notSelectedColor),
           findsOneWidget);
-      expect(find.byIcon(BillingIconMapper.getIcon(BillingType.expense, kind)),
-          findsWidgets);
+      expect(find.byIcon(BillingIconMapper.getIcon(BillingType.expense, kind)), findsWidgets);
     }
     expect(
         find.byWidgetPredicate((widget) =>
-            widget is Text &&
-            widget.data == allExpenseKinds.first.name &&
-            widget.style!.color == Colors.blue),
+            widget is Text && widget.data == allExpenseKinds.first.name && widget.style!.color == selectedColor),
         findsOneWidget);
-    expect(
-        find.byIcon(BillingIconMapper.getIcon(
-            BillingType.expense, allExpenseKinds.first)),
-        findsOneWidget);
+    expect(find.byIcon(BillingIconMapper.getIcon(BillingType.expense, allExpenseKinds.first)), findsOneWidget);
 
     expect(
         find.byWidgetPredicate((widget) =>
-            widget is TextField &&
-            widget.decoration!.labelText == 'Amount' &&
-            widget.controller!.text.isEmpty),
+            widget is TextField && widget.decoration!.labelText == 'Amount' && widget.controller!.text.isEmpty),
         findsOneWidget);
     expect(
         find.byWidgetPredicate((widget) =>
-            widget is TextField &&
-            widget.decoration!.labelText == 'Description' &&
-            widget.controller!.text.isEmpty),
+            widget is TextField && widget.decoration!.labelText == 'Description' && widget.controller!.text.isEmpty),
         findsOneWidget);
 
     expect(
-        find.byWidgetPredicate((widget) =>
-            widget is DropdownButton &&
-            widget.value is BillingType &&
-            widget.value == BillingType.expense),
+        find.byWidgetPredicate(
+            (widget) => widget is DropdownButton && widget.value is BillingType && widget.value == BillingType.expense),
         findsOneWidget);
   });
 
@@ -95,45 +82,33 @@ void main() {
             create: (_) => BillingProvider(),
           ),
         ],
-        child: MaterialApp(
-            home: Directionality(
-                textDirection: TextDirection.ltr,
-                child: BillingDetailPage(billing: billing))),
+        child: LocalizationsInj(
+            home: Directionality(textDirection: TextDirection.ltr, child: BillingDetailPage(billing: billing))),
       ),
     );
     await widgetTester.pump();
+    var selectedColor = getIsSelectedColor(widgetTester, true);
+    var notSelectedColor = getIsSelectedColor(widgetTester, false);
 
     expect(find.text('Edit Billing'), findsOneWidget);
 
     final allExpenseKinds = getExpenseValues();
-    for (var kind in allExpenseKinds
-        .where((value) => value != BillingKind.fruit)
-        .toList()) {
+    for (var kind in allExpenseKinds.where((value) => value != BillingKind.fruit).toList()) {
       expect(
-          find.byWidgetPredicate((widget) =>
-              widget is Text &&
-              widget.data == kind.name &&
-              widget.style!.color == Colors.black),
+          find.byWidgetPredicate(
+              (widget) => widget is Text && widget.data == kind.name && widget.style!.color == notSelectedColor),
           findsOneWidget);
-      expect(find.byIcon(BillingIconMapper.getIcon(BillingType.expense, kind)),
-          findsWidgets);
+      expect(find.byIcon(BillingIconMapper.getIcon(BillingType.expense, kind)), findsWidgets);
     }
     expect(
         find.byWidgetPredicate((widget) =>
-            widget is Text &&
-            widget.data == BillingKind.fruit.name &&
-            widget.style!.color == Colors.blue),
+            widget is Text && widget.data == BillingKind.fruit.name && widget.style!.color == selectedColor),
         findsOneWidget);
-    expect(
-        find.byIcon(
-            BillingIconMapper.getIcon(BillingType.expense, BillingKind.fruit)),
-        findsOneWidget);
+    expect(find.byIcon(BillingIconMapper.getIcon(BillingType.expense, BillingKind.fruit)), findsOneWidget);
 
     expect(
         find.byWidgetPredicate((widget) =>
-            widget is TextField &&
-            widget.decoration!.labelText == 'Amount' &&
-            widget.controller!.text == '100'),
+            widget is TextField && widget.decoration!.labelText == 'Amount' && widget.controller!.text == '100'),
         findsOneWidget);
     expect(
         find.byWidgetPredicate((widget) =>
@@ -143,10 +118,8 @@ void main() {
         findsOneWidget);
 
     expect(
-        find.byWidgetPredicate((widget) =>
-            widget is DropdownButton &&
-            widget.value is BillingType &&
-            widget.value == BillingType.expense),
+        find.byWidgetPredicate(
+            (widget) => widget is DropdownButton && widget.value is BillingType && widget.value == BillingType.expense),
         findsOneWidget);
 
     await widgetTester.tap(find.text('Jan 1, 2021'));
@@ -155,39 +128,27 @@ void main() {
     await widgetTester.pumpAndSettle();
     await widgetTester.tap(find.text('OK'));
     await widgetTester.pumpAndSettle();
-    expect(
-        find.byWidgetPredicate(
-            (widget) => widget is Text && widget.data == 'Jan 2, 2021'),
-        findsOneWidget);
+    expect(find.byWidgetPredicate((widget) => widget is Text && widget.data == 'Jan 2, 2021'), findsOneWidget);
 
     await widgetTester.tap(find.text('Expense'));
     await widgetTester.pumpAndSettle();
     await widgetTester.tap(find.text('Income'));
     await widgetTester.pumpAndSettle();
     expect(
-        find.byWidgetPredicate((widget) =>
-            widget is DropdownButton &&
-            widget.value is BillingType &&
-            widget.value == BillingType.income),
+        find.byWidgetPredicate(
+            (widget) => widget is DropdownButton && widget.value is BillingType && widget.value == BillingType.income),
         findsOneWidget);
     final allIncomeKinds = getIncomeValues();
-    for (var kind in allIncomeKinds
-        .where((value) => value != BillingKind.salary)
-        .toList()) {
+    for (var kind in allIncomeKinds.where((value) => value != BillingKind.salary).toList()) {
       expect(
-          find.byWidgetPredicate((widget) =>
-              widget is Text &&
-              widget.data == kind.name &&
-              widget.style!.color == Colors.black),
+          find.byWidgetPredicate(
+              (widget) => widget is Text && widget.data == kind.name && widget.style!.color == notSelectedColor),
           findsOneWidget);
-      expect(find.byIcon(BillingIconMapper.getIcon(BillingType.income, kind)),
-          findsWidgets);
+      expect(find.byIcon(BillingIconMapper.getIcon(BillingType.income, kind)), findsWidgets);
     }
     expect(
         find.byWidgetPredicate((widget) =>
-            widget is Text &&
-            widget.data == BillingKind.salary.name &&
-            widget.style!.color == Colors.blue),
+            widget is Text && widget.data == BillingKind.salary.name && widget.style!.color == selectedColor),
         findsOneWidget);
   });
 
@@ -210,7 +171,7 @@ void main() {
             create: (_) => mockBillingProvider,
           ),
         ],
-        child: MaterialApp(
+        child: LocalizationsInj(
           home: Directionality(
             textDirection: TextDirection.ltr,
             child: Builder(
@@ -267,7 +228,7 @@ void main() {
             create: (_) => mockBillingProvider,
           ),
         ],
-        child: MaterialApp(
+        child: LocalizationsInj(
           home: Directionality(
             textDirection: TextDirection.ltr,
             child: Builder(
@@ -295,18 +256,16 @@ void main() {
     await widgetTester.tap(find.text('Go to Billing Detail Page'));
     await widgetTester.pumpAndSettle();
 
-    expect(
-        find.byWidgetPredicate((widget) =>
-            widget is Text &&
-            widget.data == BillingKind.fruit.name &&
-            widget.style!.color == Colors.blue),
-        findsOneWidget);
+    var selectedColor = getIsSelectedColor(widgetTester, true);
+    var notSelectedColor = getIsSelectedColor(widgetTester, false);
+
+    expect(find.byWidgetPredicate((widget) {
+      return widget is Text && widget.data == BillingKind.fruit.name && widget.style!.color == selectedColor;
+    }), findsOneWidget);
 
     expect(
         find.byWidgetPredicate((widget) =>
-            widget is Text &&
-            widget.data == BillingKind.sport.name &&
-            widget.style!.color == Colors.black),
+            widget is Text && widget.data == BillingKind.sport.name && widget.style!.color == notSelectedColor),
         findsOneWidget);
 
     await widgetTester.tap(find.text('sport'));
@@ -314,16 +273,12 @@ void main() {
 
     expect(
         find.byWidgetPredicate((widget) =>
-            widget is Text &&
-            widget.data == BillingKind.sport.name &&
-            widget.style!.color == Colors.blue),
+            widget is Text && widget.data == BillingKind.sport.name && widget.style!.color == selectedColor),
         findsOneWidget);
 
     expect(
         find.byWidgetPredicate((widget) =>
-            widget is Text &&
-            widget.data == BillingKind.fruit.name &&
-            widget.style!.color == Colors.black),
+            widget is Text && widget.data == BillingKind.fruit.name && widget.style!.color == notSelectedColor),
         findsOneWidget);
 
     await widgetTester.tap(find.text('Save'));
@@ -349,4 +304,9 @@ void main() {
           param.kind == BillingKind.sport;
     })))).called(1);
   });
+}
+
+Color getIsSelectedColor(WidgetTester widgetTester, bool isSelected) {
+  var context = widgetTester.element(find.byType(MaterialApp));
+  return isSelected ? Theme.of(context).colorScheme.inversePrimary : Theme.of(context).colorScheme.onSurfaceVariant;
 }
