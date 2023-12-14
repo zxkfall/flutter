@@ -115,24 +115,24 @@ class _PageViewContainerState extends State<PageViewContainer> {
       child: SizedBox(
         width: 48,
         child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 32,
-                width: 32,
-                child: Icon(
+          child: SingleChildScrollView(
+            physics: const NeverScrollableScrollPhysics(),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
                   itemIcon,
                   color: itemColor,
+                  size: 24,
                 ),
-              ),
-              Text(
-                itemName,
-                style: TextStyle(fontSize: 12, color: itemColor),
-                textAlign: TextAlign.center,
-              )
-            ],
+                Text(
+                  itemName,
+                  style: TextStyle(fontSize: 12, color: itemColor),
+                  textAlign: TextAlign.center,
+                )
+              ],
+            ),
           ),
         ),
       ),
