@@ -22,21 +22,20 @@ class PageViewContainer extends StatefulWidget {
 
 class _PageViewContainerState extends State<PageViewContainer> {
   final PageController _pageController = PageController(initialPage: 0);
+  final initOrderPageViews = <Widget>[
+    const BillingListPage(),
+    const ChartPage(),
+    const SearchPage(),
+    const SettingPage(),
+  ];
+  final tempOrderPageViews = <Widget>[
+    const BillingListPage(),
+    const ChartPage(),
+    const SearchPage(),
+    const SettingPage(),
+  ];
   var currentPage = 0;
   var actualTargetPage = 0;
-  var initOrderPageViews = <Widget>[
-    const BillingListPage(),
-    const ChartPage(),
-    const SearchPage(),
-    const SettingPage(),
-  ];
-
-  var tempOrderPageViews = <Widget>[
-    const BillingListPage(),
-    const ChartPage(),
-    const SearchPage(),
-    const SettingPage(),
-  ];
 
   @override
   void initState() {
@@ -125,10 +124,6 @@ class _PageViewContainerState extends State<PageViewContainer> {
     }
   }
 
-  // 1. make target page view to be the next page view
-  // 2. animate to next page view
-  // 3. jump to actual target page view
-  // 4. replace next page view with init page view
   Future<void> replacePage(int targetPageIndex, int nextPageIndex) async {
     var targetPageView = initOrderPageViews[targetPageIndex];
     tempOrderPageViews[nextPageIndex] = targetPageView;
