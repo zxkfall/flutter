@@ -114,21 +114,28 @@ class _PageViewContainerState extends State<PageViewContainer> {
   }
 
   Future<void> animateToPage(int targetPageIndex) async {
-    var tempCurrentPage = currentPage;
-    if (tempCurrentPage < targetPageIndex) {
-      tempOrderPageViews[tempCurrentPage + 1] = initOrderPageViews[targetPageIndex];
-      await _pageController.animateToPage(tempCurrentPage + 1,
-          duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
-      _pageController.jumpToPage(targetPageIndex);
-      tempOrderPageViews[tempCurrentPage + 1] = initOrderPageViews[tempCurrentPage + 1];
-    } else if (tempCurrentPage > targetPageIndex) {
-      tempOrderPageViews[tempCurrentPage - 1] = initOrderPageViews[targetPageIndex];
-      await _pageController.animateToPage(tempCurrentPage - 1,
-          duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
-      _pageController.jumpToPage(targetPageIndex);
-      tempOrderPageViews[tempCurrentPage - 1] = initOrderPageViews[tempCurrentPage - 1];
-    }
     actualTargetPage = targetPageIndex;
+    if (currentPage < targetPageIndex) {
+      await replacePage(targetPageIndex, currentPage + 1);
+      return;
+    }
+    if (currentPage > targetPageIndex) {
+      await replacePage(targetPageIndex, currentPage - 1);
+      return;
+    }
+  }
+
+  // 1. make target page view to be the next page view
+  // 2. animate to next page view
+  // 3. jump to actual target page view
+  // 4. replace next page view with init page view
+  Future<void> replacePage(int targetPageIndex, int nextPageIndex) async {
+    var targetPageView = initOrderPageViews[targetPageIndex];
+    tempOrderPageViews[nextPageIndex] = targetPageView;
+    await _pageController.animateToPage(nextPageIndex,
+        duration: const Duration(milliseconds: 150), curve: Curves.easeInOut);
+    _pageController.jumpToPage(targetPageIndex);
+    tempOrderPageViews[nextPageIndex] = initOrderPageViews[nextPageIndex];
     setState(() {});
   }
 
