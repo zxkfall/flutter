@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:decimal/decimal.dart';
-import 'package:demo/main.dart';
 import 'package:demo/page/preview_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -11,6 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import '../constants/custom_constants.dart';
 import '../model/billing.dart';
+import '../store/my_shared_preferences.dart';
 import '../view/top_bar_placeholder.dart';
 import 'billing_detail_page.dart';
 import '../provider/billing_provider.dart';

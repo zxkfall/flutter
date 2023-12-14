@@ -1,5 +1,4 @@
 import 'package:demo/provider/theme_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'provider/billing_provider.dart';
 import 'package:demo/repository/billing_repository.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +7,7 @@ import 'page/billing_detail_page.dart';
 import 'package:provider/provider.dart';
 import 'container/page_view_container.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'store/my_shared_preferences.dart';
 
 Future<void> main() async {
   GetIt.I.registerSingleton<BillingRepository>(SqlBillingRepository());
@@ -59,14 +59,4 @@ class _MyAppState extends State<MyApp> {
           });
     });
   }
-}
-
-class MySharedPreferences {
-  SharedPreferences? _prefs;
-
-  Future<void> init() async {
-    _prefs = await SharedPreferences.getInstance();
-  }
-
-  SharedPreferences get prefs => _prefs!;
 }
