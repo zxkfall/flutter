@@ -76,13 +76,14 @@ class _BillingListPageState extends State<BillingListPage> {
         ));
       },
     );
-    setState(() {});
     image.image.resolve(const ImageConfiguration()).addListener(ImageStreamListener((ImageInfo info, bool _) {
       if (info.sizeBytes > 0) {
         getImageMainColor(info.image.width.toDouble(), info.image.height.toDouble(), image.image).then((value) {
           var computeLuminance = value.dominantColor!.color.computeLuminance();
           color = computeLuminance > 0.5 ? Colors.black : Colors.white;
-          setState(() {});
+          if (mounted) {
+            setState(() {});
+          }
         });
       }
     }));
