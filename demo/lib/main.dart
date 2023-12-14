@@ -1,4 +1,5 @@
 import 'package:demo/provider/theme_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'provider/billing_provider.dart';
 import 'package:demo/repository/billing_repository.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Future<void> main() async {
   GetIt.I.registerSingleton<BillingRepository>(SqlBillingRepository());
+  MySharedPreferences mySharedPreferences = MySharedPreferences();
+  await mySharedPreferences.init();
+  GetIt.I.registerSingleton<MySharedPreferences>(mySharedPreferences);
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => BillingProvider()),
@@ -55,4 +59,14 @@ class _MyAppState extends State<MyApp> {
           });
     });
   }
+}
+
+class MySharedPreferences {
+  SharedPreferences? _prefs;
+
+  Future<void> init() async {
+    _prefs = await SharedPreferences.getInstance();
+  }
+
+  SharedPreferences get prefs => _prefs!;
 }

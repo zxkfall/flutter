@@ -30,6 +30,9 @@ class CustomTheme {
     'lightBlueAccent': Colors.lightBlueAccent,
     'lightGreenAccent': Colors.lightGreenAccent,
   };
+}
 
+class MyPreferenceKeys {
   static const String currentThemeColorKey = 'currentThemeColor';
+  static const String indexDefaultImageUrlKey = 'indexDefaultImageUrl';
 }

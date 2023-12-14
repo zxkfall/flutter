@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../constants/custom_theme.dart';
+import '../../constants/custom_constants.dart';
 import '../../provider/theme_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 

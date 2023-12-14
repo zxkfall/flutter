@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:decimal/decimal.dart';
+import 'package:demo/main.dart';
 import 'package:demo/page/preview_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -8,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import '../constants/custom_constants.dart';
 import '../model/billing.dart';
 import '../view/top_bar_placeholder.dart';
 import 'billing_detail_page.dart';
@@ -34,59 +36,8 @@ class _BillingListPageState extends State<BillingListPage> {
 
   @override
   void initState() {
+    _initImage();
     super.initState();
-    _loadImage();
-  }
-
-  Future<void> _loadImageUrls() async {
-    try {
-      final directory = await getApplicationDocumentsDirectory();
-      final file = File('${directory.path}/saved_text.txt');
-      if (file.existsSync()) {
-        var allUrls = file.readAsStringSync().trim().split(';').where((element) => element != '').toList();
-        imgUrls =
-            allUrls.isEmpty ? ['https://cdn.pixabay.com/photo/2023/10/27/17/04/dahlia-8345799_1280.jpg'] : allUrls;
-      } else {
-        imgUrls = ['https://cdn.pixabay.com/photo/2023/10/27/17/04/dahlia-8345799_1280.jpg'];
-      }
-    } catch (e) {
-      imgUrls = ['https://cdn.pixabay.com/photo/2023/10/27/17/04/dahlia-8345799_1280.jpg'];
-    }
-  }
-
-  Future<void> _loadImage() async {
-    await _loadImageUrls();
-    image = Image.network(
-      imgUrls[Random().nextInt(imgUrls.length)],
-      width: double.infinity,
-      height: null,
-      fit: BoxFit.contain,
-      loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-        if (loadingProgress == null) {
-          return child;
-        }
-        var totalBytes = loadingProgress.expectedTotalBytes;
-        var bytesLoaded = loadingProgress.cumulativeBytesLoaded;
-        return Center(
-            child: Padding(
-          padding: const EdgeInsets.all(64.0),
-          child: CircularProgressIndicator(
-            value: totalBytes != null ? bytesLoaded / totalBytes : null,
-          ),
-        ));
-      },
-    );
-    image.image.resolve(const ImageConfiguration()).addListener(ImageStreamListener((ImageInfo info, bool _) {
-      if (info.sizeBytes > 0) {
-        getImageMainColor(info.image.width.toDouble(), info.image.height.toDouble(), image.image).then((value) {
-          var computeLuminance = value.dominantColor!.color.computeLuminance();
-          color = computeLuminance > 0.5 ? Colors.black : Colors.white;
-          if (mounted) {
-            setState(() {});
-          }
-        });
-      }
-    }));
   }
 
   @override
@@ -218,7 +169,7 @@ class _BillingListPageState extends State<BillingListPage> {
   GestureDetector buildHeader(Decimal totalExpense, Decimal totalIncome) {
     return GestureDetector(
       onTap: () {
-        _loadImage();
+        _getRandomImage();
       },
       onHorizontalDragEnd: (longPressDetails) {
         Navigator.push(
@@ -257,6 +208,76 @@ class _BillingListPageState extends State<BillingListPage> {
         ],
       ),
     );
+  }
+
+  Future<void> _loadImageUrls() async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/saved_text.txt');
+      if (file.existsSync()) {
+        var allUrls = file.readAsStringSync().trim().split(';').where((element) => element != '').toList();
+        imgUrls =
+            allUrls.isEmpty ? ['https://cdn.pixabay.com/photo/2023/10/27/17/04/dahlia-8345799_1280.jpg'] : allUrls;
+      } else {
+        imgUrls = ['https://cdn.pixabay.com/photo/2023/10/27/17/04/dahlia-8345799_1280.jpg'];
+      }
+    } catch (e) {
+      imgUrls = ['https://cdn.pixabay.com/photo/2023/10/27/17/04/dahlia-8345799_1280.jpg'];
+    }
+  }
+
+  Future<void> _getRandomImage() async {
+    await _loadImageUrls();
+    _loadImage(imgUrls[Random().nextInt(imgUrls.length)]);
+  }
+
+  Future<void> _initImage() async {
+    var prefs = GetIt.I<MySharedPreferences>();
+    var imageUrl = prefs.prefs.getString(MyPreferenceKeys.indexDefaultImageUrlKey);
+    if (imageUrl == null) {
+      await _getRandomImage();
+      var imgUrl = imgUrls[Random().nextInt(imgUrls.length)];
+      prefs.prefs.setString(MyPreferenceKeys.indexDefaultImageUrlKey, imgUrl);
+      _loadImage(imgUrl);
+      return;
+    }
+
+    _loadImage(imageUrl);
+  }
+
+  Future<void> _loadImage(String imageUrl) async {
+    image = Image.network(
+      imageUrl,
+      width: double.infinity,
+      height: null,
+      fit: BoxFit.contain,
+      loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+        if (loadingProgress == null) {
+          return child;
+        }
+        var totalBytes = loadingProgress.expectedTotalBytes;
+        var bytesLoaded = loadingProgress.cumulativeBytesLoaded;
+        return Center(
+            child: Padding(
+          padding: const EdgeInsets.all(64.0),
+          child: CircularProgressIndicator(
+            value: totalBytes != null ? bytesLoaded / totalBytes : null,
+          ),
+        ));
+      },
+    );
+    setState(() {});
+    image.image.resolve(const ImageConfiguration()).addListener(ImageStreamListener((ImageInfo info, bool _) {
+      if (info.sizeBytes > 0) {
+        getImageMainColor(info.image.width.toDouble(), info.image.height.toDouble(), image.image).then((value) {
+          var computeLuminance = value.dominantColor!.color.computeLuminance();
+          color = computeLuminance > 0.5 ? Colors.black : Colors.white;
+          if (mounted) {
+            setState(() {});
+          }
+        });
+      }
+    }));
   }
 
   Future<PaletteGenerator> getImageMainColor(double imageWidth, double imageHeight, ImageProvider<Object> image) async {

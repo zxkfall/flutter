@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'package:demo/constants/custom_theme.dart';
+import 'package:demo/constants/custom_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -10,7 +10,7 @@ class ThemeProvider with ChangeNotifier {
 
   Future<void> setThemeColor(Color themeColor) async {
     final prefs = await SharedPreferences.getInstance();
-    final isSuccess = await prefs.setInt(CustomTheme.currentThemeColorKey, themeColor.value);
+    final isSuccess = await prefs.setInt(MyPreferenceKeys.currentThemeColorKey, themeColor.value);
     if (!isSuccess) {
       log('Failed to save theme color');
       return;
@@ -21,9 +21,9 @@ class ThemeProvider with ChangeNotifier {
 
   Future<void> init() async {
     final prefs = await SharedPreferences.getInstance();
-    _themeColor = prefs.getInt(CustomTheme.currentThemeColorKey) == null
+    _themeColor = prefs.getInt(MyPreferenceKeys.currentThemeColorKey) == null
         ? Colors.lightBlueAccent
-        : Color(prefs.getInt(CustomTheme.currentThemeColorKey)!);
+        : Color(prefs.getInt(MyPreferenceKeys.currentThemeColorKey)!);
     notifyListeners();
   }
 }
