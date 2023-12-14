@@ -42,6 +42,7 @@ class _PageViewContainerState extends State<PageViewContainer> {
   @override
   Widget build(BuildContext context) {
     var appLocalizations = AppLocalizations.of(context)!;
+
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -82,28 +83,28 @@ class _PageViewContainerState extends State<PageViewContainer> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 buildBottomAppBarItem(() {
-                  _pageController.animateToPage(0,
-                      duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                  animateToPage(0);
                 }, Icons.menu, _getCurrentColor(0), appLocalizations.home),
                 buildBottomAppBarItem(() {
-                  _pageController.animateToPage(1,
-                      duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                  animateToPage(1);
                 }, Icons.bar_chart, _getCurrentColor(1), appLocalizations.chart),
                 Container(
                   width: 48,
                 ),
                 buildBottomAppBarItem(() {
-                  _pageController.animateToPage(2,
-                      duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                  animateToPage(2);
                 }, Icons.search, _getCurrentColor(2), appLocalizations.search),
                 buildBottomAppBarItem(() {
-                  _pageController.animateToPage(3,
-                      duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                  animateToPage(3);
                 }, Icons.settings, _getCurrentColor(3), appLocalizations.setting),
               ],
             ),
           ),
         ));
+  }
+
+  void animateToPage(int pageIndex) {
+    _pageController.animateToPage(pageIndex, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
   }
 
   InkWell buildBottomAppBarItem(Null Function() tapFunction, IconData itemIcon, Color itemColor, String itemName) {
