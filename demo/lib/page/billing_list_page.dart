@@ -228,7 +228,10 @@ class _BillingListPageState extends State<BillingListPage> {
 
   Future<void> _getRandomImage() async {
     await _loadImageUrls();
-    _loadImage(imgUrls[Random().nextInt(imgUrls.length)]);
+    var prefs = GetIt.I<MySharedPreferences>();
+    var imgUrl = imgUrls[Random().nextInt(imgUrls.length)];
+    prefs.prefs.setString(MyPreferenceKeys.indexDefaultImageUrlKey, imgUrl);
+    _loadImage(imgUrl);
   }
 
   Future<void> _initImage() async {
