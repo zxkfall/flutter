@@ -152,3 +152,4 @@ Tasks:
 15. [] change chart page date show format
 16. [] add change language support
 17. [] add light/dark theme support
+18. [] fix bottom navigation bar click area too small, wrong click bottom sheet
