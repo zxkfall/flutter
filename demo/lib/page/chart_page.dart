@@ -38,6 +38,8 @@ class _LineChartState extends State<ChartPage> {
                       billingType == BillingType.expense
                           ? billingType = BillingType.income
                           : billingType = BillingType.expense;
+                      BillingProvider billingProvider = Provider.of<BillingProvider>(context, listen: false);
+                      billingProvider.chartBillingType = billingType;
                     });
                   },
                   style: TextButton.styleFrom(
@@ -60,6 +62,10 @@ class _LineChartState extends State<ChartPage> {
         ),
         Expanded(child: Consumer<BillingProvider>(
           builder: (context, billingProvider, child) {
+            billingType = billingProvider.chartBillingType;
+            currentDate = billingProvider.chartCurrentDate;
+            chartPeriod = billingProvider.chartPeriod;
+
             var billings = billingProvider.billings;
 
             var allPeriodKindData = billings
@@ -97,6 +103,7 @@ class _LineChartState extends State<ChartPage> {
                               onPressed: () {
                                 setState(() {
                                   chartPeriod = ChartPeriod.week;
+                                  billingProvider.chartPeriod = chartPeriod;
                                 });
                               },
                               style: TextButton.styleFrom(
@@ -121,6 +128,7 @@ class _LineChartState extends State<ChartPage> {
                               onPressed: () {
                                 setState(() {
                                   chartPeriod = ChartPeriod.month;
+                                  billingProvider.chartPeriod = chartPeriod;
                                 });
                               },
                               style: TextButton.styleFrom(
@@ -145,6 +153,7 @@ class _LineChartState extends State<ChartPage> {
                               onPressed: () {
                                 setState(() {
                                   chartPeriod = ChartPeriod.year;
+                                  billingProvider.chartPeriod = chartPeriod;
                                 });
                               },
                               style: TextButton.styleFrom(
@@ -181,6 +190,7 @@ class _LineChartState extends State<ChartPage> {
                               : chartPeriod == ChartPeriod.month
                                   ? currentDate = DateTime(currentDate.year, currentDate.month - 1, currentDate.day)
                                   : currentDate = DateTime(currentDate.year - 1, currentDate.month, currentDate.day);
+                          billingProvider.chartCurrentDate = currentDate;
                           setState(() {});
                         },
                         child: const Icon(
@@ -198,6 +208,7 @@ class _LineChartState extends State<ChartPage> {
                         if (date != null) {
                           setState(() {
                             currentDate = date;
+                            billingProvider.chartCurrentDate = currentDate;
                           });
                         }
                       },
@@ -213,6 +224,7 @@ class _LineChartState extends State<ChartPage> {
                               : chartPeriod == ChartPeriod.month
                                   ? currentDate = DateTime(currentDate.year, currentDate.month + 1, currentDate.day)
                                   : currentDate = DateTime(currentDate.year + 1, currentDate.month, currentDate.day);
+                          billingProvider.chartCurrentDate = currentDate;
                           setState(() {});
                         },
                         child: const Icon(

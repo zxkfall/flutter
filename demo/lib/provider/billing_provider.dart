@@ -1,3 +1,4 @@
+import 'package:demo/page/chart_page.dart';
 import 'package:flutter/foundation.dart';
 import '../model/billing.dart';
 
@@ -118,4 +119,8 @@ class BillingProvider with ChangeNotifier {
     _isAllDate = false;
     notifyListeners();
   }
+
+  BillingType chartBillingType = BillingType.expense;
+  DateTime chartCurrentDate = DateTime.now();
+  ChartPeriod chartPeriod = ChartPeriod.week;
 }
