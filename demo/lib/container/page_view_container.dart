@@ -70,7 +70,8 @@ class _PageViewContainerState extends State<PageViewContainer> {
                 backgroundColor: Theme.of(context).colorScheme.surface,
                 child: const Icon(Icons.add),
               ),
-        bottomNavigationBar: SizedBox(
+        bottomNavigationBar: Container(
+          color: Colors.transparent,
           height: Platform.isIOS ? kBottomNavigationBarHeight * 3 / 2 : kBottomNavigationBarHeight * 6 / 5,
           child: BottomAppBar(
             padding: const EdgeInsets.only(left: 30, right: 30),
