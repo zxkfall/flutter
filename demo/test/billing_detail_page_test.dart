@@ -3,6 +3,7 @@ import 'package:demo/model/billing.dart';
 import 'package:demo/page/billing_detail_page.dart';
 import 'package:demo/provider/billing_provider.dart';
 import 'package:demo/repository/billing_repository.dart';
+import 'package:demo/store/my_shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -10,15 +11,20 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mocktail_image_network/mocktail_image_network.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'billing_detail_page_test.mocks.dart';
 import 'localizations_inj.dart';
 import 'utils.dart';
 
 @GenerateNiceMocks([MockSpec<BillingProvider>(), MockSpec<BillingRepository>()])
-void main() {
+Future<void> main() async {
+  SharedPreferences.setMockInitialValues({});
   final mockBillingRepository = MockBillingRepository();
-  setUpAll(() {
+  final preferences = MySharedPreferences();
+  await preferences.init();
+  setUpAll(() async {
     GetIt.I.registerSingleton<BillingRepository>(mockBillingRepository);
+    GetIt.I.registerSingleton<MySharedPreferences>(preferences);
   });
   testWidgets('Should show empty billing detail page', (widgetTester) async {
     await widgetTester.pumpWidget(

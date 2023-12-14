@@ -2,6 +2,7 @@ import 'package:decimal/decimal.dart';
 import 'package:demo/model/billing.dart';
 import 'package:demo/provider/theme_provider.dart';
 import 'package:demo/repository/billing_repository.dart';
+import 'package:demo/store/my_shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -11,6 +12,7 @@ import 'package:mockito/mockito.dart';
 import 'package:mocktail_image_network/mocktail_image_network.dart';
 import 'package:provider/provider.dart';
 import 'package:demo/provider/billing_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'billing_detail_page_test.mocks.dart';
 
 // before run test, run this command: flutter pub run build_runner build --delete-conflicting-outputs
@@ -24,11 +26,14 @@ import 'billing_detail_page_test.mocks.dart';
 // 7. add await tester.pump();
 // 8. add expect(find.text('fake income'), findsOneWidget);
 @GenerateNiceMocks([MockSpec<BillingRepository>()])
-void main() {
+Future<void> main() async {
+  SharedPreferences.setMockInitialValues({});
   final mockRepository = MockBillingRepository();
-
+  final preferences = MySharedPreferences();
+  await preferences.init();
   setUpAll(() async {
     GetIt.I.registerSingleton<BillingRepository>(mockRepository);
+    GetIt.I.registerSingleton<MySharedPreferences>(preferences);
   });
 
   testWidgets('Test that all the billing data in the sqllite', (WidgetTester tester) async {

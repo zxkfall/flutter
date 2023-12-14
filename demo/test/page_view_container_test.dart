@@ -4,15 +4,21 @@ import 'package:demo/provider/billing_provider.dart';
 import 'package:demo/provider/theme_provider.dart';
 import 'package:demo/repository/billing_repository.dart';
 import 'package:demo/main.dart';
+import 'package:demo/store/my_shared_preferences.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail_image_network/mocktail_image_network.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+Future<void> main() async {
+  SharedPreferences.setMockInitialValues({});
+  MySharedPreferences preferences = MySharedPreferences();
+  await preferences.init();
   setUpAll(() async {
     GetIt.I.registerSingleton<BillingRepository>(HMockBillingRepository());
+    GetIt.I.registerSingleton<MySharedPreferences>(preferences);
   });
   testWidgets('Should delete billing when swipe billing item', (widgetTester) async {
     await mockNetworkImages(() async => await widgetTester.pumpWidget(
