@@ -41,6 +41,7 @@ class _PageViewContainerState extends State<PageViewContainer> {
 
   @override
   Widget build(BuildContext context) {
+    var appLocalizations = AppLocalizations.of(context)!;
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -65,7 +66,7 @@ class _PageViewContainerState extends State<PageViewContainer> {
                 onPressed: () {
                   _goToBillingDetailPage(context);
                 },
-                tooltip: AppLocalizations.of(context)!.addBilling,
+                tooltip: appLocalizations.addBilling,
                 shape: const CircleBorder(),
                 backgroundColor: Theme.of(context).colorScheme.surface,
                 child: const Icon(Icons.add),
@@ -80,144 +81,61 @@ class _PageViewContainerState extends State<PageViewContainer> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                InkWell(
-                  onTap: () {
-                    _pageController.animateToPage(0,
-                        duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                  },
-                  highlightColor: Colors.transparent,
-                  splashColor: Colors.transparent,
-                  child: SizedBox(
-                    // padding: const EdgeInsets.only(left: 30, right: 24),
-                    width: 48,
-                    child: Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            height: 32,
-                            width: 32,
-                            child: Icon(
-                              Icons.menu,
-                              color: _getCurrentColor(0),
-                            ),
-                          ),
-                          Text(
-                            AppLocalizations.of(context)!.home,
-                            style: TextStyle(fontSize: 12, color: _getCurrentColor(0)),
-                            textAlign: TextAlign.center,
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    _pageController.animateToPage(1,
-                        duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                  },
-                  highlightColor: Colors.transparent,
-                  splashColor: Colors.transparent,
-                  child: SizedBox(
-                    // padding: const EdgeInsets.only(left: 24),
-                    width: 48,
-                    child: Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            height: 32,
-                            width: 32,
-                            child: Icon(
-                              Icons.bar_chart,
-                              color: _getCurrentColor(1),
-                            ),
-                          ),
-                          Text(
-                            AppLocalizations.of(context)!.chart,
-                            style: TextStyle(fontSize: 12, color: _getCurrentColor(1)),
-                            textAlign: TextAlign.center,
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                buildBottomAppBarItem(() {
+                  _pageController.animateToPage(0,
+                      duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                }, Icons.menu, _getCurrentColor(0), appLocalizations.home),
+                buildBottomAppBarItem(() {
+                  _pageController.animateToPage(1,
+                      duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                }, Icons.bar_chart, _getCurrentColor(1), appLocalizations.chart),
                 Container(
                   width: 48,
                 ),
-                InkWell(
-                    onTap: () {
-                      _pageController.animateToPage(2,
-                          duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                    },
-                    highlightColor: Colors.transparent,
-                    splashColor: Colors.transparent,
-                    child: SizedBox(
-                      // padding: const EdgeInsets.only(right: 24),
-                      width: 48,
-                      child: Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              height: 32,
-                              width: 32,
-                              child: Icon(
-                                Icons.search,
-                                color: _getCurrentColor(2),
-                              ),
-                            ),
-                            Text(
-                              AppLocalizations.of(context)!.search,
-                              style: TextStyle(fontSize: 12, color: _getCurrentColor(2)),
-                              textAlign: TextAlign.center,
-                            )
-                          ],
-                        ),
-                      ),
-                    )),
-                InkWell(
-                  onTap: () {
-                    _pageController.animateToPage(3,
-                        duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
-                  },
-                  highlightColor: Colors.transparent,
-                  splashColor: Colors.transparent,
-                  child: SizedBox(
-                    // padding: const EdgeInsets.only(right: 30, left: 24),
-                    width: 48,
-                    child: Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            height: 32,
-                            width: 32,
-                            child: Icon(
-                              Icons.settings,
-                              color: _getCurrentColor(3),
-                            ),
-                          ),
-                          Text(
-                            AppLocalizations.of(context)!.setting,
-                            style: TextStyle(fontSize: 12, color: _getCurrentColor(3)),
-                            textAlign: TextAlign.center,
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                buildBottomAppBarItem(() {
+                  _pageController.animateToPage(2,
+                      duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                }, Icons.search, _getCurrentColor(2), appLocalizations.search),
+                buildBottomAppBarItem(() {
+                  _pageController.animateToPage(3,
+                      duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+                }, Icons.settings, _getCurrentColor(3), appLocalizations.setting),
               ],
             ),
           ),
         ));
+  }
+
+  InkWell buildBottomAppBarItem(Null Function() tapFunction, IconData itemIcon, Color itemColor, String itemName) {
+    return InkWell(
+      onTap: tapFunction,
+      highlightColor: Colors.transparent,
+      splashColor: Colors.transparent,
+      child: SizedBox(
+        width: 48,
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: 32,
+                width: 32,
+                child: Icon(
+                  itemIcon,
+                  color: itemColor,
+                ),
+              ),
+              Text(
+                itemName,
+                style: TextStyle(fontSize: 12, color: itemColor),
+                textAlign: TextAlign.center,
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   @override
