@@ -112,6 +112,24 @@ class _PageViewContainerState extends State<PageViewContainer> {
         ));
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    _pageController.dispose();
+  }
+
+  Color _getCurrentColor(page) => actualTargetPage == page ? Colors.pink : Colors.white;
+
+  void _goToBillingDetailPage(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => const BillingDetailPage()));
+  }
+
+  Future<List<Billing>> _loadBillingData() async {
+    var list = await GetIt.I<BillingRepository>().billings();
+    list.sort((a, b) => b.date.compareTo(a.date));
+    return list;
+  }
+
   Future<void> animateToPage(int targetPageIndex) async {
     actualTargetPage = targetPageIndex;
     if (currentPage < targetPageIndex) {
@@ -164,23 +182,5 @@ class _PageViewContainerState extends State<PageViewContainer> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _pageController.dispose();
-  }
-
-  Color _getCurrentColor(page) => actualTargetPage == page ? Colors.pink : Colors.white;
-
-  void _goToBillingDetailPage(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (_) => const BillingDetailPage()));
-  }
-
-  Future<List<Billing>> _loadBillingData() async {
-    var list = await GetIt.I<BillingRepository>().billings();
-    list.sort((a, b) => b.date.compareTo(a.date));
-    return list;
   }
 }
