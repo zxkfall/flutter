@@ -23,6 +23,20 @@ class PageViewContainer extends StatefulWidget {
 class _PageViewContainerState extends State<PageViewContainer> {
   final PageController _pageController = PageController(initialPage: 0);
   var currentPage = 0;
+  var actualTargetPage = 0;
+  var initOrderPageViews = <Widget>[
+    const BillingListPage(),
+    const ChartPage(),
+    const SearchPage(),
+    const SettingPage(),
+  ];
+
+  var tempOrderPageViews = <Widget>[
+    const BillingListPage(),
+    const ChartPage(),
+    const SearchPage(),
+    const SettingPage(),
+  ];
 
   @override
   void initState() {
@@ -43,6 +57,7 @@ class _PageViewContainerState extends State<PageViewContainer> {
   Widget build(BuildContext context) {
     var appLocalizations = AppLocalizations.of(context)!;
 
+    var pageViews = tempOrderPageViews;
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -51,12 +66,7 @@ class _PageViewContainerState extends State<PageViewContainer> {
         body: PageView(
           physics: const NeverScrollableScrollPhysics(),
           controller: _pageController,
-          children: const <Widget>[
-            BillingListPage(),
-            ChartPage(),
-            SearchPage(),
-            SettingPage(),
-          ],
+          children: pageViews,
         ),
         resizeToAvoidBottomInset: true,
         extendBody: true,
@@ -103,8 +113,23 @@ class _PageViewContainerState extends State<PageViewContainer> {
         ));
   }
 
-  void animateToPage(int pageIndex) {
-    _pageController.animateToPage(pageIndex, duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+  Future<void> animateToPage(int targetPageIndex) async {
+    var tempCurrentPage = currentPage;
+    if (tempCurrentPage < targetPageIndex) {
+      tempOrderPageViews[tempCurrentPage + 1] = initOrderPageViews[targetPageIndex];
+      await _pageController.animateToPage(tempCurrentPage + 1,
+          duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
+      _pageController.jumpToPage(targetPageIndex);
+      tempOrderPageViews[tempCurrentPage + 1] = initOrderPageViews[tempCurrentPage + 1];
+    } else if (tempCurrentPage > targetPageIndex) {
+      tempOrderPageViews[tempCurrentPage - 1] = initOrderPageViews[targetPageIndex];
+      await _pageController.animateToPage(tempCurrentPage - 1,
+          duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
+      _pageController.jumpToPage(targetPageIndex);
+      tempOrderPageViews[tempCurrentPage - 1] = initOrderPageViews[tempCurrentPage - 1];
+    }
+    actualTargetPage = targetPageIndex;
+    setState(() {});
   }
 
   InkWell buildBottomAppBarItem(Null Function() tapFunction, IconData itemIcon, Color itemColor, String itemName) {
@@ -145,7 +170,7 @@ class _PageViewContainerState extends State<PageViewContainer> {
     _pageController.dispose();
   }
 
-  Color _getCurrentColor(page) => currentPage == page ? Colors.pink : Colors.white;
+  Color _getCurrentColor(page) => actualTargetPage == page ? Colors.pink : Colors.white;
 
   void _goToBillingDetailPage(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(builder: (_) => const BillingDetailPage()));
