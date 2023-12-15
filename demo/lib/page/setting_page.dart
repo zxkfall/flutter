@@ -143,15 +143,21 @@ class _SettingPageState extends State<SettingPage> {
     var excel = Excel.createExcel();
     Sheet sheetObject = excel['Sheet1'];
 
-    sheetObject.appendRow(['Date', 'Amount', 'Type', 'Kind', 'Description']);
+    sheetObject.appendRow([
+      const TextCellValue('Date'),
+      const TextCellValue('Amount'),
+      const TextCellValue('Type'),
+      const TextCellValue('Kind'),
+      const TextCellValue('Description')
+    ]);
     var billings = await GetIt.I<BillingRepository>().billings();
     for (var billing in billings) {
       sheetObject.appendRow([
-        billing.date.toString(),
-        billing.amount,
-        billing.type == BillingType.expense ? 'COST' : 'INCOME',
-        billing.kind.name,
-        billing.description
+        TextCellValue(billing.date.toString()),
+        TextCellValue(billing.amount.toString()),
+        TextCellValue(billing.type == BillingType.expense ? 'COST' : 'INCOME'),
+        TextCellValue(billing.kind.name),
+        TextCellValue(billing.description)
       ]);
     }
     var fileBytes = excel.save();
@@ -187,15 +193,21 @@ class _SettingPageState extends State<SettingPage> {
     var excel = Excel.createExcel();
     Sheet sheetObject = excel['Sheet1'];
 
-    sheetObject.appendRow(['Date', 'Amount', 'Type', 'Kind', 'Description']);
+    sheetObject.appendRow([
+      const TextCellValue('Date'),
+      const TextCellValue('Amount'),
+      const TextCellValue('Type'),
+      const TextCellValue('Kind'),
+      const TextCellValue('Description')
+    ]);
     var billings = await GetIt.I<BillingRepository>().billings();
     for (var billing in billings) {
       sheetObject.appendRow([
-        billing.date.toString(),
-        billing.amount,
-        billing.type == BillingType.expense ? 'COST' : 'INCOME',
-        billing.kind.name,
-        billing.description
+        TextCellValue(billing.date.toString()),
+        TextCellValue(billing.amount.toString()),
+        TextCellValue(billing.type == BillingType.expense ? 'COST' : 'INCOME'),
+        TextCellValue(billing.kind.name),
+        TextCellValue(billing.description)
       ]);
     }
     var fileBytes = excel.save();
