@@ -125,6 +125,7 @@
 				98F7C7FE956FEB3BE3E3F289 /* Pods */,
 				460DB36B4B44EFC2FCD1BBF1 /* Frameworks */,
 			);
+			indentWidth = 4;
 			sourceTree = "<group>";
 		};
 		97C146EF1CF9000F007C117D /* Products */ = {
