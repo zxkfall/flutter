@@ -31,12 +31,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late ThemeProvider themeProvider;
 
   @override
   void initState() {
-    super.initState();
     Provider.of<ThemeProvider>(context, listen: false).init();
+    super.initState();
   }
 
   @override

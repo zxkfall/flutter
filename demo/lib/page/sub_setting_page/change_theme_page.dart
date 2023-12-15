@@ -45,20 +45,20 @@ class _ChangeThemePageState extends State<ChangeThemePage> {
                     children: [
                   ...CustomTheme.themeColors.keys.map((key) {
                     var themeProvider = Provider.of<ThemeProvider>(context, listen: false);
-                    var isCurrentColor = themeProvider.themeColor == CustomTheme.themeColors[key];
+                    var currentColor = CustomTheme.themeColors[key];
+                    var isCurrentColor = currentColor != null && themeProvider.themeColor.value == currentColor.value;
                     return InkWell(
                       onTap: () {
-                        themeProvider.setThemeColor(CustomTheme.themeColors[key]!);
+                        themeProvider.setThemeColor(currentColor);
                         setState(() {});
                       },
                       child: Container(
-                        color: CustomTheme.themeColors[key]!.withOpacity(isCurrentColor ? 0.5 : 1),
+                        color: currentColor!.withOpacity(isCurrentColor ? 0.5 : 1),
                         child: Center(
                           child: Text(
                             isCurrentColor ? key : '',
                             style: TextStyle(
-                              color:
-                                  CustomTheme.themeColors[key]!.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+                              color: currentColor.computeLuminance() > 0.5 ? Colors.black : Colors.white,
                               fontSize: 12,
                             ),
                           ),
